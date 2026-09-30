@@ -30,6 +30,14 @@ El formato de cada entrada está en `AGENTS.md`.
 ---
 
 ## 2026-09-30 — Claude
+- **Pedido:** que esta sesión dirija a las demás (Codex y otras sesiones de Claude).
+- **Cambios:** nuevo `TAREAS.md` con roles y archivos propios de cada agente (Directora:
+  documentos de coordinación; Ingeniería/Codex: `index.html` y `tests/`; Contenido/Claude:
+  `enlaces.js` y `logos/`), el flujo de asignación y revisión, la hoja de ruta y la
+  primera tarea propuesta (T-001). `AGENTS.md` lo exige; `_config.yml` lo excluye del sitio.
+- **Pendiente:** que Vincent apruebe T-001.
+
+## 2026-09-30 — Claude
 - **Pedido:** un documento donde cada agente anote en qué está trabajando, para que los
   demás lo consulten y no choquen al editar los mismos archivos.
 - **Cambios:** nuevo `EN-CURSO.md` con una tabla de reservas (agente, sesión, hora,

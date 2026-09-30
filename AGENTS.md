@@ -3,6 +3,11 @@
 Este archivo lo leen los agentes de IA que trabajan en el proyecto (Codex y Claude Code).
 Responde siempre al usuario en español y en lenguaje sencillo: no es programador.
 
+**Organización del trabajo:** una sesión de Claude ("Hub de herramientas Ecco Qualita") es
+la **directora**: planifica, asigna tareas en `TAREAS.md` y revisa. Cada agente tiene un
+rol y unos archivos propios (tabla en `TAREAS.md`) y solo ejecuta las tareas asignadas a
+él. Lee `TAREAS.md` al empezar cualquier sesión.
+
 **Antes de editar cualquier archivo, consulta y usa `EN-CURSO.md`**: ahí cada agente
 reserva los archivos que está editando en ese momento, para que dos sesiones no guarden
 el mismo archivo a la vez. Ya hubo cambios perdidos por no hacerlo.
@@ -31,6 +36,7 @@ Es un sitio estático sin compilación ni dependencias.
 | `enlaces.js` | **Todos los datos**: áreas, clientes, herramientas y sus enlaces. Casi todos los cambios se hacen aquí. |
 | `index.html` | Diseño (CSS) y lógica (JS) de la página. Solo se toca para cambiar apariencia o comportamiento. |
 | `BITACORA.md` | Registro compartido de lo que hace cada agente. Ver "Bitácora" abajo. |
+| `TAREAS.md` | Roles de cada agente, sus archivos propios, la hoja de ruta y las tareas asignadas por la directora con su estado. |
 | `EN-CURSO.md` | Tablero de reservas: qué archivos está editando cada agente **ahora mismo**. Se consulta antes de editar y se actualiza al empezar y al terminar. |
 | `_config.yml` | Configuración de GitHub Pages: evita que los archivos internos (`.md`) se publiquen en el sitio. |
 | `netlify.toml` | Hacía lo mismo en Netlify, el alojamiento anterior. |
