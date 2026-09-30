@@ -127,7 +127,14 @@ const AREAS = [
     descripcion: "Diseño, planificación y ejecución de cursos; evaluación y certificación.",
     icono: "academia",
     proceso: "operativo",
-    grupos: [],
+    grupos: [
+      {
+        titulo: "Accesos principales",
+        enlaces: [
+          { nombre: "SharePoint Académica", descripcion: "Sitio de formación y recursos del área académica.", url: "https://eccoqualita2102.sharepoint.com/:u:/r/sites/ECCOTRAINING/SitePages/TrainingHome.aspx?d=w4aa90b0f92d140e08462c0ab25fee550&csf=1&web=2&share=IQAPC6lK0ZLgQIRiwKsl_uVQAf44zPqSmfyElQrNTCaXo1E&e=ugx8CC", icono: "sharepoint" },
+        ],
+      },
+    ],
   },
   {
     id: "administrativa-financiera",

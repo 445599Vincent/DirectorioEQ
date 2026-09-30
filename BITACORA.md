@@ -11,14 +11,20 @@ El formato de cada entrada está en `AGENTS.md`.
   Proyectos Cerrados, Lecciones Aprendidas, Gestión Interna PMO.
 - Enlace del SharePoint de los clientes Soluciones Globales y OMP.
 - Planner de Recursos Humanos y de Calidad: confirmar si existen y sus enlaces.
-- Ocho áreas del mapa de procesos están sin accesos: Planificación, Comunicaciones,
-  Académica, Servicios Generales, Mantenimiento de Infraestructura, TIC, Legal y
-  Seguridad. Faltan sus enlaces (SharePoint, Planner u otros). Por decisión del usuario,
-  las áreas vacías se quedan visibles en el inicio.
+- Siete áreas del mapa de procesos están sin accesos: Planificación, Comunicaciones,
+  Servicios Generales, Mantenimiento de Infraestructura, TIC, Legal y Seguridad. Faltan
+  sus enlaces (SharePoint, Planner u otros). Por decisión del usuario, las áreas vacías se
+  quedan visibles en el inicio.
 - Gestión Administrativa y Financiera solo tiene AdmCloud; faltan su SharePoint y Planner.
 - Definir si las demás áreas tendrán secciones internas como el PMO.
 
 ---
+
+## 2026-09-30 — Codex
+- **Pedido:** registrar el sitio de SharePoint del área Académica.
+- **Cambios:** se agregó la tarjeta "SharePoint Académica" en Gestión Académica
+  (`enlaces.js`) y se actualizó la lista de áreas sin accesos (`BITACORA.md`).
+- **Pendiente:** Nada.
 
 ## 2026-09-30 — Claude
 - **Pedido:** poner el logo de SharePoint a las seis secciones del PMO; el usuario querría
