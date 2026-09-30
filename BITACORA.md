@@ -21,6 +21,13 @@ El formato de cada entrada está en `AGENTS.md`.
 ---
 
 ## 2026-09-30 — Claude
+- **Pedido:** agregar el Listado Maestro de Documentos Internos (MAT-SGC-01) dentro de
+  Gestión de la Calidad.
+- **Cambios:** tarjeta "Listado Maestro de Documentos" en Gestión de la Calidad, con el
+  logo de SharePoint (`enlaces.js`).
+- **Pendiente:** Nada.
+
+## 2026-09-30 — Claude
 - **Pedido:** agregar los tres "Accesos Directos" que tiene el SharePoint del PMO
   (Reportes de Consultores, Plantillas PMO, Material educativo). También se confirmó el
   dominio propio: Vincent creó el archivo `CNAME` con `directorio.eccoqualita.com` desde
