@@ -20,6 +20,18 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ---
 
+## 2026-09-30 — Claude
+- **Pedido:** agregar los tres "Accesos Directos" que tiene el SharePoint del PMO
+  (Reportes de Consultores, Plantillas PMO, Material educativo). También se confirmó el
+  dominio propio: Vincent creó el archivo `CNAME` con `directorio.eccoqualita.com` desde
+  GitHub y Alfredo (quien administra las zonas DNS de eccoqualita.com) ya agregó el
+  registro; el sitio carga en esa dirección con HTTPS.
+- **Cambios:** nuevo grupo "Accesos Directos" en Gestión de Proyectos (PMO), con esas tres
+  tarjetas pendientes y logo de SharePoint (`enlaces.js`).
+- **Pendiente:** enlaces de esas tres tarjetas. Avisar al equipo que el directorio ya
+  también se puede abrir en https://directorio.eccoqualita.com (además de la dirección de
+  github.io, que sigue funcionando igual).
+
 ## 2026-09-30 — Codex
 - **Pedido:** registrar el SharePoint de Banco Central como proyecto cerrado y separar los
   proyectos finalizados de los proyectos activos.

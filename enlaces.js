@@ -119,6 +119,14 @@ const AREAS = [
           { nombre: "Gestión Interna PMO", descripcion: "Organización y documentos internos del PMO.", url: "", icono: "sharepoint" },
         ],
       },
+      {
+        titulo: "Accesos Directos",
+        enlaces: [
+          { nombre: "Reportes de Consultores", descripcion: "Reportes de avance que entregan los consultores.", url: "", icono: "sharepoint" },
+          { nombre: "Plantillas PMO", descripcion: "Plantillas de uso interno del PMO.", url: "", icono: "sharepoint" },
+          { nombre: "Material educativo", descripcion: "Material de apoyo y consulta del PMO.", url: "", icono: "sharepoint" },
+        ],
+      },
     ],
   },
   {
