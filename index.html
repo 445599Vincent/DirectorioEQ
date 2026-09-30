@@ -122,6 +122,9 @@
   .icono.logo img { width: 28px; height: 28px; display: block; }
   .tarjeta.pendiente .icono.logo { background: transparent; }
   .tarjeta.pendiente .icono.logo img { filter: grayscale(1); opacity: .55; }
+  /* Logo propio de un cliente (campo "logo" en enlaces.js): ocupa todo el recuadro */
+  .icono.logo.propio { overflow: hidden; }
+  .icono.logo.propio img { width: 100%; height: 100%; object-fit: contain; }
 
   .tarjeta strong { font-family: "DM Sans", sans-serif; font-size: 18px; color: var(--titulos); }
   .tarjeta p { margin: 0; font-size: 14px; line-height: 1.5; flex: 1; }
@@ -138,6 +141,34 @@
 
   footer { background: var(--titulos); color: rgba(255, 255, 255, .7); font-size: 14px; padding: 24px 0; text-align: center; }
   footer a { color: var(--dorado); text-decoration: none; }
+
+  /* Inicio de sesión con Microsoft 365 */
+  .sesion { display: flex; align-items: center; gap: 12px; }
+  .sesion .quien { font-size: 13px; color: var(--texto); }
+  .sesion .cerrar { font-size: 12px; font-weight: 500; color: var(--teal); text-decoration: none; }
+  .sesion .cerrar:hover { text-decoration: underline; }
+
+  .login-pantalla {
+    display: none; min-height: calc(100vh - 72px);
+    align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--teal-oscuro), var(--teal));
+    padding: 24px;
+  }
+  .login-tarjeta {
+    background: var(--blanco); border-radius: 16px; padding: 40px 32px;
+    max-width: 380px; width: 100%; text-align: center;
+    box-shadow: 0 20px 50px rgba(11, 49, 48, .25);
+  }
+  .login-tarjeta h1 { font-size: 22px; color: var(--titulos); margin-bottom: 8px; }
+  .login-tarjeta p { font-size: 14px; margin: 0 0 24px; }
+  .btn-microsoft {
+    display: inline-flex; align-items: center; gap: 12px; justify-content: center;
+    width: 100%; padding: 12px 20px; border-radius: 8px; border: 1px solid var(--borde);
+    background: var(--blanco); font: inherit; font-size: 15px; font-weight: 500;
+    color: var(--titulos); cursor: pointer;
+  }
+  .btn-microsoft:hover { background: var(--fondo); }
+  .login-error { color: #b42318; font-size: 13px; margin-top: 18px; }
 </style>
 </head>
 <body>
@@ -148,10 +179,20 @@
       <img src="https://eccoqualita.com/wp-content/uploads/2025/09/Asset-1.svg" alt="Ecco Qualitá"
            onerror="this.outerHTML='<span>Ecco Qualitá</span>'">
     </a>
-    <span class="etiqueta">Directorio interno</span>
+    <span class="etiqueta" id="sesion">Directorio interno</span>
   </div>
 </header>
 
+<div class="login-pantalla" id="login">
+  <div class="login-tarjeta">
+    <h1>Directorio Ecco Qualitá</h1>
+    <p>Inicia sesión con tu cuenta de Microsoft 365 de Ecco Qualitá para ver los accesos de tu área.</p>
+    <button class="btn-microsoft" id="btn-login" type="button">Iniciar sesión con Microsoft</button>
+    <p class="login-error" id="login-error" style="display:none"></p>
+  </div>
+</div>
+
+<div id="app">
 <div class="portada">
   <div class="contenedor" id="portada">
     <div><a class="volver" href="#/">← Volver al inicio</a></div>
@@ -172,6 +213,7 @@
   <div id="secciones"></div>
   <p class="vacio" id="vacio">No encontramos ninguna herramienta con ese nombre.</p>
 </main>
+</div>
 
 <footer>
   <div class="contenedor">
@@ -220,6 +262,28 @@
   ];
   const enlacesDe = espacio => espacio.grupos.flatMap(g => g.enlaces);
 
+  // --- Inicio de sesión con Microsoft 365 y accesos por rol -----------------
+  // Mientras AUTH.activo sea false, el hub funciona exactamente igual que
+  // hasta ahora: sin inicio de sesión y visible para cualquiera. Un
+  // administrador de TI debe registrar la aplicación en el Microsoft Entra
+  // ID (Azure AD) de Ecco Qualitá y entregar los dos datos de abajo; recién
+  // entonces se cambia "activo" a true. Ver CONFIGURAR-INICIO-DE-SESION.md.
+  const AUTH = {
+    activo: false,          // true cuando ya estén cargados clientId y tenantId reales
+    clientId: "",           // "Application (client) ID" del registro de la app
+    tenantId: "",           // "Directory (tenant) ID" del registro de la app
+    rolAdmin: "admin",      // valor del "App role" que da acceso a todas las áreas
+  };
+
+  // El rol de cada área es su propio "id" (por ejemplo "pmo", "comercial").
+  // Los clientes se ven junto con el PMO, así que siguen el rol "pmo".
+  let MIS_ROLES = [];
+  const puedeVer = id => !AUTH.activo || MIS_ROLES.includes(AUTH.rolAdmin) || MIS_ROLES.includes(id);
+  const rolDe = espacio => espacio.tipo === "Cliente" ? "pmo" : espacio.id;
+  const mensajeSinAcceso = () => `<p class="vacio" style="display:block">
+    No tienes acceso a esta área. Si crees que deberías tenerlo, pide a tu administrador
+    que te asigne el rol correspondiente en el directorio.</p>`;
+
   const contenedor = document.getElementById("secciones");
   const buscar = document.getElementById("buscar");
   const normalizar = t => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
@@ -267,7 +331,9 @@
     const total = enlacesDe(espacio).length;
     return `
       <a class="tarjeta" href="#/${espacio.id}">
-        ${icono(espacio.icono)}
+        ${espacio.logo
+          ? `<span class="icono logo propio"><img src="${espacio.logo}" alt="" data-icono="${espacio.icono}"></span>`
+          : icono(espacio.icono)}
         <strong>${espacio.nombre}</strong>
         <p>${espacio.descripcion}</p>
         <span class="abrir">${total ? `${total} ${total === 1 ? "acceso" : "accesos"} →` : "Sin accesos todavía →"}</span>
@@ -317,11 +383,13 @@
     }
 
     if (q) {
-      // La búsqueda siempre recorre todo el hub, sin importar la página actual
+      // La búsqueda siempre recorre todo el hub, sin importar la página actual,
+      // pero solo entre lo que el usuario tiene permiso de ver.
       const coincide = (...textos) => normalizar(textos.join(" ")).includes(q);
+      const visibles = ESPACIOS.filter(e => puedeVer(rolDe(e)));
       const tarjetas = [
-        ...ESPACIOS.filter(e => coincide(e.nombre, e.descripcion)).map(tarjetaEspacio),
-        ...ESPACIOS.flatMap(e => enlacesDe(e)
+        ...visibles.filter(e => coincide(e.nombre, e.descripcion)).map(tarjetaEspacio),
+        ...visibles.flatMap(e => enlacesDe(e)
           .filter(l => coincide(l.nombre, l.descripcion, e.nombre))
           .map(l => tarjetaEnlace(l, e.nombre))),
         ...GENERALES.filter(l => coincide(l.nombre, l.descripcion)).map(l => tarjetaEnlace(l)),
@@ -331,19 +399,27 @@
     } else {
       document.getElementById("vacio").style.display = "none";
       if (esPaginaCerrados) {
-        html = seccion("Gestión de Proyectos (PMO)", "Clientes con proyectos finalizados",
-          ESPACIOS.filter(e => e.tipo === "Cliente" && e.estado === "cerrado").map(tarjetaEspacio));
+        html = puedeVer("pmo")
+          ? seccion("Gestión de Proyectos (PMO)", "Clientes con proyectos finalizados",
+              ESPACIOS.filter(e => e.tipo === "Cliente" && e.estado === "cerrado").map(tarjetaEspacio))
+          : mensajeSinAcceso();
       } else if (espacio) {
-        const grupos = espacio.grupos.map(g => seccion(espacio.nombre, g.titulo, g.enlaces.map(l => tarjetaEnlace(l))));
-        if (espacio.proyectosDeClientes) {
-          grupos.splice(1, 0, seccion(espacio.nombre, "Proyectos Activos",
-            ESPACIOS.filter(e => e.tipo === "Cliente" && e.estado !== "cerrado").map(tarjetaEspacio)));
+        if (!puedeVer(rolDe(espacio))) {
+          html = mensajeSinAcceso();
+        } else {
+          const grupos = espacio.grupos.map(g => seccion(espacio.nombre, g.titulo, g.enlaces.map(l => tarjetaEnlace(l))));
+          if (espacio.proyectosDeClientes) {
+            grupos.splice(1, 0, seccion(espacio.nombre, "Proyectos Activos",
+              ESPACIOS.filter(e => e.tipo === "Cliente" && e.estado !== "cerrado").map(tarjetaEspacio)));
+          }
+          html = grupos.join("") || `<p class="vacio" style="display:block">Todavía no hay accesos cargados para esta área.</p>`;
         }
-        html = grupos.join("") || `<p class="vacio" style="display:block">Todavía no hay accesos cargados para esta área.</p>`;
       } else {
         html =
-          PROCESOS.map(p => seccion("Mapa de procesos", p.titulo,
-            ESPACIOS.filter(e => e.proceso === p.id).map(tarjetaEspacio))).join("") +
+          PROCESOS.map(p => {
+            const tarjetas = ESPACIOS.filter(e => e.proceso === p.id && puedeVer(e.id)).map(tarjetaEspacio);
+            return tarjetas.length ? seccion("Mapa de procesos", p.titulo, tarjetas) : "";
+          }).join("") +
           seccion("Para todo el equipo", "Herramientas generales", GENERALES.map(l => tarjetaEnlace(l)));
       }
     }
@@ -362,7 +438,91 @@
     mostrar();
     window.scrollTo(0, 0);
   });
-  mostrar();
+
+  // Carga la librería de Microsoft (MSAL) solo si el inicio de sesión está activo;
+  // mientras AUTH.activo sea false, el sitio no depende de ningún servidor externo.
+  function cargarMsal() {
+    return new Promise((resolve, reject) => {
+      const s = document.createElement("script");
+      s.src = "https://cdn.jsdelivr.net/npm/@azure/msal-browser@3/lib/msal-browser.min.js";
+      s.onload = resolve;
+      s.onerror = () => reject(new Error("No se pudo cargar la librería de inicio de sesión."));
+      document.head.appendChild(s);
+    });
+  }
+
+  function mostrarErrorLogin(texto) {
+    const error = document.getElementById("login-error");
+    error.textContent = texto;
+    error.style.display = "block";
+  }
+
+  async function iniciarSesion() {
+    if (!AUTH.activo) { mostrar(); return; }
+
+    document.getElementById("app").style.display = "none";
+    const login = document.getElementById("login");
+    const boton = document.getElementById("btn-login");
+
+    let msalApp;
+    try {
+      await cargarMsal();
+      msalApp = new msal.PublicClientApplication({
+        auth: {
+          clientId: AUTH.clientId,
+          authority: `https://login.microsoftonline.com/${AUTH.tenantId}`,
+          redirectUri: window.location.origin + window.location.pathname,
+        },
+        cache: { cacheLocation: "sessionStorage" },
+      });
+      await msalApp.initialize();
+    } catch (error) {
+      login.style.display = "flex";
+      mostrarErrorLogin("No se pudo preparar el inicio de sesión. Intenta recargar la página.");
+      return;
+    }
+
+    let cuenta;
+    try {
+      const resultado = await msalApp.handleRedirectPromise();
+      cuenta = resultado?.account || msalApp.getAllAccounts()[0];
+    } catch (error) {
+      login.style.display = "flex";
+      mostrarErrorLogin("No se pudo completar el inicio de sesión. Intenta de nuevo.");
+      boton.onclick = () => msalApp.loginRedirect({ scopes: ["User.Read"] });
+      return;
+    }
+
+    if (!cuenta) {
+      login.style.display = "flex";
+      boton.onclick = () => msalApp.loginRedirect({ scopes: ["User.Read"] });
+      return;
+    }
+
+    msalApp.setActiveAccount(cuenta);
+    MIS_ROLES = cuenta.idTokenClaims?.roles || [];
+
+    login.style.display = "none";
+    document.getElementById("app").style.display = "";
+    document.getElementById("sesion").innerHTML = `
+      <span class="sesion">
+        <span class="quien">${cuenta.name || cuenta.username}</span>
+        <a href="#" class="cerrar" id="cerrar-sesion">Cerrar sesión</a>
+      </span>`;
+    document.getElementById("cerrar-sesion").addEventListener("click", e => {
+      e.preventDefault();
+      msalApp.logoutRedirect();
+    });
+
+    mostrar();
+    if (MIS_ROLES.length === 0) {
+      contenedor.innerHTML = `<p class="vacio" style="display:block">
+        Tu cuenta inició sesión correctamente, pero todavía no tiene ningún área asignada.
+        Pide a tu administrador que te asigne un rol en el directorio.</p>`;
+    }
+  }
+
+  iniciarSesion();
 
   document.getElementById("anio").textContent = new Date().getFullYear();
 </script>

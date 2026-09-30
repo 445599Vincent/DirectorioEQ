@@ -7,9 +7,9 @@ El formato de cada entrada está en `AGENTS.md`.
 
 - Avisar al equipo de la nueva dirección (https://445599vincent.github.io/DirectorioEQ/)
   y borrar o desconectar el proyecto viejo en Netlify, que quedó congelado.
-- Enlaces de las secciones del PMO: Gobernanza PMO, Metodología MEQ, Portafolio,
-  Lecciones Aprendidas y Gestión Interna PMO.
+- Enlaces del PMO que faltan: Gestión Interna PMO y las tres tarjetas de "Accesos Directos".
 - Enlace del SharePoint de los clientes Soluciones Globales y OMP.
+- Enlace del Planner del cliente Fintax Consulting.
 - Planner de Recursos Humanos y de Calidad: confirmar si existen y sus enlaces.
 - Siete áreas del mapa de procesos están sin accesos: Planificación, Comunicaciones,
   Servicios Generales, Mantenimiento de Infraestructura, TIC, Legal y Seguridad. Faltan
@@ -19,6 +19,19 @@ El formato de cada entrada está en `AGENTS.md`.
 - Definir si las demás áreas tendrán secciones internas como el PMO.
 
 ---
+
+## 2026-09-30 — Claude
+- **Pedido:** poner el logo del Banco Central en su tarjeta.
+- **Cambios:** nuevo campo opcional `logo` para los clientes: su tarjeta muestra esa imagen
+  en lugar del icono (`index.html`, explicado en `enlaces.js`). El emblema del Banco
+  Central se guardó recortado en `logos/banco-central.png`.
+- **Pendiente:** Nada.
+
+## 2026-09-30 — Claude
+- **Pedido:** agregar el SharePoint de Fintax, un cliente nuevo.
+- **Cambios:** nuevo cliente "Fintax Consulting" (`fintax`) como proyecto activo, con su
+  SharePoint y el Planner pendiente (`enlaces.js`). Se actualizaron los pendientes del PMO.
+- **Pendiente:** enlace del Planner de Fintax; confirmar que el proyecto está activo.
 
 ## 2026-09-30 — Claude
 - **Pedido:** agregar el enlace de "Lecciones Aprendidas" del SharePoint del PMO.

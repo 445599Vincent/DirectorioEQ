@@ -28,6 +28,10 @@
   Cada área o cliente tiene además un "id" (sin espacios ni acentos),
   que es lo que aparece en la dirección de su página.
 
+  Un cliente puede llevar "logo": la ruta de una imagen cuadrada guardada
+  en la carpeta "logos" (p. ej. "logos/banco-central.png"). Su tarjeta
+  muestra ese logo en lugar del icono.
+
   Cada área lleva también "proceso": el grupo del mapa de procesos al
   que pertenece ("estrategico" | "operativo" | "soporte"). Un área sin
   accesos todavía se deja con "grupos: []".
@@ -250,10 +254,26 @@ const CLIENTES = [
     ],
   },
   {
+    id: "fintax",
+    nombre: "Fintax Consulting",
+    descripcion: "Proyecto con el cliente Fintax Consulting.",
+    estado: "activo",
+    grupos: [
+      {
+        titulo: "Accesos del proyecto",
+        enlaces: [
+          { nombre: "SharePoint del proyecto", descripcion: "Documentos y entregables del cliente.", url: "https://eccoqualita2102.sharepoint.com/sites/FintaxConsulting/SitePages/CollabHome.aspx", icono: "sharepoint" },
+          { nombre: "Planner del proyecto", descripcion: "Tareas y seguimiento del proyecto.", url: "", icono: "planner" },
+        ],
+      },
+    ],
+  },
+  {
     id: "banco-central",
     nombre: "Banco Central",
     descripcion: "Proyecto finalizado con el cliente Banco Central.",
     estado: "cerrado",
+    logo: "logos/banco-central.png",
     grupos: [
       {
         titulo: "Accesos del proyecto",
