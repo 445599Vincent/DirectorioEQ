@@ -52,7 +52,8 @@ oscuro, estadísticas).
 
 ### T-001 — Pruebas automáticas de los datos
 
-- **Estado:** Propuesta (espera aprobación de Vincent)
+- **Estado:** En curso
+- **Tipo:** Directa (aprobada por Vincent el 2026-09-30)
 - **Asignada a:** Codex (Ingeniería)
 - **Archivos:** `tests/directorio.test.mjs`
 - **Qué hacer:** agregar pruebas que revisen `enlaces.js` sin cambiar el sitio:
