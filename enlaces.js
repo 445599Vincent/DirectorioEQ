@@ -6,7 +6,9 @@
 
     AREAS      Áreas internas de Ecco Qualitá (según el mapa de procesos).
                Cada área tiene su propia página con grupos de accesos.
-    CLIENTES   Proyectos de clientes. Cada cliente tiene su propia página.
+    CLIENTES   Proyectos de clientes. Cada cliente tiene su propia página,
+               a la que se entra desde el área marcada con
+               "proyectosDeClientes: true" (el PMO), no desde el inicio.
     GENERALES  Herramientas que usa todo el equipo (aparecen en el inicio).
 
   Cada acceso tiene:
@@ -31,6 +33,7 @@ const AREAS = [
     nombre: "Proyectos (PMO)",
     descripcion: "Gobernanza, metodología, portafolio y seguimiento de proyectos.",
     icono: "proyectos",
+    proyectosDeClientes: true, // los CLIENTES se muestran dentro de esta área
     grupos: [
       {
         titulo: "Accesos principales",

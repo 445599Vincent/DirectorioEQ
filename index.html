@@ -259,9 +259,14 @@
 
     if (espacio) {
       portada(espacio.tipo, espacio.nombre, espacio.descripcion, true);
+      // Desde un cliente se vuelve al área que contiene los proyectos, no al inicio
+      const padre = espacio.tipo === "Cliente" && AREAS.find(a => a.proyectosDeClientes);
+      const volver = document.querySelector(".volver");
+      volver.href = padre ? `#/${padre.id}` : "#/";
+      volver.textContent = padre ? `← Volver a ${padre.nombre}` : "← Volver al inicio";
     } else {
       portada("Hub de herramientas", "Todo lo que usamos, en un solo lugar",
-        "Accesos por área, por cliente y a las herramientas de todo el equipo.", false);
+        "Accesos por área y a las herramientas de todo el equipo.", false);
     }
 
     if (q) {
@@ -279,11 +284,15 @@
     } else {
       document.getElementById("vacio").style.display = "none";
       if (espacio) {
-        html = espacio.grupos.map(g => seccion(espacio.nombre, g.titulo, g.enlaces.map(l => tarjetaEnlace(l)))).join("");
+        const grupos = espacio.grupos.map(g => seccion(espacio.nombre, g.titulo, g.enlaces.map(l => tarjetaEnlace(l))));
+        if (espacio.proyectosDeClientes) {
+          grupos.splice(1, 0, seccion(espacio.nombre, "Proyectos de clientes",
+            ESPACIOS.filter(e => e.tipo === "Cliente").map(tarjetaEspacio)));
+        }
+        html = grupos.join("");
       } else {
         html =
           seccion("Ecco Qualitá", "Áreas internas", AREAS.map(a => tarjetaEspacio(ESPACIOS.find(e => e.id === a.id)))) +
-          seccion("Proyectos de clientes", "Clientes", CLIENTES.map(c => tarjetaEspacio(ESPACIOS.find(e => e.id === c.id)))) +
           seccion("Para todo el equipo", "Herramientas generales", GENERALES.map(l => tarjetaEnlace(l)));
       }
     }
