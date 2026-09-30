@@ -33,9 +33,10 @@ Es un sitio estático sin compilación ni dependencias.
   cambio pedido por el usuario: "Gestión de Proyectos" y "Gestión de Seguimiento (PMO)" son
   una sola área (`pmo`). Un área sin accesos se deja con `grupos: []`.
 - **Página de cada área** (`#/id-del-area`): sus grupos de accesos (SharePoint, Planner, contenido).
-- **Clientes:** están en `CLIENTES`, pero NO aparecen en el inicio. Se muestran dentro del
-  área marcada con `proyectosDeClientes: true` (el PMO), en la sección "Proyectos Activos".
-  Cada cliente tiene su propia página (`#/id-del-cliente`).
+- **Clientes:** están en `CLIENTES`, pero NO aparecen en el inicio. Cada uno tiene un
+  `estado`: los activos se muestran dentro del PMO en "Proyectos Activos" y los cerrados
+  en la página `#/proyectos-cerrados`. Cada cliente tiene su propia página
+  (`#/id-del-cliente`).
 - **Buscador:** recorre todo el hub desde cualquier página.
 - Un acceso con `url: ""` se muestra como "Enlace pendiente" y no se puede abrir.
 

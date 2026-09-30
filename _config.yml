@@ -5,3 +5,4 @@ exclude:
   - CLAUDE.md
   - BITACORA.md
   - netlify.toml
+  - tests

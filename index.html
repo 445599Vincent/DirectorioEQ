@@ -248,14 +248,18 @@
     : enlace.icono;
 
   function tarjetaEnlace(enlace, origen) {
-    const etiqueta = enlace.url ? `a href="${enlace.url}" target="_blank" rel="noopener"` : "div";
+    const esInterno = enlace.url.startsWith("#/");
+    const etiqueta = enlace.url
+      ? `a href="${enlace.url}"${esInterno ? "" : ' target="_blank" rel="noopener"'}`
+      : "div";
+    const accion = esInterno ? "Ver proyectos →" : enlace.url ? "Abrir →" : "Enlace pendiente";
     return `
       <${etiqueta} class="tarjeta${enlace.url ? "" : " pendiente"}">
         ${icono(iconoDeEnlace(enlace))}
         ${origen ? `<span class="origen">${origen}</span>` : ""}
         <strong>${enlace.nombre}</strong>
         <p>${enlace.descripcion}</p>
-        <span class="abrir">${enlace.url ? "Abrir →" : "Enlace pendiente"}</span>
+        <span class="abrir">${accion}</span>
       </${enlace.url ? "a" : "div"}>`;
   }
 
@@ -290,15 +294,23 @@
     const q = normalizar(buscar.value.trim());
     const id = decodeURIComponent(location.hash.replace(/^#\/?/, ""));
     const espacio = ESPACIOS.find(e => e.id === id);
+    const esPaginaCerrados = id === "proyectos-cerrados";
+    const volver = document.querySelector(".volver");
     let html;
 
     if (espacio) {
       portada(espacio.tipo, espacio.nombre, espacio.descripcion, true);
-      // Desde un cliente se vuelve al área que contiene los proyectos, no al inicio
+      // Los clientes activos vuelven al PMO; los cerrados, a su listado separado.
       const padre = espacio.tipo === "Cliente" && AREAS.find(a => a.proyectosDeClientes);
-      const volver = document.querySelector(".volver");
-      volver.href = padre ? `#/${padre.id}` : "#/";
-      volver.textContent = padre ? `← Volver a ${padre.nombre}` : "← Volver al inicio";
+      const regresoCerrados = espacio.tipo === "Cliente" && espacio.estado === "cerrado";
+      volver.href = regresoCerrados ? "#/proyectos-cerrados" : padre ? `#/${padre.id}` : "#/";
+      volver.textContent = regresoCerrados ? "← Volver a Proyectos Cerrados"
+        : padre ? `← Volver a ${padre.nombre}` : "← Volver al inicio";
+    } else if (esPaginaCerrados) {
+      portada("Gestión de Proyectos (PMO)", "Proyectos Cerrados",
+        "Consulta los accesos de los proyectos finalizados.", true);
+      volver.href = "#/pmo";
+      volver.textContent = "← Volver a Gestión de Proyectos (PMO)";
     } else {
       portada("Hub de herramientas", "Todo lo que usamos, en un solo lugar",
         "Accesos por área, según el mapa de procesos, y a las herramientas de todo el equipo.", false);
@@ -318,11 +330,14 @@
       document.getElementById("vacio").style.display = tarjetas.length ? "none" : "block";
     } else {
       document.getElementById("vacio").style.display = "none";
-      if (espacio) {
+      if (esPaginaCerrados) {
+        html = seccion("Gestión de Proyectos (PMO)", "Clientes con proyectos finalizados",
+          ESPACIOS.filter(e => e.tipo === "Cliente" && e.estado === "cerrado").map(tarjetaEspacio));
+      } else if (espacio) {
         const grupos = espacio.grupos.map(g => seccion(espacio.nombre, g.titulo, g.enlaces.map(l => tarjetaEnlace(l))));
         if (espacio.proyectosDeClientes) {
           grupos.splice(1, 0, seccion(espacio.nombre, "Proyectos Activos",
-            ESPACIOS.filter(e => e.tipo === "Cliente").map(tarjetaEspacio)));
+            ESPACIOS.filter(e => e.tipo === "Cliente" && e.estado !== "cerrado").map(tarjetaEspacio)));
         }
         html = grupos.join("") || `<p class="vacio" style="display:block">Todavía no hay accesos cargados para esta área.</p>`;
       } else {

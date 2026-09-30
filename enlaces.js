@@ -6,9 +6,9 @@
 
     AREAS      Áreas internas de Ecco Qualitá (según el mapa de procesos).
                Cada área tiene su propia página con grupos de accesos.
-    CLIENTES   Proyectos de clientes. Cada cliente tiene su propia página,
-               a la que se entra desde el área marcada con
-               "proyectosDeClientes: true" (el PMO), no desde el inicio.
+    CLIENTES   Proyectos de clientes. Cada cliente tiene su propia página y
+               un estado ("activo" o "cerrado"). Los activos se muestran en
+               el PMO y los cerrados en su página separada.
     GENERALES  Herramientas que usa todo el equipo (aparecen en el inicio).
 
   Cada acceso tiene:
@@ -114,7 +114,7 @@ const AREAS = [
           { nombre: "Gobernanza PMO", descripcion: "Políticas, roles y lineamientos del PMO.", url: "", icono: "sharepoint" },
           { nombre: "Metodología MEQ", descripcion: "Metodología, plantillas y guías de trabajo.", url: "", icono: "sharepoint" },
           { nombre: "Portafolio", descripcion: "Vista general de todos los proyectos.", url: "", icono: "sharepoint" },
-          { nombre: "Proyectos Cerrados", descripcion: "Archivo de proyectos finalizados.", url: "", icono: "sharepoint" },
+          { nombre: "Proyectos Cerrados", descripcion: "Archivo de proyectos finalizados.", url: "#/proyectos-cerrados", icono: "archivo" },
           { nombre: "Lecciones Aprendidas", descripcion: "Aprendizajes documentados de cada proyecto.", url: "", icono: "sharepoint" },
           { nombre: "Gestión Interna PMO", descripcion: "Organización y documentos internos del PMO.", url: "", icono: "sharepoint" },
         ],
@@ -214,6 +214,7 @@ const CLIENTES = [
     id: "soluciones-globales",
     nombre: "Soluciones Globales",
     descripcion: "Proyecto con el cliente Soluciones Globales.",
+    estado: "activo",
     grupos: [
       {
         titulo: "Accesos del proyecto",
@@ -228,12 +229,27 @@ const CLIENTES = [
     id: "omp",
     nombre: "OMP",
     descripcion: "Proyecto con el cliente OMP.",
+    estado: "activo",
     grupos: [
       {
         titulo: "Accesos del proyecto",
         enlaces: [
           { nombre: "SharePoint del proyecto", descripcion: "Documentos y entregables del cliente.", url: "", icono: "sharepoint" },
           { nombre: "Planner del proyecto", descripcion: "Tareas y seguimiento del proyecto.", url: "https://planner.cloud.microsoft/webui/v1/plan/3GEYzyVz5kGqxsml4hLbRmUAGg0p?tid=f0b59f88-a70a-4207-864a-406a47180842", icono: "planner" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "banco-central",
+    nombre: "Banco Central",
+    descripcion: "Proyecto finalizado con el cliente Banco Central.",
+    estado: "cerrado",
+    grupos: [
+      {
+        titulo: "Accesos del proyecto",
+        enlaces: [
+          { nombre: "SharePoint del proyecto", descripcion: "Documentos y entregables del proyecto finalizado.", url: "https://eccoqualita2102.sharepoint.com/:u:/r/sites/BancoCentral/SitePages/ProjectHome.aspx?d=w04a39ae3239948b7923a62cbb5b7e14c&csf=1&web=2&share=IQDjmqMEmSO3SJI6Ysu1t-FMAQIb7AJLBDdw_rzVE1QOUZY&e=gjdd6S", icono: "sharepoint" },
         ],
       },
     ],

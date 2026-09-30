@@ -8,7 +8,7 @@ El formato de cada entrada está en `AGENTS.md`.
 - Avisar al equipo de la nueva dirección (https://445599vincent.github.io/DirectorioEQ/)
   y borrar o desconectar el proyecto viejo en Netlify, que quedó congelado.
 - Enlaces de las secciones del PMO: Gobernanza PMO, Metodología MEQ, Portafolio,
-  Proyectos Cerrados, Lecciones Aprendidas, Gestión Interna PMO.
+  Lecciones Aprendidas y Gestión Interna PMO.
 - Enlace del SharePoint de los clientes Soluciones Globales y OMP.
 - Planner de Recursos Humanos y de Calidad: confirmar si existen y sus enlaces.
 - Siete áreas del mapa de procesos están sin accesos: Planificación, Comunicaciones,
@@ -19,6 +19,15 @@ El formato de cada entrada está en `AGENTS.md`.
 - Definir si las demás áreas tendrán secciones internas como el PMO.
 
 ---
+
+## 2026-09-30 — Codex
+- **Pedido:** registrar el SharePoint de Banco Central como proyecto cerrado y separar los
+  proyectos finalizados de los proyectos activos.
+- **Cambios:** se creó la página interna "Proyectos Cerrados", Banco Central se registró
+  allí con su SharePoint y los clientes activos siguen separados en el PMO. También se
+  actualizaron la navegación, el buscador, la guía del proyecto y las pruebas
+  (`enlaces.js`, `index.html`, `AGENTS.md`, `_config.yml`, `tests/directorio.test.mjs`).
+- **Pendiente:** Nada.
 
 ## 2026-09-30 — Codex
 - **Pedido:** registrar el sitio de SharePoint del área Académica.
