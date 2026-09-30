@@ -3,15 +3,6 @@
 Registro compartido de lo que hace cada agente (Codex y Claude). Lo más nuevo va arriba.
 El formato de cada entrada está en `AGENTS.md`.
 
-## ⚠️ Aviso para Codex (y cualquier otro agente): no tocar `enlaces.js` ni `index.html` por ahora
-
-Vincent pidió pausar los cambios en estos dos archivos. Varias sesiones han estado
-editándolos al mismo tiempo y ya hubo una pérdida de cambios por una colisión al guardar
-(ver la entrada de Claude del inicio de sesión por rol, más abajo). Antes de tocar
-`enlaces.js` o `index.html`, avisa en el chat y espera confirmación de Vincent. Los demás
-archivos (`BITACORA.md`, `AGENTS.md`, `CONFIGURAR-INICIO-DE-SESION.md`) sí se pueden seguir
-editando con normalidad.
-
 ## Pendientes generales
 
 - Avisar al equipo de la dirección oficial (https://directorio.eccoqualita.com) y borrar o
@@ -37,6 +28,12 @@ editando con normalidad.
   el proveedor de TI, no Vincent directamente — falta coordinar con esa persona.
 
 ---
+
+## 2026-09-30 — Claude
+- **Pedido:** quitar el aviso de pausa sobre `enlaces.js` e `index.html`.
+- **Cambios:** se eliminó el aviso del inicio de `BITACORA.md`; los agentes pueden volver a
+  editar esos archivos siguiendo el flujo normal de `AGENTS.md`.
+- **Pendiente:** Nada.
 
 ## 2026-09-30 — Claude
 - **Pedido:** poner el logo de Agitech; Vincent pasó su web, https://agiltech.com.do/
