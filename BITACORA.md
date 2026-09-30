@@ -21,6 +21,12 @@ El formato de cada entrada está en `AGENTS.md`.
 ---
 
 ## 2026-09-30 — Claude
+- **Pedido:** agregar el enlace de la carpeta "Gobernanza PMO" del SharePoint del PMO.
+- **Cambios:** la tarjeta "Gobernanza PMO" ya no está pendiente (`enlaces.js`).
+- **Pendiente:** enlaces de Metodología MEQ, Portafolio, Lecciones Aprendidas, Gestión
+  Interna PMO, y de las tres tarjetas de "Accesos Directos".
+
+## 2026-09-30 — Claude
 - **Pedido:** agregar el Listado Maestro de Documentos Internos (MAT-SGC-01) dentro de
   Gestión de la Calidad.
 - **Cambios:** tarjeta "Listado Maestro de Documentos" en Gestión de la Calidad, con el
