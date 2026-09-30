@@ -5,6 +5,7 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ## Pendientes generales
 
+- La directora debe revisar T-001: pruebas automáticas de los datos entregadas por Codex.
 - Avisar al equipo de la dirección oficial (https://directorio.eccoqualita.com) y borrar o
   desconectar el proyecto viejo en Netlify, que quedó congelado.
 - Enlaces del PMO que faltan: Gestión Interna PMO y las tres tarjetas de "Accesos Directos".
@@ -28,6 +29,17 @@ El formato de cada entrada está en `AGENTS.md`.
   el proveedor de TI, no Vincent directamente — falta coordinar con esa persona.
 
 ---
+
+## 2026-09-30 — Codex
+- **Pedido:** ejecutar T-001, aprobada por Vincent: ampliar las pruebas automáticas de los
+  datos del directorio.
+- **Cambios:** `tests/directorio.test.mjs` ahora comprueba identificadores únicos, campos
+  obligatorios, URLs sin duplicados, procesos y estados válidos, separación de proyectos
+  cerrados, existencia de logos y rutas internas, y uso de HTTPS. Cada regla incluye una
+  mutación controlada para demostrar que detecta el error. Pasan las 14 pruebas; la página
+  se revisó en escritorio y móvil sin errores del navegador. No se cambiaron `index.html`
+  ni `enlaces.js`.
+- **Pendiente:** revisión de la directora para marcar T-001 como completada.
 
 ## 2026-09-30 — Claude (Contenido)
 - **Pedido:** tarea T-002, uniformar nombres y descripciones de los accesos (asignada por la

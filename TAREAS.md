@@ -52,7 +52,7 @@ oscuro, estadísticas).
 
 ### T-001 — Pruebas automáticas de los datos
 
-- **Estado:** En curso
+- **Estado:** Para revisión
 - **Tipo:** Directa (aprobada por Vincent el 2026-09-30)
 - **Asignada a:** Codex (Ingeniería)
 - **Archivos:** `tests/directorio.test.mjs`
@@ -66,7 +66,12 @@ oscuro, estadísticas).
 - **Criterios de aceptación:** todas las pruebas pasan con los datos actuales; cada prueba
   falla si se introduce a propósito el error que vigila (comprobarlo y revertirlo);
   `index.html` y `enlaces.js` sin cambios.
-- **Notas de entrega:**
+- **Notas de entrega:** se agregaron diez validaciones de datos con sus comprobaciones de
+  mutación: identificadores, campos obligatorios, URLs duplicadas, procesos, estados de
+  clientes, proyectos cerrados fuera del PMO, logos, rutas internas y HTTPS. La suite
+  completa pasa con 14 pruebas. `index.html` y `enlaces.js` no cambiaron. La directora debe
+  ejecutar `node --test tests/directorio.test.mjs` y revisar que el alcance coincida con
+  los criterios de aceptación.
 
 ### T-002 — Uniformar nombres y descripciones de los accesos
 
