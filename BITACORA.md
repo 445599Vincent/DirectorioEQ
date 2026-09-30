@@ -21,8 +21,8 @@ editando con normalidad.
 - Enlace del Planner del cliente Fintax Consulting.
 - Enlace del SharePoint del cliente Urban Empresa Constructora.
 - Clientes nuevos sin enlaces: Agroplast (activo: SharePoint y Planner de cada uno de sus
-  tres servicios), Agitech y Atómica Publicidad (cerrados: SharePoint). Agitech y Atómica
-  tampoco tienen logo.
+  tres servicios), AgilTech Solutions y Atómica Publicidad (cerrados: SharePoint). Atómica
+  tampoco tiene logo.
 - Planner de Recursos Humanos y de Calidad: confirmar si existen y sus enlaces.
 - Siete áreas del mapa de procesos están sin accesos: Planificación, Comunicaciones,
   Servicios Generales, Mantenimiento de Infraestructura, TIC, Legal y Seguridad. Faltan
@@ -37,6 +37,15 @@ editando con normalidad.
   el proveedor de TI, no Vincent directamente — falta coordinar con esa persona.
 
 ---
+
+## 2026-09-30 — Claude
+- **Pedido:** poner el logo de Agitech; Vincent pasó su web, https://agiltech.com.do/
+  (pedido directo en el chat).
+- **Cambios:** el nombre correcto, según su web, es "AgilTech Solutions": se corrigió el
+  nombre y el `id` (`agitech` → `agiltech`, así que su página ahora es `#/agiltech`). Su
+  tarjeta usa el icono cuadrado "AT" del sitio (`enlaces.js`, `logos/agiltech.png`). La
+  pausa sigue vigente.
+- **Pendiente:** enlace del SharePoint de AgilTech.
 
 ## 2026-09-30 — Claude
 - **Pedido:** separar Agroplast en sus tres servicios contratados: Planificación

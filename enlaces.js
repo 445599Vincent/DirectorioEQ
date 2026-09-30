@@ -332,10 +332,11 @@ const CLIENTES = [
     ],
   },
   {
-    id: "agitech",
-    nombre: "Agitech",
-    descripcion: "Proyecto finalizado con el cliente Agitech.",
+    id: "agiltech",
+    nombre: "AgilTech Solutions",
+    descripcion: "Proyecto finalizado con el cliente AgilTech Solutions.",
     estado: "cerrado",
+    logo: "logos/agiltech.png",
     grupos: [
       {
         titulo: "Accesos del proyecto",
