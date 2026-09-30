@@ -3,6 +3,10 @@
 Este archivo lo leen los agentes de IA que trabajan en el proyecto (Codex y Claude Code).
 Responde siempre al usuario en español y en lenguaje sencillo: no es programador.
 
+**Revisa siempre `BITACORA.md` antes de tocar `enlaces.js` o `index.html`**: puede haber un
+aviso de pausa activo ahí (el usuario lo pide cuando varias sesiones están chocando al
+guardar esos archivos al mismo tiempo).
+
 ## Qué es
 
 Un hub interno con accesos directos a las herramientas de Ecco Qualitá (AdmCloud,

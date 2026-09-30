@@ -3,6 +3,15 @@
 Registro compartido de lo que hace cada agente (Codex y Claude). Lo más nuevo va arriba.
 El formato de cada entrada está en `AGENTS.md`.
 
+## ⚠️ Aviso para Codex (y cualquier otro agente): no tocar `enlaces.js` ni `index.html` por ahora
+
+Vincent pidió pausar los cambios en estos dos archivos. Varias sesiones han estado
+editándolos al mismo tiempo y ya hubo una pérdida de cambios por una colisión al guardar
+(ver la entrada de Claude del inicio de sesión por rol, más abajo). Antes de tocar
+`enlaces.js` o `index.html`, avisa en el chat y espera confirmación de Vincent. Los demás
+archivos (`BITACORA.md`, `AGENTS.md`, `CONFIGURAR-INICIO-DE-SESION.md`) sí se pueden seguir
+editando con normalidad.
+
 ## Pendientes generales
 
 - Avisar al equipo de la dirección oficial (https://directorio.eccoqualita.com) y borrar o
