@@ -9,9 +9,11 @@ Un hub interno con accesos directos a las herramientas de Ecco Qualitá (AdmClou
 SharePoint, Planner, Microsoft 365), organizado por áreas según el mapa de procesos.
 Es un sitio estático sin compilación ni dependencias.
 
-- Sitio publicado: https://directorioeq.netlify.app
-- Repositorio: https://github.com/445599Vincent/DirectorioEQ (rama `main`)
-- Netlify publica solo cada vez que se hace `git push` a `main`.
+- Sitio publicado: https://445599vincent.github.io/DirectorioEQ/ (GitHub Pages)
+- Repositorio: https://github.com/445599Vincent/DirectorioEQ (rama `main`, público)
+- GitHub Pages publica solo cada vez que se hace `git push` a `main`; tarda uno o dos minutos.
+- El sitio anterior en Netlify (https://directorioeq.netlify.app) dejó de actualizarse:
+  no usarlo como referencia.
 
 ## Archivos
 
@@ -20,7 +22,8 @@ Es un sitio estático sin compilación ni dependencias.
 | `enlaces.js` | **Todos los datos**: áreas, clientes, herramientas y sus enlaces. Casi todos los cambios se hacen aquí. |
 | `index.html` | Diseño (CSS) y lógica (JS) de la página. Solo se toca para cambiar apariencia o comportamiento. |
 | `BITACORA.md` | Registro compartido de lo que hace cada agente. Ver "Bitácora" abajo. |
-| `netlify.toml` | Evita que los archivos internos (`.md`) se sirvan en el sitio público. |
+| `_config.yml` | Configuración de GitHub Pages: evita que los archivos internos (`.md`) se publiquen en el sitio. |
+| `netlify.toml` | Hacía lo mismo en Netlify, el alojamiento anterior. |
 
 ## Cómo está organizado el hub
 
@@ -58,7 +61,7 @@ Es un sitio estático sin compilación ni dependencias.
 2. Hacer el cambio y probarlo abriendo la página (p. ej. `python -m http.server 5500`).
 3. **Registrar el cambio en `BITACORA.md`** (ver formato abajo), en el mismo commit.
 4. `git add`, `git commit` con mensaje en español, y `git push`.
-5. Comprobar en https://directorioeq.netlify.app que el cambio se publicó.
+5. Comprobar en https://445599vincent.github.io/DirectorioEQ/ que el cambio se publicó.
 
 ## Bitácora
 

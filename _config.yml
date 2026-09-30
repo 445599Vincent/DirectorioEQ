@@ -1,0 +1,7 @@
+# Configuración de GitHub Pages.
+# Los archivos de trabajo de los agentes no se publican en el sitio.
+exclude:
+  - AGENTS.md
+  - CLAUDE.md
+  - BITACORA.md
+  - netlify.toml
