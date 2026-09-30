@@ -238,11 +238,18 @@
     ? `<span class="icono logo"><img src="${LOGOS[nombre]}" alt="" data-icono="${nombre}"></span>`
     : `<span class="icono">${trazo(nombre)}</span>`;
 
+  // Todo enlace que lleva a Planner o a SharePoint usa el logo de ese producto,
+  // sin importar el icono que tenga puesto en enlaces.js
+  const iconoDeEnlace = enlace =>
+    /planner\.cloud\.microsoft|tasks\.office\.com/.test(enlace.url) ? "planner"
+    : /sharepoint\.com/.test(enlace.url) ? "sharepoint"
+    : enlace.icono;
+
   function tarjetaEnlace(enlace, origen) {
     const etiqueta = enlace.url ? `a href="${enlace.url}" target="_blank" rel="noopener"` : "div";
     return `
       <${etiqueta} class="tarjeta${enlace.url ? "" : " pendiente"}">
-        ${icono(enlace.icono)}
+        ${icono(iconoDeEnlace(enlace))}
         ${origen ? `<span class="origen">${origen}</span>` : ""}
         <strong>${enlace.nombre}</strong>
         <p>${enlace.descripcion}</p>

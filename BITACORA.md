@@ -21,6 +21,14 @@ El formato de cada entrada está en `AGENTS.md`.
 ---
 
 ## 2026-09-30 — Claude
+- **Pedido:** que todo acceso a Planner tenga el logo de Planner y todo acceso a
+  SharePoint el de SharePoint.
+- **Cambios:** el logo ahora se decide también por la URL del enlace (`iconoDeEnlace` en
+  `index.html`). Los enlaces existentes ya lo tenían; la regla lo garantiza para los nuevos.
+- **Pendiente:** confirmar con el usuario si las seis secciones del PMO (sin enlace) son
+  de SharePoint, para ponerles el logo desde ya.
+
+## 2026-09-30 — Claude
 - **Pedido:** mudar el sitio de Netlify a GitHub Pages (Netlify dejó de publicar,
   probablemente por falta de créditos).
 - **Cambios:** se agregó `_config.yml` para que Pages no publique los archivos de trabajo;
