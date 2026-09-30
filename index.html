@@ -60,6 +60,13 @@
   .portada .etiqueta { color: var(--dorado); }
   .portada h1 { font-size: clamp(30px, 5vw, 44px); margin: 8px 0 10px; text-wrap: balance; }
   .portada p { margin: 0 auto; max-width: 560px; color: rgba(255, 255, 255, .85); }
+  .volver {
+    display: none; margin-bottom: 14px;
+    font-size: 13px; font-weight: 500; color: var(--blanco); text-decoration: none;
+    padding: 6px 16px; border: 1px solid rgba(255, 255, 255, .4); border-radius: 48px;
+  }
+  .volver:hover { background: rgba(255, 255, 255, .12); }
+  .en-espacio .volver { display: inline-block; }
 
   .buscador { max-width: 560px; margin: -28px auto 0; position: relative; }
   .buscador input {
@@ -112,6 +119,7 @@
 
   .tarjeta strong { font-family: "DM Sans", sans-serif; font-size: 18px; color: var(--titulos); }
   .tarjeta p { margin: 0; font-size: 14px; line-height: 1.5; flex: 1; }
+  .origen { font-size: 12px; font-weight: 500; color: var(--teal); margin-bottom: -6px; }
   .abrir { font-size: 12px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--teal); }
 
   .tarjeta.pendiente { border-style: dashed; background: transparent; cursor: not-allowed; }
@@ -139,10 +147,11 @@
 </header>
 
 <div class="portada">
-  <div class="contenedor">
-    <span class="etiqueta">Hub de herramientas</span>
-    <h1>Todo lo que usamos, en un solo lugar</h1>
-    <p>Accesos directos a AdmCloud, SharePoint, Planner y las demás herramientas del equipo.</p>
+  <div class="contenedor" id="portada">
+    <div><a class="volver" href="#/">← Volver al inicio</a></div>
+    <span class="etiqueta" id="portada-etiqueta"></span>
+    <h1 id="portada-titulo"></h1>
+    <p id="portada-texto"></p>
   </div>
 </div>
 
@@ -181,54 +190,113 @@
     enlace: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
   };
 
+  Object.assign(ICONOS, {
+    gobierno: '<path d="M12 3 4 6v5c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V6z"/><path d="m9 12 2 2 4-4"/>',
+    libro: '<path d="M12 6c-2-1.5-5-2-8-2v14c3 0 6 .5 8 2 2-1.5 5-2 8-2V4c-3 0-6 .5-8 2zM12 6v14"/>',
+    portafolio: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/>',
+    archivo: '<rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9M9.5 14l2 2 3.5-3.5"/>',
+    idea: '<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.900c.6.5 1 1.3 1 2.100h5c0-.8.4-1.6 1-2.100A6 6 0 0 0 12 3z"/>',
+    engranaje: '<circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.600l2.1 2.100M16.3 16.300l2.1 2.100M5.6 18.400l2.1-2.100M16.3 7.700l2.1-2.1"/>',
+    cliente: '<path d="M4 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16M16 9h2a2 2 0 0 1 2 2v10M2 21h20M8 7h4M8 11h4M8 15h4"/>',
+  });
+
+  // Áreas y clientes comparten formato: cada uno es un "espacio" con su propia página
+  const ESPACIOS = [
+    ...AREAS.map(a => ({ ...a, tipo: "Área" })),
+    ...CLIENTES.map(c => ({ icono: "cliente", ...c, tipo: "Cliente" })),
+  ];
+  const enlacesDe = espacio => espacio.grupos.flatMap(g => g.enlaces);
+
   const contenedor = document.getElementById("secciones");
+  const buscar = document.getElementById("buscar");
+  const normalizar = t => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  const icono = nombre => `<span class="icono"><svg viewBox="0 0 24 24">${ICONOS[nombre] || ICONOS.enlace}</svg></span>`;
 
-  for (const seccion of SECCIONES) {
-    const el = document.createElement("section");
-    el.innerHTML = `
-      <div class="cabecera">
-        <span class="etiqueta">${seccion.subtitulo}</span>
-        <h2>${seccion.titulo}</h2>
-      </div>
-      <div class="rejilla"></div>`;
-    const rejilla = el.querySelector(".rejilla");
-
-    for (const enlace of seccion.enlaces) {
-      const tarjeta = document.createElement(enlace.url ? "a" : "div");
-      tarjeta.className = "tarjeta" + (enlace.url ? "" : " pendiente");
-      if (enlace.url) {
-        tarjeta.href = enlace.url;
-        tarjeta.target = "_blank";
-        tarjeta.rel = "noopener";
-      }
-      tarjeta.dataset.texto = `${enlace.nombre} ${enlace.descripcion} ${seccion.titulo}`.toLowerCase();
-      tarjeta.innerHTML = `
-        <span class="icono"><svg viewBox="0 0 24 24">${ICONOS[enlace.icono] || ICONOS.enlace}</svg></span>
+  function tarjetaEnlace(enlace, origen) {
+    const etiqueta = enlace.url ? `a href="${enlace.url}" target="_blank" rel="noopener"` : "div";
+    return `
+      <${etiqueta} class="tarjeta${enlace.url ? "" : " pendiente"}">
+        ${icono(enlace.icono)}
+        ${origen ? `<span class="origen">${origen}</span>` : ""}
         <strong>${enlace.nombre}</strong>
         <p>${enlace.descripcion}</p>
-        <span class="abrir">${enlace.url ? "Abrir →" : "Enlace pendiente"}</span>`;
-      rejilla.appendChild(tarjeta);
-    }
-    contenedor.appendChild(el);
+        <span class="abrir">${enlace.url ? "Abrir →" : "Enlace pendiente"}</span>
+      </${enlace.url ? "a" : "div"}>`;
   }
 
-  // Búsqueda: ignora mayúsculas y acentos
-  const normalizar = t => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
-  document.getElementById("buscar").addEventListener("input", e => {
-    const q = normalizar(e.target.value.trim());
-    let visibles = 0;
-    for (const seccion of contenedor.children) {
-      let enSeccion = 0;
-      for (const tarjeta of seccion.querySelectorAll(".tarjeta")) {
-        const coincide = normalizar(tarjeta.dataset.texto).includes(q);
-        tarjeta.style.display = coincide ? "" : "none";
-        if (coincide) enSeccion++;
-      }
-      seccion.style.display = enSeccion ? "" : "none";
-      visibles += enSeccion;
+  function tarjetaEspacio(espacio) {
+    const total = enlacesDe(espacio).length;
+    return `
+      <a class="tarjeta" href="#/${espacio.id}">
+        ${icono(espacio.icono)}
+        <strong>${espacio.nombre}</strong>
+        <p>${espacio.descripcion}</p>
+        <span class="abrir">${total} ${total === 1 ? "acceso" : "accesos"} →</span>
+      </a>`;
+  }
+
+  const seccion = (subtitulo, titulo, tarjetas) => `
+    <section>
+      <div class="cabecera">
+        <span class="etiqueta">${subtitulo}</span>
+        <h2>${titulo}</h2>
+      </div>
+      <div class="rejilla">${tarjetas.join("")}</div>
+    </section>`;
+
+  function portada(etiqueta, titulo, texto, enEspacio) {
+    document.getElementById("portada-etiqueta").textContent = etiqueta;
+    document.getElementById("portada-titulo").textContent = titulo;
+    document.getElementById("portada-texto").textContent = texto;
+    document.getElementById("portada").classList.toggle("en-espacio", enEspacio);
+  }
+
+  function mostrar() {
+    const q = normalizar(buscar.value.trim());
+    const id = decodeURIComponent(location.hash.replace(/^#\/?/, ""));
+    const espacio = ESPACIOS.find(e => e.id === id);
+    let html;
+
+    if (espacio) {
+      portada(espacio.tipo, espacio.nombre, espacio.descripcion, true);
+    } else {
+      portada("Hub de herramientas", "Todo lo que usamos, en un solo lugar",
+        "Accesos por área, por cliente y a las herramientas de todo el equipo.", false);
     }
-    document.getElementById("vacio").style.display = visibles ? "none" : "block";
+
+    if (q) {
+      // La búsqueda siempre recorre todo el hub, sin importar la página actual
+      const coincide = (...textos) => normalizar(textos.join(" ")).includes(q);
+      const tarjetas = [
+        ...ESPACIOS.filter(e => coincide(e.nombre, e.descripcion)).map(tarjetaEspacio),
+        ...ESPACIOS.flatMap(e => enlacesDe(e)
+          .filter(l => coincide(l.nombre, l.descripcion, e.nombre))
+          .map(l => tarjetaEnlace(l, e.nombre))),
+        ...GENERALES.filter(l => coincide(l.nombre, l.descripcion)).map(l => tarjetaEnlace(l)),
+      ];
+      html = tarjetas.length ? seccion("Búsqueda", "Resultados", tarjetas) : "";
+      document.getElementById("vacio").style.display = tarjetas.length ? "none" : "block";
+    } else {
+      document.getElementById("vacio").style.display = "none";
+      if (espacio) {
+        html = espacio.grupos.map(g => seccion(espacio.nombre, g.titulo, g.enlaces.map(l => tarjetaEnlace(l)))).join("");
+      } else {
+        html =
+          seccion("Ecco Qualitá", "Áreas internas", AREAS.map(a => tarjetaEspacio(ESPACIOS.find(e => e.id === a.id)))) +
+          seccion("Proyectos de clientes", "Clientes", CLIENTES.map(c => tarjetaEspacio(ESPACIOS.find(e => e.id === c.id)))) +
+          seccion("Para todo el equipo", "Herramientas generales", GENERALES.map(l => tarjetaEnlace(l)));
+      }
+    }
+    contenedor.innerHTML = html;
+  }
+
+  buscar.addEventListener("input", mostrar);
+  window.addEventListener("hashchange", () => {
+    buscar.value = "";
+    mostrar();
+    window.scrollTo(0, 0);
   });
+  mostrar();
 
   document.getElementById("anio").textContent = new Date().getFullYear();
 </script>
