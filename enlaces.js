@@ -114,7 +114,7 @@ const AREAS = [
         enlaces: [
           { nombre: "Gobernanza PMO", descripcion: "Políticas, roles y lineamientos del PMO.", url: "https://eccoqualita2102.sharepoint.com/sites/PROJECTMANAGEMENTOFFICE/Documentos%20compartidos/Forms/AllItems.aspx?FolderCTID=0x012000F27531068D84394B8561DF2D7CC5B6B3&id=%2Fsites%2FPROJECTMANAGEMENTOFFICE%2FDocumentos%20compartidos%2F01%5FGobernanza%20PMO", icono: "sharepoint" },
           { nombre: "Metodología MEQ", descripcion: "Metodología, plantillas y guías de trabajo.", url: "https://eccoqualita2102.sharepoint.com/:f:/s/PROJECTMANAGEMENTOFFICE/IgA4MdotnhBFSpSqpm6lODPoATtt1MK82BBcmjGQb_ltpiY?e=REgjEk", icono: "sharepoint" },
-          { nombre: "Portafolio", descripcion: "Vista general de todos los proyectos.", url: "", icono: "sharepoint" },
+          { nombre: "Portafolio", descripcion: "Vista general de todos los proyectos.", url: "https://eccoqualita2102.sharepoint.com/:f:/s/PROJECTMANAGEMENTOFFICE/IgD0Z6RYpx6JQ7Uack4Sub25AQNVIAL3jdjjeupHs8vzIJ0?e=WeyYhI", icono: "sharepoint" },
           { nombre: "Proyectos Cerrados", descripcion: "Archivo de proyectos finalizados.", url: "#/proyectos-cerrados", icono: "archivo" },
           { nombre: "Lecciones Aprendidas", descripcion: "Aprendizajes documentados de cada proyecto.", url: "", icono: "sharepoint" },
           { nombre: "Gestión Interna PMO", descripcion: "Organización y documentos internos del PMO.", url: "", icono: "sharepoint" },
