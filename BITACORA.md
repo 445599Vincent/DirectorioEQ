@@ -10,6 +10,7 @@ El formato de cada entrada está en `AGENTS.md`.
 - Enlaces del PMO que faltan: Gestión Interna PMO y las tres tarjetas de "Accesos Directos".
 - Enlace del SharePoint de los clientes Soluciones Globales y OMP.
 - Enlace del Planner del cliente Fintax Consulting.
+- Enlace del SharePoint del cliente Urban Empresa Constructora.
 - Planner de Recursos Humanos y de Calidad: confirmar si existen y sus enlaces.
 - Siete áreas del mapa de procesos están sin accesos: Planificación, Comunicaciones,
   Servicios Generales, Mantenimiento de Infraestructura, TIC, Legal y Seguridad. Faltan
@@ -24,6 +25,14 @@ El formato de cada entrada está en `AGENTS.md`.
   el proveedor de TI, no Vincent directamente — falta coordinar con esa persona.
 
 ---
+
+## 2026-09-30 — Claude
+- **Pedido:** logo de OMP Industrial y nuevo cliente Urban Empresa Constructora en
+  Proyectos Cerrados.
+- **Cambios:** OMP muestra su logo; nuevo cliente cerrado "Urban Empresa Constructora"
+  (`urban`) con su logo y el SharePoint pendiente (`enlaces.js`, `logos/omp.png`,
+  `logos/urban.png`).
+- **Pendiente:** enlace del SharePoint de Urban.
 
 ## 2026-09-30 — Claude
 - **Pedido:** crear inicio de sesión con Microsoft 365 para que cada persona solo vea las

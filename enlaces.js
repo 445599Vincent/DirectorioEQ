@@ -243,6 +243,7 @@ const CLIENTES = [
     nombre: "OMP",
     descripcion: "Proyecto con el cliente OMP.",
     estado: "activo",
+    logo: "logos/omp.png",
     grupos: [
       {
         titulo: "Accesos del proyecto",
@@ -279,6 +280,21 @@ const CLIENTES = [
         titulo: "Accesos del proyecto",
         enlaces: [
           { nombre: "SharePoint del proyecto", descripcion: "Documentos y entregables del proyecto finalizado.", url: "https://eccoqualita2102.sharepoint.com/:u:/r/sites/BancoCentral/SitePages/ProjectHome.aspx?d=w04a39ae3239948b7923a62cbb5b7e14c&csf=1&web=2&share=IQDjmqMEmSO3SJI6Ysu1t-FMAQIb7AJLBDdw_rzVE1QOUZY&e=gjdd6S", icono: "sharepoint" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "urban",
+    nombre: "Urban Empresa Constructora",
+    descripcion: "Proyecto finalizado con el cliente Urban Empresa Constructora.",
+    estado: "cerrado",
+    logo: "logos/urban.png",
+    grupos: [
+      {
+        titulo: "Accesos del proyecto",
+        enlaces: [
+          { nombre: "SharePoint del proyecto", descripcion: "Documentos y entregables del proyecto finalizado.", url: "", icono: "sharepoint" },
         ],
       },
     ],
