@@ -111,12 +111,12 @@ const AREAS = [
       {
         titulo: "Contenido del PMO",
         enlaces: [
-          { nombre: "Gobernanza PMO", descripcion: "Políticas, roles y lineamientos del PMO.", url: "", icono: "gobierno" },
-          { nombre: "Metodología MEQ", descripcion: "Metodología, plantillas y guías de trabajo.", url: "", icono: "libro" },
-          { nombre: "Portafolio", descripcion: "Vista general de todos los proyectos.", url: "", icono: "portafolio" },
-          { nombre: "Proyectos Cerrados", descripcion: "Archivo de proyectos finalizados.", url: "", icono: "archivo" },
-          { nombre: "Lecciones Aprendidas", descripcion: "Aprendizajes documentados de cada proyecto.", url: "", icono: "idea" },
-          { nombre: "Gestión Interna PMO", descripcion: "Organización y documentos internos del PMO.", url: "", icono: "engranaje" },
+          { nombre: "Gobernanza PMO", descripcion: "Políticas, roles y lineamientos del PMO.", url: "", icono: "sharepoint" },
+          { nombre: "Metodología MEQ", descripcion: "Metodología, plantillas y guías de trabajo.", url: "", icono: "sharepoint" },
+          { nombre: "Portafolio", descripcion: "Vista general de todos los proyectos.", url: "", icono: "sharepoint" },
+          { nombre: "Proyectos Cerrados", descripcion: "Archivo de proyectos finalizados.", url: "", icono: "sharepoint" },
+          { nombre: "Lecciones Aprendidas", descripcion: "Aprendizajes documentados de cada proyecto.", url: "", icono: "sharepoint" },
+          { nombre: "Gestión Interna PMO", descripcion: "Organización y documentos internos del PMO.", url: "", icono: "sharepoint" },
         ],
       },
     ],
