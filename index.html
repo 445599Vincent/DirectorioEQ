@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Directorio Ecco Qualitá</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #107782;
+    --teal-claro: #16a5b4;
+    --teal-oscuro: #0a4950;
+    --titulos: #0b3130;
+    --dorado: #fec565;
+    --dorado-oscuro: #feb02d;
+    --texto: #646464;
+    --fondo: #f6f5ef;
+    --blanco: #ffffff;
+    --borde: #e6e4da;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Ubuntu", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--texto);
+    background: var(--fondo);
+  }
+
+  h1, h2 { font-family: "DM Sans", sans-serif; font-weight: 700; line-height: 1.2; margin: 0; }
+
+  .contenedor { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+
+  /* Encabezado */
+  header {
+    background: var(--blanco);
+    box-shadow: 0 2px 12px rgba(11, 49, 48, .08);
+    position: sticky; top: 0; z-index: 10;
+  }
+  header .contenedor { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+  .logo img { height: 40px; display: block; }
+  .logo span { font-family: "DM Sans", sans-serif; font-weight: 700; font-size: 22px; color: var(--teal); }
+  .etiqueta {
+    font-size: 12px; font-weight: 500; letter-spacing: .6px; text-transform: uppercase;
+    color: var(--teal);
+  }
+
+  /* Portada */
+  .portada {
+    background: linear-gradient(135deg, var(--teal-oscuro), var(--teal));
+    color: var(--blanco);
+    padding: 56px 0 84px;
+    text-align: center;
+  }
+  .portada .etiqueta { color: var(--dorado); }
+  .portada h1 { font-size: clamp(30px, 5vw, 44px); margin: 8px 0 10px; text-wrap: balance; }
+  .portada p { margin: 0 auto; max-width: 560px; color: rgba(255, 255, 255, .85); }
+
+  .buscador { max-width: 560px; margin: -28px auto 0; position: relative; }
+  .buscador input {
+    width: 100%; height: 56px;
+    padding: 0 24px 0 54px;
+    border: 1px solid var(--borde); border-radius: 48px;
+    font: inherit; color: var(--titulos);
+    background: var(--blanco);
+    box-shadow: 0 10px 30px rgba(11, 49, 48, .12);
+    outline: none;
+  }
+  .buscador input:focus { border-color: var(--teal); }
+  .buscador svg { position: absolute; left: 20px; top: 18px; width: 20px; height: 20px; stroke: var(--teal); }
+
+  /* Secciones */
+  main { padding: 48px 0 64px; }
+  section { margin-bottom: 44px; }
+  .cabecera { margin-bottom: 18px; }
+  .cabecera h2 { font-size: 26px; color: var(--titulos); }
+  .cabecera h2::after {
+    content: ""; display: block; width: 44px; height: 4px; border-radius: 4px;
+    background: var(--dorado); margin-top: 10px;
+  }
+
+  .rejilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 18px; }
+
+  .tarjeta {
+    display: flex; flex-direction: column; gap: 10px;
+    padding: 22px;
+    background: var(--blanco);
+    border: 1px solid var(--borde); border-radius: 16px;
+    text-decoration: none; color: inherit;
+    transition: transform .2s, box-shadow .2s, border-color .2s;
+  }
+  a.tarjeta:hover, a.tarjeta:focus-visible {
+    transform: translateY(-4px);
+    border-color: var(--teal);
+    box-shadow: 0 14px 30px rgba(16, 119, 130, .16);
+    outline: none;
+  }
+  .icono {
+    width: 46px; height: 46px; border-radius: 12px;
+    display: grid; place-items: center;
+    background: rgba(16, 119, 130, .1);
+    transition: background .2s;
+  }
+  .icono svg { width: 24px; height: 24px; stroke: var(--teal); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: stroke .2s; }
+  a.tarjeta:hover .icono { background: var(--teal); }
+  a.tarjeta:hover .icono svg { stroke: var(--blanco); }
+
+  .tarjeta strong { font-family: "DM Sans", sans-serif; font-size: 18px; color: var(--titulos); }
+  .tarjeta p { margin: 0; font-size: 14px; line-height: 1.5; flex: 1; }
+  .abrir { font-size: 12px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--teal); }
+
+  .tarjeta.pendiente { border-style: dashed; background: transparent; cursor: not-allowed; }
+  .tarjeta.pendiente .icono { background: rgba(0, 0, 0, .05); }
+  .tarjeta.pendiente .icono svg { stroke: #9a9a9a; }
+  .tarjeta.pendiente strong { color: var(--texto); }
+  .tarjeta.pendiente .abrir { color: #8a6a1c; }
+
+  .vacio { text-align: center; padding: 40px 0; display: none; }
+
+  footer { background: var(--titulos); color: rgba(255, 255, 255, .7); font-size: 14px; padding: 24px 0; text-align: center; }
+  footer a { color: var(--dorado); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="contenedor">
+    <a class="logo" href="https://eccoqualita.com/" target="_blank" rel="noopener">
+      <img src="https://eccoqualita.com/wp-content/uploads/2025/09/Asset-1.svg" alt="Ecco Qualitá"
+           onerror="this.outerHTML='<span>Ecco Qualitá</span>'">
+    </a>
+    <span class="etiqueta">Directorio interno</span>
+  </div>
+</header>
+
+<div class="portada">
+  <div class="contenedor">
+    <span class="etiqueta">Hub de herramientas</span>
+    <h1>Todo lo que usamos, en un solo lugar</h1>
+    <p>Accesos directos a AdmCloud, SharePoint, Planner y las demás herramientas del equipo.</p>
+  </div>
+</div>
+
+<div class="contenedor">
+  <div class="buscador">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input id="buscar" type="search" placeholder="Buscar una herramienta…" aria-label="Buscar una herramienta" autofocus>
+  </div>
+</div>
+
+<main class="contenedor">
+  <div id="secciones"></div>
+  <p class="vacio" id="vacio">No encontramos ninguna herramienta con ese nombre.</p>
+</main>
+
+<footer>
+  <div class="contenedor">
+    © <span id="anio"></span> Ecco Qualitá · ¿Falta un acceso? Escribe a <a href="mailto:info@eccoqualita.com">info@eccoqualita.com</a>
+  </div>
+</footer>
+
+<script src="enlaces.js"></script>
+<script>
+  const ICONOS = {
+    erp: '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4M7 13v-2M12 13V8M17 13v-4"/>',
+    sharepoint: '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+    proyectos: '<path d="M4 4v16h16"/><path d="M8 8h7M10 12h8M8 16h5"/>',
+    comercial: '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+    personas: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.2a6.5 6.5 0 0 1 3.5 5.8"/>',
+    calidad: '<circle cx="12" cy="9" r="6"/><path d="m9.5 9 1.8 1.8L14.5 7.5"/><path d="m8.5 14-1.5 8 5-3 5 3-1.5-8"/>',
+    planner: '<rect x="4" y="4" width="16" height="17" rx="2"/><path d="M9 2v4M15 2v4M8 12l2 2 4-4M8 17h8"/>',
+    correo: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+    teams: '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-5A8 8 0 1 1 21 12z"/>',
+    nube: '<path d="M7 18a4 4 0 0 1-.5-8A6 6 0 0 1 18 9.5 4.3 4.3 0 0 1 17.5 18z"/>',
+    web: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+    enlace: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+  };
+
+  const contenedor = document.getElementById("secciones");
+
+  for (const seccion of SECCIONES) {
+    const el = document.createElement("section");
+    el.innerHTML = `
+      <div class="cabecera">
+        <span class="etiqueta">${seccion.subtitulo}</span>
+        <h2>${seccion.titulo}</h2>
+      </div>
+      <div class="rejilla"></div>`;
+    const rejilla = el.querySelector(".rejilla");
+
+    for (const enlace of seccion.enlaces) {
+      const tarjeta = document.createElement(enlace.url ? "a" : "div");
+      tarjeta.className = "tarjeta" + (enlace.url ? "" : " pendiente");
+      if (enlace.url) {
+        tarjeta.href = enlace.url;
+        tarjeta.target = "_blank";
+        tarjeta.rel = "noopener";
+      }
+      tarjeta.dataset.texto = `${enlace.nombre} ${enlace.descripcion} ${seccion.titulo}`.toLowerCase();
+      tarjeta.innerHTML = `
+        <span class="icono"><svg viewBox="0 0 24 24">${ICONOS[enlace.icono] || ICONOS.enlace}</svg></span>
+        <strong>${enlace.nombre}</strong>
+        <p>${enlace.descripcion}</p>
+        <span class="abrir">${enlace.url ? "Abrir →" : "Enlace pendiente"}</span>`;
+      rejilla.appendChild(tarjeta);
+    }
+    contenedor.appendChild(el);
+  }
+
+  // Búsqueda: ignora mayúsculas y acentos
+  const normalizar = t => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  document.getElementById("buscar").addEventListener("input", e => {
+    const q = normalizar(e.target.value.trim());
+    let visibles = 0;
+    for (const seccion of contenedor.children) {
+      let enSeccion = 0;
+      for (const tarjeta of seccion.querySelectorAll(".tarjeta")) {
+        const coincide = normalizar(tarjeta.dataset.texto).includes(q);
+        tarjeta.style.display = coincide ? "" : "none";
+        if (coincide) enSeccion++;
+      }
+      seccion.style.display = enSeccion ? "" : "none";
+      visibles += enSeccion;
+    }
+    document.getElementById("vacio").style.display = visibles ? "none" : "block";
+  });
+
+  document.getElementById("anio").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
