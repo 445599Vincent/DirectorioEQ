@@ -26,9 +26,8 @@ de quien inicia sesión, usando el flujo seguro para aplicaciones de una sola p�
 
 1. Vaya a **Authentication** (menú de la izquierda, dentro de la misma aplicación).
 2. Bajo **Single-page application**, confirme que aparece
-   `https://directorio.eccoqualita.com/`. Si el equipo también usará la dirección
-   `https://445599vincent.github.io/DirectorioEQ/`, agréguela ahí también con
-   **Add URI**.
+   `https://directorio.eccoqualita.com/`. No hace falta agregar la dirección antigua
+   (`https://445599vincent.github.io/DirectorioEQ/`): redirige sola a la nueva.
 3. Pulse **Save** si hizo algún cambio.
 
 ## 3. Crear los roles del directorio ("App roles")

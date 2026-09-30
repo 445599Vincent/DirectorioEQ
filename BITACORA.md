@@ -5,8 +5,8 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ## Pendientes generales
 
-- Avisar al equipo de la nueva dirección (https://445599vincent.github.io/DirectorioEQ/)
-  y borrar o desconectar el proyecto viejo en Netlify, que quedó congelado.
+- Avisar al equipo de la dirección oficial (https://directorio.eccoqualita.com) y borrar o
+  desconectar el proyecto viejo en Netlify, que quedó congelado.
 - Enlaces del PMO que faltan: Gestión Interna PMO y las tres tarjetas de "Accesos Directos".
 - Enlace del SharePoint de los clientes Soluciones Globales y OMP.
 - Enlace del Planner del cliente Fintax Consulting.
@@ -25,6 +25,13 @@ El formato de cada entrada está en `AGENTS.md`.
   el proveedor de TI, no Vincent directamente — falta coordinar con esa persona.
 
 ---
+
+## 2026-09-30 — Claude
+- **Pedido:** usar https://directorio.eccoqualita.com como dirección oficial del sitio.
+- **Cambios:** se actualizaron el pendiente de avisar al equipo (`BITACORA.md`) y la guía
+  de inicio de sesión, que ya no pide registrar la dirección antigua porque redirige sola
+  (`CONFIGURAR-INICIO-DE-SESION.md`). `AGENTS.md` ya usaba la dirección nueva.
+- **Pendiente:** Nada.
 
 ## 2026-09-30 — Claude
 - **Pedido:** logo de OMP Industrial y nuevo cliente Urban Empresa Constructora en
