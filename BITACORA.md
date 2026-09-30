@@ -5,9 +5,8 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ## Pendientes generales
 
-- Mudanza a GitHub Pages: el usuario debe activar Pages en la configuración del
-  repositorio (Settings → Pages → rama `main`, carpeta raíz). Hasta entonces el sitio
-  nuevo no existe y Netlify sigue mostrando una versión vieja, sin los logos de Microsoft.
+- Avisar al equipo de la nueva dirección (https://445599vincent.github.io/DirectorioEQ/)
+  y borrar o desconectar el proyecto viejo en Netlify, que quedó congelado.
 - Enlaces de las secciones del PMO: Gobernanza PMO, Metodología MEQ, Portafolio,
   Proyectos Cerrados, Lecciones Aprendidas, Gestión Interna PMO.
 - Enlace del SharePoint de los clientes Soluciones Globales y OMP.
@@ -26,8 +25,7 @@ El formato de cada entrada está en `AGENTS.md`.
   probablemente por falta de créditos).
 - **Cambios:** se agregó `_config.yml` para que Pages no publique los archivos de trabajo;
   `AGENTS.md` apunta a la nueva dirección.
-- **Pendiente:** que el usuario active Pages en GitHub; luego comprobar el sitio nuevo y
-  avisar al equipo de la nueva dirección.
+- **Pendiente:** Nada. El usuario activó Pages y el sitio nuevo quedó comprobado.
 
 ## 2026-09-30 — Claude
 - **Pedido:** que las herramientas tengan el logo oficial de Microsoft.
