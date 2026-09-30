@@ -48,7 +48,6 @@ const AREAS = [
           { nombre: "Gobernanza PMO", descripcion: "Políticas, roles y lineamientos del PMO.", url: "", icono: "gobierno" },
           { nombre: "Metodología MEQ", descripcion: "Metodología, plantillas y guías de trabajo.", url: "", icono: "libro" },
           { nombre: "Portafolio", descripcion: "Vista general de todos los proyectos.", url: "", icono: "portafolio" },
-          { nombre: "Proyectos Activos", descripcion: "Proyectos en ejecución.", url: "", icono: "proyectos" },
           { nombre: "Proyectos Cerrados", descripcion: "Archivo de proyectos finalizados.", url: "", icono: "archivo" },
           { nombre: "Lecciones Aprendidas", descripcion: "Aprendizajes documentados de cada proyecto.", url: "", icono: "idea" },
           { nombre: "Gestión Interna PMO", descripcion: "Organización y documentos internos del PMO.", url: "", icono: "engranaje" },

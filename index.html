@@ -286,7 +286,7 @@
       if (espacio) {
         const grupos = espacio.grupos.map(g => seccion(espacio.nombre, g.titulo, g.enlaces.map(l => tarjetaEnlace(l))));
         if (espacio.proyectosDeClientes) {
-          grupos.splice(1, 0, seccion(espacio.nombre, "Proyectos de clientes",
+          grupos.splice(1, 0, seccion(espacio.nombre, "Proyectos Activos",
             ESPACIOS.filter(e => e.tipo === "Cliente").map(tarjetaEspacio)));
         }
         html = grupos.join("");
