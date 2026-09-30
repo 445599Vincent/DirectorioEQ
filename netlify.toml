@@ -1,0 +1,18 @@
+# Los archivos de trabajo de los agentes no deben verse en el sitio público
+[[redirects]]
+  from = "/AGENTS.md"
+  to = "/no-existe"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/CLAUDE.md"
+  to = "/no-existe"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/BITACORA.md"
+  to = "/no-existe"
+  status = 404
+  force = true
