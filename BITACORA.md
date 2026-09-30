@@ -20,6 +20,16 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ---
 
+## 2026-09-30 — Codex
+- **Pedido:** revisar los cambios recientes después de migrar la publicación de Netlify a
+  GitHub Pages.
+- **Cambios:** se comprobó la configuración de GitHub Pages, la carga del sitio y sus
+  accesos, la navegación a Gestión Comercial, los logos y la ausencia de errores del
+  navegador. También se verificó que `AGENTS.md`, `BITACORA.md` y `_config.yml` no están
+  publicados. No fue necesario corregir el sitio (`BITACORA.md`).
+- **Pendiente:** avisar al equipo de la nueva dirección y desconectar o borrar el proyecto
+  anterior de Netlify.
+
 ## 2026-09-30 — Claude
 - **Pedido:** agregar el acceso a HubSpot, que Comercial usa para la gestión de clientes.
 - **Cambios:** tarjeta "HubSpot" en el área Gestión Comercial (`enlaces.js`), con el logo
