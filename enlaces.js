@@ -134,7 +134,14 @@ const AREAS = [
     descripcion: "Presupuesto, facturación, pagos, cobros, nómina y compras.",
     icono: "finanzas",
     proceso: "soporte",
-    grupos: [],
+    grupos: [
+      {
+        titulo: "Accesos principales",
+        enlaces: [
+          { nombre: "AdmCloud", descripcion: "ERP: facturación, contabilidad e inventario.", url: "https://system.admcloud.net/Login?RedirectUrl=%2F", icono: "erp" },
+        ],
+      },
+    ],
   },
   {
     id: "recursos-humanos",
@@ -226,7 +233,6 @@ const CLIENTES = [
 ];
 
 const GENERALES = [
-  { nombre: "AdmCloud", descripcion: "ERP: facturación, contabilidad e inventario.", url: "https://system.admcloud.net/Login?RedirectUrl=%2F", icono: "erp" },
   { nombre: "Mis planes", descripcion: "Todos los planes y tareas asignadas a ti en Planner.", url: "https://planner.cloud.microsoft/", icono: "planner" },
   { nombre: "Outlook", descripcion: "Correo y calendario.", url: "https://outlook.office.com/", icono: "correo" },
   { nombre: "Teams", descripcion: "Chat, reuniones y llamadas.", url: "https://teams.microsoft.com/", icono: "teams" },

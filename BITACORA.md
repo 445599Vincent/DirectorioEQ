@@ -9,12 +9,20 @@ El formato de cada entrada está en `AGENTS.md`.
   Proyectos Cerrados, Lecciones Aprendidas, Gestión Interna PMO.
 - Enlace del SharePoint de los clientes Soluciones Globales y OMP.
 - Planner de Recursos Humanos y de Calidad: confirmar si existen y sus enlaces.
-- Nueve áreas del mapa de procesos están sin accesos: Planificación, Comunicaciones,
-  Académica, Administrativa y Financiera, Servicios Generales, Mantenimiento de
-  Infraestructura, TIC, Legal y Seguridad. Faltan sus enlaces (SharePoint, Planner u otros).
+- Ocho áreas del mapa de procesos están sin accesos: Planificación, Comunicaciones,
+  Académica, Servicios Generales, Mantenimiento de Infraestructura, TIC, Legal y
+  Seguridad. Faltan sus enlaces (SharePoint, Planner u otros). Por decisión del usuario,
+  las áreas vacías se quedan visibles en el inicio.
+- Gestión Administrativa y Financiera solo tiene AdmCloud; faltan su SharePoint y Planner.
 - Definir si las demás áreas tendrán secciones internas como el PMO.
 
 ---
+
+## 2026-09-30 — Claude
+- **Pedido:** mover AdmCloud dentro de Gestión Administrativa y Financiera.
+- **Cambios:** AdmCloud salió de `GENERALES` y ahora está en el área
+  `administrativa-financiera` (`enlaces.js`).
+- **Pendiente:** Nada.
 
 ## 2026-09-30 — Claude
 - **Pedido:** organizar el hub según el mapa de procesos (MAP-SGI-01), con Gestión de
