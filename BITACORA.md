@@ -21,6 +21,12 @@ El formato de cada entrada está en `AGENTS.md`.
 ---
 
 ## 2026-09-30 — Claude
+- **Pedido:** agregar el enlace de "Metodología MEQ" del SharePoint del PMO.
+- **Cambios:** la tarjeta "Metodología MEQ" ya no está pendiente (`enlaces.js`).
+- **Pendiente:** enlaces de Portafolio, Lecciones Aprendidas, Gestión Interna PMO, y de las
+  tres tarjetas de "Accesos Directos".
+
+## 2026-09-30 — Claude
 - **Pedido:** agregar el enlace de la carpeta "Gobernanza PMO" del SharePoint del PMO.
 - **Cambios:** la tarjeta "Gobernanza PMO" ya no está pendiente (`enlaces.js`).
 - **Pendiente:** enlaces de Metodología MEQ, Portafolio, Lecciones Aprendidas, Gestión
