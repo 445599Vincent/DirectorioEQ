@@ -3,9 +3,9 @@
 Este archivo lo leen los agentes de IA que trabajan en el proyecto (Codex y Claude Code).
 Responde siempre al usuario en español y en lenguaje sencillo: no es programador.
 
-**Revisa siempre `BITACORA.md` antes de tocar `enlaces.js` o `index.html`**: puede haber un
-aviso de pausa activo ahí (el usuario lo pide cuando varias sesiones están chocando al
-guardar esos archivos al mismo tiempo).
+**Antes de editar cualquier archivo, consulta y usa `EN-CURSO.md`**: ahí cada agente
+reserva los archivos que está editando en ese momento, para que dos sesiones no guarden
+el mismo archivo a la vez. Ya hubo cambios perdidos por no hacerlo.
 
 ## Qué es
 
@@ -31,6 +31,7 @@ Es un sitio estático sin compilación ni dependencias.
 | `enlaces.js` | **Todos los datos**: áreas, clientes, herramientas y sus enlaces. Casi todos los cambios se hacen aquí. |
 | `index.html` | Diseño (CSS) y lógica (JS) de la página. Solo se toca para cambiar apariencia o comportamiento. |
 | `BITACORA.md` | Registro compartido de lo que hace cada agente. Ver "Bitácora" abajo. |
+| `EN-CURSO.md` | Tablero de reservas: qué archivos está editando cada agente **ahora mismo**. Se consulta antes de editar y se actualiza al empezar y al terminar. |
 | `_config.yml` | Configuración de GitHub Pages: evita que los archivos internos (`.md`) se publiquen en el sitio. |
 | `netlify.toml` | Hacía lo mismo en Netlify, el alojamiento anterior. |
 | `CONFIGURAR-INICIO-DE-SESION.md` | Instrucciones para el administrador de TI: cómo registrar la app en Microsoft Entra ID. No se publica en el sitio. |
@@ -93,16 +94,24 @@ cada persona. Todo vive en la constante `AUTH` al inicio del script de `index.ht
 5. **Nombres en español** para variables, clases y textos, como el código existente.
 6. **Sin dependencias ni paso de compilación.** Nada de frameworks ni npm.
 7. El sitio es público: no poner contraseñas, datos personales ni información sensible.
+8. **Editar con cambios puntuales, nunca reescribiendo un archivo completo** con una versión
+   que leíste antes: otro agente pudo haberlo cambiado mientras tanto y su trabajo se
+   perdería. Vuelve a leer el archivo justo antes de editarlo.
 
 ## Flujo de trabajo (obligatorio para ambos agentes)
 
-1. **Antes de empezar:** `git pull` y leer `BITACORA.md` para saber qué hizo el otro agente.
+1. **Antes de empezar:** `git pull`, leer `BITACORA.md` (qué se hizo) y `EN-CURSO.md`
+   (qué se está haciendo). Si tus archivos están libres, resérvalos en `EN-CURSO.md` y haz
+   commit y push de esa reserva antes de editar; si están ocupados, avisa al usuario y espera.
 2. Hacer el cambio y probarlo abriendo la página (p. ej. `python -m http.server 5500`;
    si el puerto está ocupado por el otro agente, usar otro puerto).
 3. Correr `node --test tests/directorio.test.mjs` y que pasen las cuatro pruebas.
-4. **Registrar el cambio en `BITACORA.md`** (ver formato abajo), en el mismo commit.
-5. `git add`, `git commit` con mensaje en español, `git pull --rebase` (por si el otro
-   agente subió algo mientras tanto) y `git push`.
+4. **Registrar el cambio en `BITACORA.md`** (ver formato abajo) y **borrar tu reserva de
+   `EN-CURSO.md`**, en el mismo commit.
+5. `git add` **solo de los archivos que reservaste** más `BITACORA.md` y `EN-CURSO.md`
+   (nunca `git add .` ni `git add -A`: las sesiones comparten la misma carpeta y así se
+   suben cambios a medias de otro agente), `git commit` con mensaje en español,
+   `git pull --rebase` y `git push`.
 6. Comprobar en https://directorio.eccoqualita.com que el cambio se publicó, usando
    `fetch` con `cache: "no-store"` como se explica arriba (no alcanza con recargar).
 

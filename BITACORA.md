@@ -30,6 +30,15 @@ El formato de cada entrada está en `AGENTS.md`.
 ---
 
 ## 2026-09-30 — Claude
+- **Pedido:** un documento donde cada agente anote en qué está trabajando, para que los
+  demás lo consulten y no choquen al editar los mismos archivos.
+- **Cambios:** nuevo `EN-CURSO.md` con una tabla de reservas (agente, sesión, hora,
+  archivos, tarea) y sus reglas. `AGENTS.md` ahora exige consultarlo y reservar antes de
+  editar, subir solo los archivos propios (nunca `git add .`) y no reescribir archivos
+  completos. `_config.yml` lo excluye del sitio publicado.
+- **Pendiente:** Nada.
+
+## 2026-09-30 — Claude
 - **Pedido:** quitar el aviso de pausa sobre `enlaces.js` e `index.html`.
 - **Cambios:** se eliminó el aviso del inicio de `BITACORA.md`; los agentes pueden volver a
   editar esos archivos siguiendo el flujo normal de `AGENTS.md`.

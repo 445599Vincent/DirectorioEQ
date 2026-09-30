@@ -7,3 +7,4 @@ exclude:
   - netlify.toml
   - tests
   - CONFIGURAR-INICIO-DE-SESION.md
+  - EN-CURSO.md
