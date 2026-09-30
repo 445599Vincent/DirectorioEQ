@@ -228,6 +228,7 @@ const CLIENTES = [
     nombre: "Soluciones Globales",
     descripcion: "Proyecto con el cliente Soluciones Globales.",
     estado: "activo",
+    logo: "logos/soluciones-globales.png",
     grupos: [
       {
         titulo: "Accesos del proyecto",

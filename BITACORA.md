@@ -36,6 +36,13 @@ editando con normalidad.
 ---
 
 ## 2026-09-30 — Claude
+- **Pedido:** poner el logo de Soluciones Globales (Vincent confirmó en el chat tocar
+  `enlaces.js` pese a la pausa, solo para este cambio).
+- **Cambios:** la tarjeta de Soluciones Globales muestra su emblema de burbujas, sin el
+  texto (`enlaces.js`, `logos/soluciones-globales.png`). La pausa sigue vigente.
+- **Pendiente:** Nada.
+
+## 2026-09-30 — Claude
 - **Pedido:** poner el logo de Fintax Consulting.
 - **Cambios:** la tarjeta de Fintax muestra su emblema, recortado sin el texto
   (`enlaces.js`, `logos/fintax.png`).
