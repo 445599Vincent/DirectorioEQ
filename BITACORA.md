@@ -21,6 +21,12 @@ El formato de cada entrada está en `AGENTS.md`.
 ---
 
 ## 2026-09-30 — Claude
+- **Pedido:** agregar el enlace de "Lecciones Aprendidas" del SharePoint del PMO.
+- **Cambios:** la tarjeta "Lecciones Aprendidas" ya no está pendiente (`enlaces.js`).
+- **Pendiente:** enlace de Gestión Interna PMO, y de las tres tarjetas de
+  "Accesos Directos".
+
+## 2026-09-30 — Claude
 - **Pedido:** agregar el enlace de "Portafolio" del SharePoint del PMO.
 - **Cambios:** la tarjeta "Portafolio" ya no está pendiente (`enlaces.js`).
 - **Pendiente:** enlaces de Lecciones Aprendidas, Gestión Interna PMO, y de las tres
