@@ -6,3 +6,4 @@ exclude:
   - BITACORA.md
   - netlify.toml
   - tests
+  - CONFIGURAR-INICIO-DE-SESION.md

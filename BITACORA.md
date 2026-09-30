@@ -17,8 +17,33 @@ El formato de cada entrada está en `AGENTS.md`.
   quedan visibles en el inicio.
 - Gestión Administrativa y Financiera solo tiene AdmCloud; faltan su SharePoint y Planner.
 - Definir si las demás áreas tendrán secciones internas como el PMO.
+- **Inicio de sesión por rol:** el código ya está listo pero apagado (`AUTH.activo = false`
+  en `index.html`). Falta que un administrador del Microsoft 365 de Ecco Qualitá siga
+  `CONFIGURAR-INICIO-DE-SESION.md` y envíe el `clientId` y el `tenantId`; con esos dos
+  datos se enciende. El usuario dijo que quien administra eso es otra persona del equipo o
+  el proveedor de TI, no Vincent directamente — falta coordinar con esa persona.
 
 ---
+
+## 2026-09-30 — Claude
+- **Pedido:** crear inicio de sesión con Microsoft 365 para que cada persona solo vea las
+  áreas que le corresponden, con roles administrados desde un "usuario administrador".
+- **Cambios:** se agregó a `index.html` una pantalla de inicio de sesión con Microsoft
+  (librería MSAL, sin backend propio) y filtrado de áreas por rol (`AUTH`, `puedeVer`,
+  `rolDe`); el rol de cada área es su propio `id`. Se agregó `CONFIGURAR-INICIO-DE-SESION.md`
+  con los pasos exactos para que el administrador de TI registre la app en Microsoft Entra
+  ID, cree un "App role" por área y asigne a cada persona su rol — ahí también se explica
+  qué es "el administrador" en este diseño: el propio panel de Microsoft Entra ID
+  (Enterprise applications → Users and groups), no una pantalla nueva dentro del hub, para
+  no tener que construir ni asegurar una base de datos propia de usuarios.
+  **Queda apagado a propósito** (`AUTH.activo = false`): encenderlo sin los datos reales
+  dejaría a todo el equipo sin poder entrar. No cambiar ese valor sin que el usuario lo
+  pida.
+- **Importante para cualquier agente:** esto NO oculta los datos del archivo `enlaces.js`
+  en sí (es un sitio estático, sin servidor, así que ese archivo siempre es descargable
+  completo); solo controla qué se *muestra* en pantalla y exige una cuenta real de
+  Microsoft 365 asignada para entrar. Se lo expliqué así al usuario antes de construirlo.
+- **Pendiente:** ver "Pendientes generales" (falta la configuración del lado de Microsoft).
 
 ## 2026-09-30 — Claude
 - **Pedido:** poner el logo del Banco Central en su tarjeta.
