@@ -87,7 +87,8 @@ cada persona. Todo vive en la constante `AUTH` al inicio del script de `index.ht
    nuevo, agregarlo ahí y a la lista del comentario inicial de `enlaces.js`. Las herramientas
    de Microsoft (iconos `sharepoint`, `planner`, `correo`, `teams`, `nube`) muestran su logo
    oficial, enlazado desde los servidores de Microsoft en `LOGOS`; no copiar los logos al
-   repositorio. Además, cualquier enlace cuya URL sea de Planner o de SharePoint muestra el
+   repositorio. Lo mismo `hubspot` y `eccoqualita` (el icono "EQ" de eccoqualita.com, que
+   usa la tarjeta "Sitio web"). Los logos de clientes, en cambio, sí se guardan en `logos/`. Además, cualquier enlace cuya URL sea de Planner o de SharePoint muestra el
    logo de ese producto automáticamente, aunque en `enlaces.js` tenga otro icono.
 5. **Nombres en español** para variables, clases y textos, como el código existente.
 6. **Sin dependencias ni paso de compilación.** Nada de frameworks ni npm.

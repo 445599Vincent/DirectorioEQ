@@ -36,6 +36,14 @@ El formato de cada entrada está en `AGENTS.md`.
 - **Pendiente:** Nada.
 
 ## 2026-09-30 — Claude
+- **Pedido:** poner el logo de Ecco Qualitá en la tarjeta "Sitio web" de Herramientas
+  generales (pedido directo de Vincent en el chat).
+- **Cambios:** nuevo logo `eccoqualita` en `LOGOS` (`index.html`), enlazado desde
+  eccoqualita.com: es el icono cuadrado "EQ" del sitio. La tarjeta "Sitio web" lo usa
+  (`enlaces.js`) y se documentó en la regla de iconos (`AGENTS.md`). La pausa sigue vigente.
+- **Pendiente:** Nada.
+
+## 2026-09-30 — Claude
 - **Pedido:** poner el logo de Agitech; Vincent pasó su web, https://agiltech.com.do/
   (pedido directo en el chat).
 - **Cambios:** el nombre correcto, según su web, es "AgilTech Solutions": se corrigió el

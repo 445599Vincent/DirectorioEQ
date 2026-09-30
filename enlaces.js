@@ -23,7 +23,7 @@
                   | "libro" | "portafolio" | "archivo" | "idea"
                   | "engranaje" | "cliente" | "objetivo" | "megafono"
                   | "academia" | "finanzas" | "herramienta" | "balanza"
-                  | "candado" | "hubspot"
+                  | "candado" | "hubspot" | "eccoqualita"
 
   Cada área o cliente tiene además un "id" (sin espacios ni acentos),
   que es lo que aparece en la dirección de su página.
@@ -367,5 +367,5 @@ const GENERALES = [
   { nombre: "Outlook", descripcion: "Correo y calendario.", url: "https://outlook.office.com/", icono: "correo" },
   { nombre: "Teams", descripcion: "Chat, reuniones y llamadas.", url: "https://teams.microsoft.com/", icono: "teams" },
   { nombre: "OneDrive", descripcion: "Tus archivos personales de trabajo.", url: "https://www.microsoft365.com/onedrive", icono: "nube" },
-  { nombre: "Sitio web", descripcion: "eccoqualita.com", url: "https://eccoqualita.com/", icono: "web" },
+  { nombre: "Sitio web", descripcion: "eccoqualita.com", url: "https://eccoqualita.com/", icono: "eccoqualita" },
 ];
