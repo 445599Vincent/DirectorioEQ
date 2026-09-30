@@ -40,7 +40,7 @@ El formato de cada entrada está en `AGENTS.md`.
   generales (pedido directo de Vincent en el chat).
 - **Cambios:** nuevo logo `eccoqualita` en `LOGOS` (`index.html`), enlazado desde
   eccoqualita.com: es el icono cuadrado "EQ" del sitio. La tarjeta "Sitio web" lo usa
-  (`enlaces.js`) y se documentó en la regla de iconos (`AGENTS.md`). La pausa sigue vigente.
+  (`enlaces.js`) y se documentó en la regla de iconos (`AGENTS.md`).
 - **Pendiente:** Nada.
 
 ## 2026-09-30 — Claude
