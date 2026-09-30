@@ -19,6 +19,13 @@ El formato de cada entrada está en `AGENTS.md`.
 ---
 
 ## 2026-09-30 — Claude
+- **Pedido:** que las herramientas tengan el logo oficial de Microsoft.
+- **Cambios:** las tarjetas de SharePoint, Planner, Outlook, Teams y OneDrive muestran el
+  logo oficial (`LOGOS` en `index.html`), con el icono de trazo como respaldo si no carga.
+  AdmCloud, el sitio web y las tarjetas de áreas conservan sus iconos.
+- **Pendiente:** Nada.
+
+## 2026-09-30 — Claude
 - **Pedido:** mover AdmCloud dentro de Gestión Administrativa y Financiera.
 - **Cambios:** AdmCloud salió de `GENERALES` y ahora está en el área
   `administrativa-financiera` (`enlaces.js`).

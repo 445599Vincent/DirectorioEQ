@@ -117,6 +117,12 @@
   a.tarjeta:hover .icono { background: var(--teal); }
   a.tarjeta:hover .icono svg { stroke: var(--blanco); }
 
+  /* Logos oficiales de Microsoft: van sin fondo de color y no cambian al pasar el cursor */
+  .icono.logo, a.tarjeta:hover .icono.logo { background: var(--blanco); border: 1px solid var(--borde); }
+  .icono.logo img { width: 28px; height: 28px; display: block; }
+  .tarjeta.pendiente .icono.logo { background: transparent; }
+  .tarjeta.pendiente .icono.logo img { filter: grayscale(1); opacity: .55; }
+
   .tarjeta strong { font-family: "DM Sans", sans-serif; font-size: 18px; color: var(--titulos); }
   .tarjeta p { margin: 0; font-size: 14px; line-height: 1.5; flex: 1; }
   .origen { font-size: 12px; font-weight: 500; color: var(--teal); margin-bottom: -6px; }
@@ -217,7 +223,20 @@
   const contenedor = document.getElementById("secciones");
   const buscar = document.getElementById("buscar");
   const normalizar = t => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
-  const icono = nombre => `<span class="icono"><svg viewBox="0 0 24 24">${ICONOS[nombre] || ICONOS.enlace}</svg></span>`;
+  // Logos oficiales de los productos de Microsoft, servidos desde los servidores de Microsoft.
+  // Si uno no carga, la tarjeta muestra el icono de trazo de ICONOS.
+  const MARCAS = "https://static2.sharepointonline.com/files/fabric/assets/brand-icons/product/svg/";
+  const LOGOS = {
+    sharepoint: MARCAS + "sharepoint_48x1.svg",
+    correo: MARCAS + "outlook_48x1.svg",
+    teams: MARCAS + "teams_48x1.svg",
+    nube: MARCAS + "onedrive_48x1.svg",
+    planner: "https://planner.cloud.microsoft/favicon.ico",
+  };
+  const trazo = nombre => `<svg viewBox="0 0 24 24">${ICONOS[nombre] || ICONOS.enlace}</svg>`;
+  const icono = nombre => LOGOS[nombre]
+    ? `<span class="icono logo"><img src="${LOGOS[nombre]}" alt="" data-icono="${nombre}"></span>`
+    : `<span class="icono">${trazo(nombre)}</span>`;
 
   function tarjetaEnlace(enlace, origen) {
     const etiqueta = enlace.url ? `a href="${enlace.url}" target="_blank" rel="noopener"` : "div";
@@ -305,6 +324,12 @@
       }
     }
     contenedor.innerHTML = html;
+    for (const img of contenedor.querySelectorAll(".logo img")) {
+      img.onerror = () => {
+        img.parentElement.classList.remove("logo");
+        img.outerHTML = trazo(img.dataset.icono);
+      };
+    }
   }
 
   buscar.addEventListener("input", mostrar);

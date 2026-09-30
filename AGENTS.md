@@ -44,7 +44,10 @@ Es un sitio estático sin compilación ni dependencias.
    `#0b3130`, dorado `#fec565`, fondo `#f6f5ef`, fuentes DM Sans (títulos) y Ubuntu (texto).
    Usar las variables CSS ya definidas en `index.html`, no colores sueltos.
 4. **Iconos:** son SVG de trazo definidos en `ICONOS` dentro de `index.html`. Para un icono
-   nuevo, agregarlo ahí y a la lista del comentario inicial de `enlaces.js`.
+   nuevo, agregarlo ahí y a la lista del comentario inicial de `enlaces.js`. Las herramientas
+   de Microsoft (iconos `sharepoint`, `planner`, `correo`, `teams`, `nube`) muestran su logo
+   oficial, enlazado desde los servidores de Microsoft en `LOGOS`; no copiar los logos al
+   repositorio.
 5. **Nombres en español** para variables, clases y textos, como el código existente.
 6. **Sin dependencias ni paso de compilación.** Nada de frameworks ni npm.
 7. El sitio es público: no poner contraseñas, datos personales ni información sensible.
