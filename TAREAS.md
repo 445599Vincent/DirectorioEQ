@@ -70,7 +70,7 @@ oscuro, estadísticas).
 
 ### T-002 — Uniformar nombres y descripciones de los accesos
 
-- **Estado:** Para revisión
+- **Estado:** Completada (revisada por la directora el 2026-09-30)
 - **Asignada a:** Ejecutador (Contenido)
 - **Archivos:** `enlaces.js`
 - **Qué hacer:** solo textos (`nombre` y `descripcion`); nada de `id`, `url`, `logo`,
@@ -117,3 +117,11 @@ oscuro, estadísticas).
 
   Para revisar: que "Mis Planes" en mayúscula sea lo que se quiere (no lo nombraba la tarea,
   lo apliqué por la regla 1) y que el texto nuevo de "Sitio web" sea aceptable.
+
+- **Revisión de la directora:** aprobada. `git diff` confirma que solo cambiaron
+  `nombre` y `descripcion` (8 líneas); las pruebas pasan; publicada y comprobada sin caché
+  en https://directorio.eccoqualita.com (la página de Calidad muestra los textos nuevos y
+  el buscador encuentra "SharePoint Calidad" por "SGC"). Decisiones: "Mis Planes" en
+  mayúscula se acepta, y el texto nuevo de "Sitio web" también. Para ser coherentes con la
+  regla 1, el nombre "Sitio web" debe pasar a "Sitio Web": queda como ajuste menor para la
+  próxima tarea de Contenido.
