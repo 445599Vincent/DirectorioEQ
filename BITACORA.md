@@ -20,8 +20,8 @@ editando con normalidad.
 - Enlace del SharePoint de los clientes Soluciones Globales y OMP.
 - Enlace del Planner del cliente Fintax Consulting.
 - Enlace del SharePoint del cliente Urban Empresa Constructora.
-- Clientes nuevos sin enlaces ni logo: Agroplast (activo: SharePoint y Planner), Agitech y
-  Atómica Publicidad (cerrados: SharePoint).
+- Clientes nuevos sin enlaces: Agroplast (activo: SharePoint y Planner), Agitech y
+  Atómica Publicidad (cerrados: SharePoint). Agitech y Atómica tampoco tienen logo.
 - Planner de Recursos Humanos y de Calidad: confirmar si existen y sus enlaces.
 - Siete áreas del mapa de procesos están sin accesos: Planificación, Comunicaciones,
   Servicios Generales, Mantenimiento de Infraestructura, TIC, Legal y Seguridad. Faltan
@@ -36,6 +36,12 @@ editando con normalidad.
   el proveedor de TI, no Vincent directamente — falta coordinar con esa persona.
 
 ---
+
+## 2026-09-30 — Claude
+- **Pedido:** poner el logo de Agroplast (pedido directo de Vincent en el chat).
+- **Cambios:** su logo es solo texto, así que la tarjeta muestra las letras "Ag" del
+  logotipo (`enlaces.js`, `logos/agroplast.png`). La pausa sigue vigente.
+- **Pendiente:** Nada.
 
 ## 2026-09-30 — Claude
 - **Pedido:** crear los clientes cerrados Agitech y Atómica Publicidad, y el cliente activo

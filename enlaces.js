@@ -276,6 +276,7 @@ const CLIENTES = [
     nombre: "Agroplast",
     descripcion: "Proyecto con el cliente Agroplast.",
     estado: "activo",
+    logo: "logos/agroplast.png",
     grupos: [
       {
         titulo: "Accesos del proyecto",
