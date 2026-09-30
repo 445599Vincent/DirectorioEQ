@@ -20,6 +20,15 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ---
 
+## 2026-09-30 — Claude
+- **Pedido:** poner el logo de SharePoint a las seis secciones del PMO; el usuario querría
+  usar más adelante las ilustraciones que tienen esas secciones en el SharePoint del PMO.
+- **Cambios:** las seis tarjetas de "Contenido del PMO" usan el icono `sharepoint`
+  (`enlaces.js`). Siguen sin enlace.
+- **Pendiente:** recibir del usuario los archivos de las ilustraciones del SharePoint para
+  usarlas en esas tarjetas. El SharePoint del PMO tiene además tres "Accesos Directos"
+  (Reportes de Consultores, Plantillas PMO, Material educativo) que no están en el hub.
+
 ## 2026-09-30 — Codex
 - **Pedido:** revisar los cambios recientes después de migrar la publicación de Netlify a
   GitHub Pages.
