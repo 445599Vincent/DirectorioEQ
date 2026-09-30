@@ -118,6 +118,10 @@ cada persona. Todo vive en la constante `AUTH` al inicio del script de `index.ht
    (nunca `git add .` ni `git add -A`: las sesiones comparten la misma carpeta y así se
    suben cambios a medias de otro agente), `git commit` con mensaje en español,
    `git pull --rebase` y `git push`.
+   Si `git pull --rebase` se niega porque hay cambios sin guardar de **otro** agente en la
+   carpeta (compartimos la misma), no uses `--autostash` ni `git stash`: haz `git fetch` y
+   `git rev-list --left-right --count origin/main...HEAD`. Si el primer número es 0, nadie
+   subió nada y puedes hacer `git push` directo; si no, espera a que ese agente termine.
 6. Comprobar en https://directorio.eccoqualita.com que el cambio se publicó, usando
    `fetch` con `cache: "no-store"` como se explica arriba (no alcanza con recargar).
 
