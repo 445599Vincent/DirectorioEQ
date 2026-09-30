@@ -58,8 +58,7 @@ test("el PMO separa los proyectos activos de la página de proyectos cerrados", 
   const vista = abrirRuta("#/pmo");
 
   assert.match(vista.contenido, /Soluciones Globales/);
-  assert.match(vista.contenido, /OMP/);
-  assert.doesNotMatch(vista.contenido, /Banco Central/);
+  assert.doesNotMatch(vista.contenido, /Banco Central|OMP/);
   assert.match(vista.contenido, /href="#\/proyectos-cerrados"/);
 });
 
@@ -68,7 +67,8 @@ test("la página Proyectos Cerrados muestra solamente clientes finalizados", () 
 
   assert.equal(vista.portada, "Proyectos Cerrados");
   assert.match(vista.contenido, /Banco Central/);
-  assert.doesNotMatch(vista.contenido, /Soluciones Globales|OMP/);
+  assert.match(vista.contenido, /OMP/);
+  assert.doesNotMatch(vista.contenido, /Soluciones Globales/);
   assert.equal(vista.volver.href, "#/pmo");
 });
 

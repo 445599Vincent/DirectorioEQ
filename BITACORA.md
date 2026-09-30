@@ -27,6 +27,12 @@ El formato de cada entrada está en `AGENTS.md`.
 ---
 
 ## 2026-09-30 — Claude
+- **Pedido:** OMP es un proyecto cerrado.
+- **Cambios:** OMP pasó de "Proyectos Activos" a "Proyectos Cerrados" (`enlaces.js`); se
+  ajustaron las pruebas que lo daban por activo (`tests/directorio.test.mjs`).
+- **Pendiente:** enlace del SharePoint de OMP (ya estaba en pendientes generales).
+
+## 2026-09-30 — Claude
 - **Pedido:** usar https://directorio.eccoqualita.com como dirección oficial del sitio.
 - **Cambios:** se actualizaron el pendiente de avisar al equipo (`BITACORA.md`) y la guía
   de inicio de sesión, que ya no pide registrar la dirección antigua porque redirige sola

@@ -241,14 +241,14 @@ const CLIENTES = [
   {
     id: "omp",
     nombre: "OMP",
-    descripcion: "Proyecto con el cliente OMP.",
-    estado: "activo",
+    descripcion: "Proyecto finalizado con el cliente OMP.",
+    estado: "cerrado",
     logo: "logos/omp.png",
     grupos: [
       {
         titulo: "Accesos del proyecto",
         enlaces: [
-          { nombre: "SharePoint del proyecto", descripcion: "Documentos y entregables del cliente.", url: "", icono: "sharepoint" },
+          { nombre: "SharePoint del proyecto", descripcion: "Documentos y entregables del proyecto finalizado.", url: "", icono: "sharepoint" },
           { nombre: "Planner del proyecto", descripcion: "Tareas y seguimiento del proyecto.", url: "https://planner.cloud.microsoft/webui/v1/plan/3GEYzyVz5kGqxsml4hLbRmUAGg0p?tid=f0b59f88-a70a-4207-864a-406a47180842", icono: "planner" },
         ],
       },
