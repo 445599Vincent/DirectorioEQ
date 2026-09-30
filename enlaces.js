@@ -274,15 +274,29 @@ const CLIENTES = [
   {
     id: "agroplast",
     nombre: "Agroplast",
-    descripcion: "Proyecto con el cliente Agroplast.",
+    descripcion: "Tres servicios contratados: Planificación Estratégica, Gerencia de Calidad y Programa de Salud Ocupacional EHS.",
     estado: "activo",
     logo: "logos/agroplast.png",
     grupos: [
       {
-        titulo: "Accesos del proyecto",
+        titulo: "Planificación Estratégica",
         enlaces: [
-          { nombre: "SharePoint del proyecto", descripcion: "Documentos y entregables del cliente.", url: "", icono: "sharepoint" },
-          { nombre: "Planner del proyecto", descripcion: "Tareas y seguimiento del proyecto.", url: "", icono: "planner" },
+          { nombre: "SharePoint de Planificación Estratégica", descripcion: "Documentos y entregables del servicio.", url: "", icono: "sharepoint" },
+          { nombre: "Planner de Planificación Estratégica", descripcion: "Tareas y seguimiento del servicio.", url: "", icono: "planner" },
+        ],
+      },
+      {
+        titulo: "Gerencia de Calidad",
+        enlaces: [
+          { nombre: "SharePoint de Gerencia de Calidad", descripcion: "Documentos y entregables del servicio.", url: "", icono: "sharepoint" },
+          { nombre: "Planner de Gerencia de Calidad", descripcion: "Tareas y seguimiento del servicio.", url: "", icono: "planner" },
+        ],
+      },
+      {
+        titulo: "Programa de Salud Ocupacional EHS",
+        enlaces: [
+          { nombre: "SharePoint del Programa EHS", descripcion: "Documentos y entregables del servicio.", url: "", icono: "sharepoint" },
+          { nombre: "Planner del Programa EHS", descripcion: "Tareas y seguimiento del servicio.", url: "", icono: "planner" },
         ],
       },
     ],
