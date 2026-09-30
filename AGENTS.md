@@ -3,7 +3,7 @@
 Este archivo lo leen los agentes de IA que trabajan en el proyecto (Codex y Claude Code).
 Responde siempre al usuario en español y en lenguaje sencillo: no es programador.
 
-**Organización del trabajo:** una sesión de Claude ("Hub de herramientas Ecco Qualita") es
+**Organización del trabajo:** una sesión de Claude llamada **"Organizador"** es
 la **directora**: planifica, asigna tareas en `TAREAS.md` y revisa. Cada agente tiene un
 rol y unos archivos propios (tabla en `TAREAS.md`) y solo ejecuta las tareas asignadas a
 él. Lee `TAREAS.md` al empezar cualquier sesión.
