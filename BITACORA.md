@@ -27,6 +27,12 @@ El formato de cada entrada está en `AGENTS.md`.
 ---
 
 ## 2026-09-30 — Claude
+- **Pedido:** poner el logo de Fintax Consulting.
+- **Cambios:** la tarjeta de Fintax muestra su emblema, recortado sin el texto
+  (`enlaces.js`, `logos/fintax.png`).
+- **Pendiente:** Nada.
+
+## 2026-09-30 — Claude
 - **Pedido:** OMP es un proyecto cerrado.
 - **Cambios:** OMP pasó de "Proyectos Activos" a "Proyectos Cerrados" (`enlaces.js`); se
   ajustaron las pruebas que lo daban por activo (`tests/directorio.test.mjs`).

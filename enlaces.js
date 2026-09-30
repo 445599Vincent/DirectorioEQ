@@ -259,6 +259,7 @@ const CLIENTES = [
     nombre: "Fintax Consulting",
     descripcion: "Proyecto con el cliente Fintax Consulting.",
     estado: "activo",
+    logo: "logos/fintax.png",
     grupos: [
       {
         titulo: "Accesos del proyecto",
