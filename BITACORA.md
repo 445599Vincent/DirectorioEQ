@@ -20,6 +20,8 @@ editando con normalidad.
 - Enlace del SharePoint de los clientes Soluciones Globales y OMP.
 - Enlace del Planner del cliente Fintax Consulting.
 - Enlace del SharePoint del cliente Urban Empresa Constructora.
+- Clientes nuevos sin enlaces ni logo: Agroplast (activo: SharePoint y Planner), Agitech y
+  Atómica Publicidad (cerrados: SharePoint).
 - Planner de Recursos Humanos y de Calidad: confirmar si existen y sus enlaces.
 - Siete áreas del mapa de procesos están sin accesos: Planificación, Comunicaciones,
   Servicios Generales, Mantenimiento de Infraestructura, TIC, Legal y Seguridad. Faltan
@@ -34,6 +36,15 @@ editando con normalidad.
   el proveedor de TI, no Vincent directamente — falta coordinar con esa persona.
 
 ---
+
+## 2026-09-30 — Claude
+- **Pedido:** crear los clientes cerrados Agitech y Atómica Publicidad, y el cliente activo
+  Agroplast (Vincent lo pidió directamente en el chat, lo que cuenta como confirmación para
+  tocar `enlaces.js` pese a la pausa).
+- **Cambios:** tres clientes nuevos en `enlaces.js`: `agroplast` (activo, SharePoint y
+  Planner pendientes), `agitech` y `atomica-publicidad` (cerrados, SharePoint pendiente).
+  La pausa sigue vigente.
+- **Pendiente:** sus enlaces y logos.
 
 ## 2026-09-30 — Claude
 - **Pedido:** poner el logo de Soluciones Globales (Vincent confirmó en el chat tocar

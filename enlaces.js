@@ -272,6 +272,21 @@ const CLIENTES = [
     ],
   },
   {
+    id: "agroplast",
+    nombre: "Agroplast",
+    descripcion: "Proyecto con el cliente Agroplast.",
+    estado: "activo",
+    grupos: [
+      {
+        titulo: "Accesos del proyecto",
+        enlaces: [
+          { nombre: "SharePoint del proyecto", descripcion: "Documentos y entregables del cliente.", url: "", icono: "sharepoint" },
+          { nombre: "Planner del proyecto", descripcion: "Tareas y seguimiento del proyecto.", url: "", icono: "planner" },
+        ],
+      },
+    ],
+  },
+  {
     id: "banco-central",
     nombre: "Banco Central",
     descripcion: "Proyecto finalizado con el cliente Banco Central.",
@@ -292,6 +307,34 @@ const CLIENTES = [
     descripcion: "Proyecto finalizado con el cliente Urban Empresa Constructora.",
     estado: "cerrado",
     logo: "logos/urban.png",
+    grupos: [
+      {
+        titulo: "Accesos del proyecto",
+        enlaces: [
+          { nombre: "SharePoint del proyecto", descripcion: "Documentos y entregables del proyecto finalizado.", url: "", icono: "sharepoint" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "agitech",
+    nombre: "Agitech",
+    descripcion: "Proyecto finalizado con el cliente Agitech.",
+    estado: "cerrado",
+    grupos: [
+      {
+        titulo: "Accesos del proyecto",
+        enlaces: [
+          { nombre: "SharePoint del proyecto", descripcion: "Documentos y entregables del proyecto finalizado.", url: "", icono: "sharepoint" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "atomica-publicidad",
+    nombre: "Atómica Publicidad",
+    descripcion: "Proyecto finalizado con el cliente Atómica Publicidad.",
+    estado: "cerrado",
     grupos: [
       {
         titulo: "Accesos del proyecto",
