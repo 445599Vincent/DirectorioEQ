@@ -21,6 +21,13 @@ El formato de cada entrada está en `AGENTS.md`.
 ---
 
 ## 2026-09-30 — Claude
+- **Pedido:** agregar el acceso a HubSpot, que Comercial usa para la gestión de clientes.
+- **Cambios:** tarjeta "HubSpot" en el área Gestión Comercial (`enlaces.js`), con el logo
+  oficial de HubSpot (`LOGOS` e `iconoDeEnlace` en `index.html`). El enlace es la entrada
+  general de HubSpot (`app.hubspot.com`); el usuario no dio uno específico.
+- **Pendiente:** Nada.
+
+## 2026-09-30 — Claude
 - **Pedido:** que todo acceso a Planner tenga el logo de Planner y todo acceso a
   SharePoint el de SharePoint.
 - **Cambios:** el logo ahora se decide también por la URL del enlace (`iconoDeEnlace` en

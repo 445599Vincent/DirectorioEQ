@@ -23,7 +23,7 @@
                   | "libro" | "portafolio" | "archivo" | "idea"
                   | "engranaje" | "cliente" | "objetivo" | "megafono"
                   | "academia" | "finanzas" | "herramienta" | "balanza"
-                  | "candado"
+                  | "candado" | "hubspot"
 
   Cada área o cliente tiene además un "id" (sin espacios ni acentos),
   que es lo que aparece en la dirección de su página.
@@ -88,6 +88,7 @@ const AREAS = [
         enlaces: [
           { nombre: "SharePoint Comercial", descripcion: "Documentos del área comercial.", url: "https://eccoqualita2102.sharepoint.com/sites/ECCOCOMERCIAL", icono: "sharepoint" },
           { nombre: "Planner Comercial", descripcion: "Tareas y seguimiento del área comercial.", url: "https://planner.cloud.microsoft/webui/v1/plan/jynw7IFF90WClrnHUHpE-2UAHols?tid=f0b59f88-a70a-4207-864a-406a47180842", icono: "planner" },
+          { nombre: "HubSpot", descripcion: "CRM: gestión de clientes, contactos y oportunidades.", url: "https://app.hubspot.com/", icono: "hubspot" },
         ],
       },
     ],
