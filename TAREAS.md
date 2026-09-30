@@ -70,7 +70,7 @@ oscuro, estadísticas).
 
 ### T-002 — Uniformar nombres y descripciones de los accesos
 
-- **Estado:** Asignada
+- **Estado:** Para revisión
 - **Asignada a:** Ejecutador (Contenido)
 - **Archivos:** `enlaces.js`
 - **Qué hacer:** solo textos (`nombre` y `descripcion`); nada de `id`, `url`, `logo`,
@@ -92,3 +92,28 @@ oscuro, estadísticas).
   de `enlaces.js` solo muestra cambios en `nombre` y `descripcion`; las "Notas de entrega"
   listan cada texto cambiado (antes → después).
 - **Notas de entrega:**
+  Solo cambiaron `nombre` y `descripcion` en `enlaces.js` (8 líneas). `git diff` no muestra
+  cambios en `id`, `url`, `logo`, `estado`, `icono` ni estructura. Pruebas: 5 de 5 pasan.
+  Comprobado en la página: el buscador encuentra "SharePoint Calidad" por "SGC".
+
+  Cambios (antes → después):
+  1. Mayúsculas: "Material educativo" → "Material Educativo"; "Mis planes" → "Mis Planes".
+  2. Patrón Herramienta + Área: "SharePoint SGC" → "SharePoint Calidad". Su descripción:
+     "Gerencia de Calidad: procesos y documentación del SGC." → "Sistema de Gestión de
+     Calidad (SGC): procesos y documentación del área."
+  3. Clientes activos: "Proyecto con el cliente Soluciones Globales." → "Proyecto en curso con
+     el cliente Soluciones Globales."; ídem Fintax Consulting. Agroplast conserva la suya.
+  4. Descripciones repetidas que sí tenían información real para diferenciarse:
+     Planner Calidad: "Tareas internas del área." → "Tareas internas del área de Calidad."
+     Planner Recursos Humanos: "Tareas internas del área." → "Tareas internas del área de
+     Recursos Humanos."
+     Sitio web (Herramientas generales): "eccoqualita.com" → "Sitio web de Ecco Qualitá
+     (eccoqualita.com)." (antes no era una frase ni terminaba en punto).
+  5. Sin cambios a propósito: "SharePoint del proyecto", "Planner del proyecto", "Banco
+     Central", "Soluciones Globales", "OMP" y "AdmCloud"; las descripciones genéricas de los
+     accesos de Agroplast ("Documentos y entregables del servicio." y "Tareas y seguimiento
+     del servicio."), que se repiten entre sus tres servicios: no hay información real para
+     diferenciarlas y los nombres ya dicen el servicio.
+
+  Para revisar: que "Mis Planes" en mayúscula sea lo que se quiere (no lo nombraba la tarea,
+  lo apliqué por la regla 1) y que el texto nuevo de "Sitio web" sea aceptable.

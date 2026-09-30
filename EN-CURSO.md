@@ -33,4 +33,3 @@ Formato de la hora: `AAAA-MM-DD HH:MM` (hora local de República Dominicana).
 | Agente | Sesión | Desde | Archivos | Tarea |
 |---|---|---|---|---|
 | Codex | Ingeniería | 2026-09-30 16:43 | `tests/directorio.test.mjs` | T-001 — Pruebas automáticas de los datos |
-| Claude | Ejecutador (Contenido) | 2026-09-30 16:46 | `enlaces.js` | T-002 — Uniformar nombres y descripciones de los accesos |

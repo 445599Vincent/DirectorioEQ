@@ -66,8 +66,8 @@ const AREAS = [
       {
         titulo: "Accesos principales",
         enlaces: [
-          { nombre: "SharePoint SGC", descripcion: "Gerencia de Calidad: procesos y documentación del SGC.", url: "https://eccoqualita2102.sharepoint.com/sites/GerenciadeCalidadEQ", icono: "sharepoint" },
-          { nombre: "Planner Calidad", descripcion: "Tareas internas del área.", url: "", icono: "planner" },
+          { nombre: "SharePoint Calidad", descripcion: "Sistema de Gestión de Calidad (SGC): procesos y documentación del área.", url: "https://eccoqualita2102.sharepoint.com/sites/GerenciadeCalidadEQ", icono: "sharepoint" },
+          { nombre: "Planner Calidad", descripcion: "Tareas internas del área de Calidad.", url: "", icono: "planner" },
           { nombre: "Listado Maestro de Documentos", descripcion: "MAT-SGC-01: listado maestro de documentos internos.", url: "https://eccoqualita2102.sharepoint.com/sites/GerenciadeCalidadEQ/Lists/Listado%20Maestro%20Documentos%20InternosMATSGC01%20%20V01/AllItems.aspx?env=WebViewList", icono: "sharepoint" },
         ],
       },
@@ -129,7 +129,7 @@ const AREAS = [
         enlaces: [
           { nombre: "Reportes de Consultores", descripcion: "Reportes de avance que entregan los consultores.", url: "", icono: "sharepoint" },
           { nombre: "Plantillas PMO", descripcion: "Plantillas de uso interno del PMO.", url: "", icono: "sharepoint" },
-          { nombre: "Material educativo", descripcion: "Material de apoyo y consulta del PMO.", url: "", icono: "sharepoint" },
+          { nombre: "Material Educativo", descripcion: "Material de apoyo y consulta del PMO.", url: "", icono: "sharepoint" },
         ],
       },
     ],
@@ -175,7 +175,7 @@ const AREAS = [
         titulo: "Accesos principales",
         enlaces: [
           { nombre: "SharePoint Recursos Humanos", descripcion: "Documentos y recursos de gestión humana.", url: "https://eccoqualita2102.sharepoint.com/sites/RecursosHumanos", icono: "sharepoint" },
-          { nombre: "Planner Recursos Humanos", descripcion: "Tareas internas del área.", url: "", icono: "planner" },
+          { nombre: "Planner Recursos Humanos", descripcion: "Tareas internas del área de Recursos Humanos.", url: "", icono: "planner" },
         ],
       },
     ],
@@ -226,7 +226,7 @@ const CLIENTES = [
   {
     id: "soluciones-globales",
     nombre: "Soluciones Globales",
-    descripcion: "Proyecto con el cliente Soluciones Globales.",
+    descripcion: "Proyecto en curso con el cliente Soluciones Globales.",
     estado: "activo",
     logo: "logos/soluciones-globales.png",
     grupos: [
@@ -258,7 +258,7 @@ const CLIENTES = [
   {
     id: "fintax",
     nombre: "Fintax Consulting",
-    descripcion: "Proyecto con el cliente Fintax Consulting.",
+    descripcion: "Proyecto en curso con el cliente Fintax Consulting.",
     estado: "activo",
     logo: "logos/fintax.png",
     grupos: [
@@ -363,9 +363,9 @@ const CLIENTES = [
 ];
 
 const GENERALES = [
-  { nombre: "Mis planes", descripcion: "Todos los planes y tareas asignadas a ti en Planner.", url: "https://planner.cloud.microsoft/", icono: "planner" },
+  { nombre: "Mis Planes", descripcion: "Todos los planes y tareas asignadas a ti en Planner.", url: "https://planner.cloud.microsoft/", icono: "planner" },
   { nombre: "Outlook", descripcion: "Correo y calendario.", url: "https://outlook.office.com/", icono: "correo" },
   { nombre: "Teams", descripcion: "Chat, reuniones y llamadas.", url: "https://teams.microsoft.com/", icono: "teams" },
   { nombre: "OneDrive", descripcion: "Tus archivos personales de trabajo.", url: "https://www.microsoft365.com/onedrive", icono: "nube" },
-  { nombre: "Sitio web", descripcion: "eccoqualita.com", url: "https://eccoqualita.com/", icono: "eccoqualita" },
+  { nombre: "Sitio web", descripcion: "Sitio web de Ecco Qualitá (eccoqualita.com).", url: "https://eccoqualita.com/", icono: "eccoqualita" },
 ];

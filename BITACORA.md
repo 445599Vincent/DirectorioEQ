@@ -29,6 +29,15 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ---
 
+## 2026-09-30 — Claude (Contenido)
+- **Pedido:** tarea T-002, uniformar nombres y descripciones de los accesos (asignada por la
+  directora).
+- **Cambios:** solo textos de `nombre` y `descripcion` en `enlaces.js` (8 líneas; la lista
+  antes → después está en las notas de entrega de T-002 en `TAREAS.md`). "SharePoint SGC"
+  pasó a "SharePoint Calidad" y su descripción conserva "Sistema de Gestión de Calidad
+  (SGC)", por lo que el buscador sigue encontrándolo por "SGC". Pruebas: pasan.
+- **Pendiente:** Nada.
+
 ## 2026-09-30 — Claude
 - **Pedido:** que esta sesión dirija a las demás (Codex y otras sesiones de Claude).
 - **Cambios:** nuevo `TAREAS.md` con roles y archivos propios de cada agente (Directora:
