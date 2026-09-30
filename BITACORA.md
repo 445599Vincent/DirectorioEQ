@@ -9,10 +9,21 @@ El formato de cada entrada está en `AGENTS.md`.
   Proyectos Cerrados, Lecciones Aprendidas, Gestión Interna PMO.
 - Enlace del SharePoint de los clientes Soluciones Globales y OMP.
 - Planner de Recursos Humanos y de Calidad: confirmar si existen y sus enlaces.
-- Mapa de procesos de Ecco Qualitá, para crear las áreas que faltan y ordenarlas.
-- Definir si Comercial, Recursos Humanos y Calidad tendrán secciones internas como el PMO.
+- Nueve áreas del mapa de procesos están sin accesos: Planificación, Comunicaciones,
+  Académica, Administrativa y Financiera, Servicios Generales, Mantenimiento de
+  Infraestructura, TIC, Legal y Seguridad. Faltan sus enlaces (SharePoint, Planner u otros).
+- Definir si las demás áreas tendrán secciones internas como el PMO.
 
 ---
+
+## 2026-09-30 — Claude
+- **Pedido:** organizar el hub según el mapa de procesos (MAP-SGI-01), con Gestión de
+  Proyectos y PMO fusionados en una sola área.
+- **Cambios:** el inicio agrupa las áreas en Procesos Estratégicos, Operativos y Soporte
+  (`PROCESOS` en `enlaces.js`). Se crearon nueve áreas nuevas sin accesos y se renombraron
+  las cuatro existentes con los nombres del mapa. Iconos nuevos y aviso de "área sin
+  accesos" en `index.html`.
+- **Pendiente:** enlaces de las nueve áreas nuevas.
 
 ## 2026-09-30 — Claude
 - **Pedido:** preparar el proyecto para trabajar junto con Codex y dejar registro de tareas.

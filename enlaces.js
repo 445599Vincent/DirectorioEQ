@@ -21,18 +21,83 @@
                   | "personas" | "calidad" | "planner" | "correo"
                   | "teams" | "nube" | "web" | "enlace" | "gobierno"
                   | "libro" | "portafolio" | "archivo" | "idea"
-                  | "engranaje" | "cliente"
+                  | "engranaje" | "cliente" | "objetivo" | "megafono"
+                  | "academia" | "finanzas" | "herramienta" | "balanza"
+                  | "candado"
 
   Cada área o cliente tiene además un "id" (sin espacios ni acentos),
   que es lo que aparece en la dirección de su página.
+
+  Cada área lleva también "proceso": el grupo del mapa de procesos al
+  que pertenece ("estrategico" | "operativo" | "soporte"). Un área sin
+  accesos todavía se deja con "grupos: []".
+
+  Las áreas siguen el Mapa de Procesos MAP-SGI-01 (versión 01, emisión
+  20/08/2026), con un cambio: "Gestión de Proyectos" y "Gestión de
+  Seguimiento (PMO)" están fusionadas en una sola área.
 */
+
+const PROCESOS = [
+  { id: "estrategico", titulo: "Procesos Estratégicos" },
+  { id: "operativo", titulo: "Procesos Operativos" },
+  { id: "soporte", titulo: "Procesos Soporte" },
+];
 
 const AREAS = [
   {
+    id: "planificacion",
+    nombre: "Gestión de Planificación",
+    descripcion: "Planificación estratégica, operativa y presupuestaria.",
+    icono: "objetivo",
+    proceso: "estrategico",
+    grupos: [],
+  },
+  {
+    id: "calidad",
+    nombre: "Gestión de la Calidad",
+    descripcion: "Sistema de Gestión de Calidad: documentos, indicadores, auditoría y mejora continua.",
+    icono: "calidad",
+    proceso: "estrategico",
+    grupos: [
+      {
+        titulo: "Accesos principales",
+        enlaces: [
+          { nombre: "SharePoint SGC", descripcion: "Gerencia de Calidad: procesos y documentación del SGC.", url: "https://eccoqualita2102.sharepoint.com/sites/GerenciadeCalidadEQ", icono: "sharepoint" },
+          { nombre: "Planner Calidad", descripcion: "Tareas internas del área.", url: "", icono: "planner" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "comunicaciones",
+    nombre: "Gestión de Comunicaciones",
+    descripcion: "Comunicación interna y externa, mercadeo e imagen corporativa.",
+    icono: "megafono",
+    proceso: "estrategico",
+    grupos: [],
+  },
+  {
+    id: "comercial",
+    nombre: "Gestión Comercial",
+    descripcion: "Marketing, ventas y gestión de clientes.",
+    icono: "comercial",
+    proceso: "operativo",
+    grupos: [
+      {
+        titulo: "Accesos principales",
+        enlaces: [
+          { nombre: "SharePoint Comercial", descripcion: "Documentos del área comercial.", url: "https://eccoqualita2102.sharepoint.com/sites/ECCOCOMERCIAL", icono: "sharepoint" },
+          { nombre: "Planner Comercial", descripcion: "Tareas y seguimiento del área comercial.", url: "https://planner.cloud.microsoft/webui/v1/plan/jynw7IFF90WClrnHUHpE-2UAHols?tid=f0b59f88-a70a-4207-864a-406a47180842", icono: "planner" },
+        ],
+      },
+    ],
+  },
+  {
     id: "pmo",
-    nombre: "Proyectos (PMO)",
-    descripcion: "Gobernanza, metodología, portafolio y seguimiento de proyectos.",
+    nombre: "Gestión de Proyectos (PMO)",
+    descripcion: "Gobierno del PMO, portafolio, planificación, seguimiento y cierre de proyectos.",
     icono: "proyectos",
+    proceso: "operativo",
     proyectosDeClientes: true, // los CLIENTES se muestran dentro de esta área
     grupos: [
       {
@@ -56,25 +121,27 @@ const AREAS = [
     ],
   },
   {
-    id: "comercial",
-    nombre: "Comercial",
-    descripcion: "Ventas, propuestas y seguimiento de oportunidades.",
-    icono: "comercial",
-    grupos: [
-      {
-        titulo: "Accesos principales",
-        enlaces: [
-          { nombre: "SharePoint Comercial", descripcion: "Documentos del área comercial.", url: "https://eccoqualita2102.sharepoint.com/sites/ECCOCOMERCIAL", icono: "sharepoint" },
-          { nombre: "Planner Comercial", descripcion: "Tareas y seguimiento del área comercial.", url: "https://planner.cloud.microsoft/webui/v1/plan/jynw7IFF90WClrnHUHpE-2UAHols?tid=f0b59f88-a70a-4207-864a-406a47180842", icono: "planner" },
-        ],
-      },
-    ],
+    id: "academica",
+    nombre: "Gestión Académica",
+    descripcion: "Diseño, planificación y ejecución de cursos; evaluación y certificación.",
+    icono: "academia",
+    proceso: "operativo",
+    grupos: [],
+  },
+  {
+    id: "administrativa-financiera",
+    nombre: "Gestión Administrativa y Financiera",
+    descripcion: "Presupuesto, facturación, pagos, cobros, nómina y compras.",
+    icono: "finanzas",
+    proceso: "soporte",
+    grupos: [],
   },
   {
     id: "recursos-humanos",
-    nombre: "Recursos Humanos",
-    descripcion: "Gestión humana: documentos y recursos del equipo.",
+    nombre: "Gestión de Recursos Humanos",
+    descripcion: "Reclutamiento, nómina, capacitación, clima laboral y desempeño.",
     icono: "personas",
+    proceso: "soporte",
     grupos: [
       {
         titulo: "Accesos principales",
@@ -86,19 +153,44 @@ const AREAS = [
     ],
   },
   {
-    id: "calidad",
-    nombre: "Gestión de Calidad",
-    descripcion: "Sistema de Gestión de Calidad: procesos y documentación.",
-    icono: "calidad",
-    grupos: [
-      {
-        titulo: "Accesos principales",
-        enlaces: [
-          { nombre: "SharePoint SGC", descripcion: "Gerencia de Calidad: procesos y documentación del SGC.", url: "https://eccoqualita2102.sharepoint.com/sites/GerenciadeCalidadEQ", icono: "sharepoint" },
-          { nombre: "Planner Calidad", descripcion: "Tareas internas del área.", url: "", icono: "planner" },
-        ],
-      },
-    ],
+    id: "servicios-generales",
+    nombre: "Servicios Generales",
+    descripcion: "Administración de activos fijos y conserjería.",
+    icono: "engranaje",
+    proceso: "soporte",
+    grupos: [],
+  },
+  {
+    id: "mantenimiento",
+    nombre: "Mantenimiento de Infraestructura",
+    descripcion: "Mantenimiento preventivo y correctivo.",
+    icono: "herramienta",
+    proceso: "soporte",
+    grupos: [],
+  },
+  {
+    id: "tic",
+    nombre: "Gestión TIC",
+    descripcion: "Seguridad de la información, infraestructura tecnológica y soporte técnico.",
+    icono: "erp",
+    proceso: "soporte",
+    grupos: [],
+  },
+  {
+    id: "legal",
+    nombre: "Gestión Legal",
+    descripcion: "Documentos legales y litigios.",
+    icono: "balanza",
+    proceso: "soporte",
+    grupos: [],
+  },
+  {
+    id: "seguridad",
+    nombre: "Seguridad",
+    descripcion: "Control de acceso, seguridad física y seguridad y salud en el trabajo.",
+    icono: "candado",
+    proceso: "soporte",
+    grupos: [],
   },
 ];
 

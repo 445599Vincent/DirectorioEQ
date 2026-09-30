@@ -24,7 +24,11 @@ Es un sitio estático sin compilación ni dependencias.
 
 ## Cómo está organizado el hub
 
-- **Inicio:** tarjetas de las `AREAS` internas + las herramientas `GENERALES`.
+- **Inicio:** tarjetas de las `AREAS` internas, agrupadas por tipo de proceso (`PROCESOS`:
+  estratégicos, operativos y soporte), + las herramientas `GENERALES`.
+- **Áreas:** siguen el Mapa de Procesos MAP-SGI-01 (versión 01, emisión 20/08/2026), con un
+  cambio pedido por el usuario: "Gestión de Proyectos" y "Gestión de Seguimiento (PMO)" son
+  una sola área (`pmo`). Un área sin accesos se deja con `grupos: []`.
 - **Página de cada área** (`#/id-del-area`): sus grupos de accesos (SharePoint, Planner, contenido).
 - **Clientes:** están en `CLIENTES`, pero NO aparecen en el inicio. Se muestran dentro del
   área marcada con `proyectosDeClientes: true` (el PMO), en la sección "Proyectos Activos".
