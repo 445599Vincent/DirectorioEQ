@@ -233,7 +233,7 @@ const CLIENTES = [
       {
         titulo: "Accesos del proyecto",
         enlaces: [
-          { nombre: "SharePoint del proyecto", descripcion: "Documentos y entregables del cliente.", url: "", icono: "sharepoint" },
+          { nombre: "SharePoint del proyecto", descripcion: "Documentos y entregables del cliente.", url: "https://eccoqualita2102.sharepoint.com/:u:/r/sites/SOLUCIONESGLOBALESJM/SitePages/ProjectHome.aspx?d=wcaf276bf9d704f2db96195c32d6fb3da&csf=1&web=2&share=IQC_dvLKcJ0tT7lhlcMtb7PaAXOTgQnN26tfZ642WxSZ1F8&e=MHDYMi", icono: "sharepoint" },
           { nombre: "Planner del proyecto", descripcion: "Tareas y seguimiento del proyecto.", url: "", icono: "planner" },
         ],
       },

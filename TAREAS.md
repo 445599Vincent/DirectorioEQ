@@ -266,3 +266,11 @@ oscuro, estadísticas).
 - **Archivos:** `enlaces.js`
 - **Notas de entrega:** `url` de "Planner Calidad": "" → enlace dado por Vincent (no repetido
   en otro acceso). Único cambio. Pruebas 19 de 19.
+
+### D-006 — Directa: SharePoint de Soluciones Globales
+
+- **Estado:** Para revisión (2026-10-01)
+- **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent (dato 7 de T-004)
+- **Archivos:** `enlaces.js`
+- **Notas de entrega:** `url` de "SharePoint del proyecto" (Soluciones Globales): "" → enlace
+  dado por Vincent (no repetido en otro acceso). Único cambio. Pruebas 19 de 19.
