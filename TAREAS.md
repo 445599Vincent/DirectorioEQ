@@ -171,3 +171,27 @@ oscuro, estadísticas).
   en escritorio y móvil (375 px) sin desbordes; contraste de las etiquetas ≥ 4,5:1
   indicado en las "Notas de entrega".
 - **Notas de entrega:**
+
+### T-004 — Ajuste "Sitio Web" y recolección de datos pendientes
+
+- **Estado:** Asignada (2026-10-01)
+- **Asignada a:** Ejecutador (Contenido) — Claude Sonnet 5.5, esfuerzo medio
+- **Archivos:** `enlaces.js`, `logos/`
+- **Qué hacer:**
+  1. En `GENERALES`, cambiar el nombre "Sitio web" → "Sitio Web" (pendiente de la revisión
+     de T-002). Nada más en esa tarjeta.
+  2. Preparar para Vincent, en el chat del Ejecutador, una lista de **todos los datos que
+     faltan**, agrupada por área y por cliente, para que él la complete: cada acceso con
+     `url: ""` (nombre del acceso y dónde aparece), el logo de Atómica Publicidad, y la
+     pregunta de si existen los Planner de Recursos Humanos y de Calidad. Debe ser fácil de
+     responder (una línea por dato).
+  3. Cuando Vincent entregue datos, cargarlos en `enlaces.js` (enlaces) o `logos/`
+     (imágenes cuadradas, como las demás), cada lote como tarea **Directa** en este archivo,
+     con su propio commit. Si Vincent dice que un acceso no existe, no lo borres por tu
+     cuenta: anótalo en las "Notas de entrega" y la directora decide.
+- **No hacer:** no inventar URLs; no cambiar `id`, `estado` ni estructura salvo que Vincent
+  lo pida; no tocar `index.html` ni `tests/` (Codex está trabajando ahí en la T-003).
+- **Criterios de aceptación:** todas las pruebas pasan; `git diff` del punto 1 solo cambia
+  ese nombre; la lista del punto 2 cubre los 18 accesos pendientes, el logo y los dos
+  Planner.
+- **Notas de entrega:**
