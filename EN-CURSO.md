@@ -32,4 +32,3 @@ Formato de la hora: `AAAA-MM-DD HH:MM` (hora local de República Dominicana).
 
 | Agente | Sesión | Desde | Archivos | Tarea |
 |---|---|---|---|---|
-| Claude | Ejecutador (Contenido) | 2026-10-01 15:13 | `enlaces.js` | D-014 — Últimas dos carpetas de Recursos Humanos |

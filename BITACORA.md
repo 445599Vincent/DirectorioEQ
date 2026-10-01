@@ -32,6 +32,13 @@ El formato de cada entrada está en `AGENTS.md`.
 ---
 
 ## 2026-10-01 — Claude (Contenido)
+- **Pedido:** cargar los enlaces de Políticas y Reglamentos y de Documentos Legales y Registros
+  de Recursos Humanos (pedido directo).
+- **Cambios:** esas dos tarjetas ya tienen su enlace (`enlaces.js`); con esto las 6 carpetas
+  principales de Recursos Humanos quedan completas. Pruebas: 19 de 19 pasan.
+- **Pendiente:** quedan 9 datos por recibir (ver T-004).
+
+## 2026-10-01 — Claude (Contenido)
 - **Pedido:** cargar los enlaces de tres carpetas de Recursos Humanos: Plantillas de
   Contratación, Expedientes de Personal Activo y Expedientes de Personal Inactivo (pedido directo).
 - **Cambios:** esas tres tarjetas ya tienen su enlace (`enlaces.js`). Pruebas: 19 de 19 pasan.

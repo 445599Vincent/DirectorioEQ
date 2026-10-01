@@ -397,3 +397,13 @@ oscuro, estadísticas).
   "Expedientes de Personal Inactivo": "" → enlaces dados por Vincent (ninguno repetido en otro
   acceso). Vincent escribió "Expediente del Personal Inactivo"; se conservó el nombre de la
   tarjeta ya creada. Único cambio: tres `url`. Pruebas 19 de 19.
+
+### D-014 — Directa: últimas dos carpetas de Recursos Humanos
+
+- **Estado:** Para revisión (2026-10-01)
+- **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent
+- **Archivos:** `enlaces.js`
+- **Notas de entrega:** `url` de "Políticas y Reglamentos" y "Documentos Legales y Registros":
+  "" → enlaces dados por Vincent (ninguno repetido en otro acceso). Con D-012 y D-013, las 6
+  carpetas del grupo "Carpetas de Recursos Humanos" tienen enlace. Único cambio: dos `url`.
+  Pruebas 19 de 19.
