@@ -174,7 +174,7 @@ oscuro, estadísticas).
 
 ### T-004 — Ajuste "Sitio Web" y recolección de datos pendientes
 
-- **Estado:** Asignada (2026-10-01)
+- **Estado:** En curso (2026-10-01)
 - **Asignada a:** Ejecutador (Contenido) — Claude Sonnet 5.5, esfuerzo medio
 - **Archivos:** `enlaces.js`, `logos/`
 - **Qué hacer:**
