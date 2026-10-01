@@ -32,3 +32,4 @@ Formato de la hora: `AAAA-MM-DD HH:MM` (hora local de República Dominicana).
 
 | Agente | Sesión | Desde | Archivos | Tarea |
 |---|---|---|---|---|
+| Codex | Ingeniería | 2026-10-01 10:31 | `index.html`, `tests/directorio.test.mjs` | T-003 — Contadores reales y etiquetas de estado |
