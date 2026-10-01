@@ -288,7 +288,7 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
 
 ### T-007 — Base de datos y reglas de seguridad (Etapa 1)
 
-- **Estado:** Asignada (2026-10-01)
+- **Estado:** En curso (2026-10-01)
 - **Asignada a:** Codex (Ingeniería) — **GPT-6 Astra, esfuerzo alto** (es la pieza de
   seguridad; un error expone enlaces)
 - **Archivos:** `supabase/esquema.sql` (nuevo), `supabase/LEEME.md` (nuevo)
