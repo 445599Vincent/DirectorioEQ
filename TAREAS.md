@@ -278,7 +278,10 @@ cuentas ni inician sesión con contraseñas: eso lo hace Vincent.
 
 **Proyecto de Supabase:** "Directorio EQ", región East US (North Virginia),
 URL `https://yvhractjxuvfjaldhgdo.supabase.co` (pública, se puede usar en el código). Clave
-pública (`sb_publishable_…`): pendiente de que Vincent la entregue.
+pública (se puede usar en el código): `sb_publishable_1QVuwl_e3IWZtdUCJwLvSQ_RnUIOI02`.
+Comprobado el 2026-10-01: la clave funciona y el único método de acceso activo es correo y
+contraseña. **Pendiente de Vincent:** desactivar el registro público ("Allow new users to
+sign up"; hoy sigue activo) y poner `https://directorio.eccoqualita.com` como Site URL.
 
 Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1** T-007 ·
 **2** T-008 · **3** T-009 · **4** T-010 · **5** T-011.
