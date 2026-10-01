@@ -31,6 +31,15 @@ El formato de cada entrada está en `AGENTS.md`.
 ---
 
 ## 2026-10-01 — Claude (Contenido)
+- **Pedido:** cargar los SharePoint de Agroplast para Programa EHS y Gerencia de Calidad
+  (pedido directo, dos enlaces).
+- **Cambios:** ambas tarjetas ya tienen su enlace (`enlaces.js`). Agroplast queda con 3 de sus
+  6 accesos disponibles.
+- **Pendiente:** quedan 15 datos por recibir (ver T-004). Aviso: la prueba nueva de Codex en
+  `tests/` (T-003, sin subir) fija "6 pendientes" para Agroplast y fallará al cargar enlaces
+  reales; debe contar desde los datos, no un número fijo.
+
+## 2026-10-01 — Claude (Contenido)
 - **Pedido:** cargar el SharePoint de Planificación Estratégica de Agroplast (pedido directo).
 - **Cambios:** la tarjeta "SharePoint de Planificación Estratégica" de Agroplast ya tiene su
   enlace (`enlaces.js`). Pruebas: 14 de 14 pasan.

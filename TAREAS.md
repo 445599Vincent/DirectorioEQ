@@ -207,3 +207,13 @@ oscuro, estadísticas).
 - **Archivos:** `enlaces.js`
 - **Notas de entrega:** `url` de "SharePoint de Planificación Estratégica" (Agroplast): "" →
   enlace dado por Vincent. Es el único cambio. Pruebas 14 de 14.
+
+### D-002 — Directa: SharePoint de Agroplast, Programa EHS y Gerencia de Calidad
+
+- **Estado:** Para revisión (2026-10-01)
+- **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent (datos 13 y 11 de T-004)
+- **Archivos:** `enlaces.js`
+- **Notas de entrega:** `url` de "SharePoint del Programa EHS" y de "SharePoint de Gerencia de
+  Calidad" (Agroplast): "" → enlaces dados por Vincent. Son los únicos cambios. Con los datos
+  actuales, la prueba nueva de Codex (T-003, sin subir) falla porque fija "6 pendientes" para
+  Agroplast (ahora son 3 disponibles y 3 pendientes): hay que contar desde `enlaces.js`.

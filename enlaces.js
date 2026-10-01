@@ -288,14 +288,14 @@ const CLIENTES = [
       {
         titulo: "Gerencia de Calidad",
         enlaces: [
-          { nombre: "SharePoint de Gerencia de Calidad", descripcion: "Documentos y entregables del servicio.", url: "", icono: "sharepoint" },
+          { nombre: "SharePoint de Gerencia de Calidad", descripcion: "Documentos y entregables del servicio.", url: "https://eccoqualita2102.sharepoint.com/:u:/r/sites/Agroplast-TERCERIZACINDELAGERENCIADECALIDAD/SitePages/CollabHome.aspx?d=w32fadb05dbca4aee8fb4f75c2837a25c&csf=1&web=2&share=IQAF2_oyytvuSo-091woN6JcAfdnQK04mgxvf_i7j_y67EI&e=H35kSd", icono: "sharepoint" },
           { nombre: "Planner de Gerencia de Calidad", descripcion: "Tareas y seguimiento del servicio.", url: "", icono: "planner" },
         ],
       },
       {
         titulo: "Programa de Salud Ocupacional EHS",
         enlaces: [
-          { nombre: "SharePoint del Programa EHS", descripcion: "Documentos y entregables del servicio.", url: "", icono: "sharepoint" },
+          { nombre: "SharePoint del Programa EHS", descripcion: "Documentos y entregables del servicio.", url: "https://eccoqualita2102.sharepoint.com/:u:/r/sites/Agroplast-TERCERIZACINDELAREADEEHS/SitePages/CollabHome.aspx?d=w7cea2ee7296046bc82c0c568bb685026&csf=1&web=2&share=IQDnLup8YCm8RoLAxWi7aFAmAYy9kb5wMEkNeuI991ly2YA&e=hktn0N", icono: "sharepoint" },
           { nombre: "Planner del Programa EHS", descripcion: "Tareas y seguimiento del servicio.", url: "", icono: "planner" },
         ],
       },
