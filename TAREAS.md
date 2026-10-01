@@ -137,7 +137,7 @@ oscuro, estadísticas).
 
 ### T-003 — Contadores reales y etiquetas de estado en las tarjetas
 
-- **Estado:** Asignada (aprobada por Vincent el 2026-10-01)
+- **Estado:** En curso
 - **Asignada a:** Codex (Ingeniería) — modelo GPT-6 Sol, esfuerzo medio
 - **Archivos:** `index.html`, `tests/directorio.test.mjs`
 - **Problema:** las tarjetas de áreas y clientes cuentan los enlaces pendientes como si
