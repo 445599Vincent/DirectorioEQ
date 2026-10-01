@@ -5,8 +5,8 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ## Pendientes generales
 
-- El Organizador debe revisar T-003: contadores reales y etiquetas de estado entregados por
-  Codex.
+- El Organizador debe revisar T-007: esquema de base de datos y reglas de seguridad de
+  Supabase entregados por Codex.
 - Avisar al equipo de la dirección oficial (https://directorio.eccoqualita.com) y borrar o
   desconectar el proyecto viejo en Netlify, que quedó congelado.
 - Enlaces del PMO que faltan: Gestión Interna PMO y las tres tarjetas de "Accesos Directos".
@@ -23,13 +23,27 @@ El formato de cada entrada está en `AGENTS.md`.
   quedan visibles en el inicio.
 - Gestión Administrativa y Financiera solo tiene AdmCloud; faltan su SharePoint y Planner.
 - Definir si las demás áreas tendrán secciones internas como el PMO.
-- **Inicio de sesión por rol:** el código ya está listo pero apagado (`AUTH.activo = false`
-  en `index.html`). Falta que un administrador del Microsoft 365 de Ecco Qualitá siga
-  `CONFIGURAR-INICIO-DE-SESION.md` y envíe el `clientId` y el `tenantId`; con esos dos
-  datos se enciende. El usuario dijo que quien administra eso es otra persona del equipo o
-  el proveedor de TI, no Vincent directamente — falta coordinar con esa persona.
+- **Inicio de sesión por rol:** Vincent eligió usuarios propios con Supabase y la ruta de
+  Microsoft 365 quedó detenida. T-007 está para revisión; después siguen T-008 a T-011.
 
 ---
+
+## 2026-10-01 — Claude (Contenido)
+- **Pedido:** cargar el enlace de Material Educativo del PMO (pedido directo).
+- **Cambios:** la tarjeta "Material Educativo" ya tiene su enlace (`enlaces.js`). Pruebas:
+  19 de 19 pasan.
+- **Pendiente:** quedan 7 datos por recibir (ver T-004).
+
+## 2026-10-01 — Codex
+- **Pedido:** ejecutar T-007: preparar la base de datos y las reglas de seguridad de
+  Supabase para el inicio de sesión con usuarios propios.
+- **Cambios:** se crearon `supabase/esquema.sql` y `supabase/LEEME.md`. El SQL define las
+  cuatro tablas, crea perfiles sin privilegios, activa RLS, bloquea el acceso anónimo,
+  limita los datos por área y reserva toda escritura para administradores. Incluye una
+  barrera contra el autoascenso y una instrucción comentada para el primer administrador.
+  Pasan las 19 pruebas del directorio y las comprobaciones estructurales de seguridad.
+- **Pendiente:** revisión política por política del Organizador. No se ejecutó el SQL en una
+  base real; la prueba con usuarios corresponde a la Etapa 5 (T-011).
 
 ## 2026-10-01 — Claude (Contenido)
 - **Pedido:** cargar el enlace de Gestión Interna PMO (pedido directo).

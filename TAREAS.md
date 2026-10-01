@@ -288,7 +288,7 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
 
 ### T-007 — Base de datos y reglas de seguridad (Etapa 1)
 
-- **Estado:** En curso (2026-10-01)
+- **Estado:** Para revisión (2026-10-01)
 - **Asignada a:** Codex (Ingeniería) — **GPT-6 Astra, esfuerzo alto** (es la pieza de
   seguridad; un error expone enlaces)
 - **Archivos:** `supabase/esquema.sql` (nuevo), `supabase/LEEME.md` (nuevo)
@@ -324,7 +324,27 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
   tabla queda sin RLS; las "Notas de entrega" incluyen la tabla de permisos y cómo se
   comprobó (si no hay base de datos de prueba disponible, decirlo; la prueba real se hace
   en la Etapa 5). La directora revisa política por política antes de pasárselo a Vincent.
-- **Notas de entrega:**
+- **Notas de entrega:** `supabase/esquema.sql` crea las cuatro tablas, índices, perfil
+  automático para usuarios nuevos y existentes, funciones auxiliares en el esquema privado
+  `privado`, RLS y 14 políticas reejecutables. También revoca todos los privilegios de
+  `anon` y agrega un disparador independiente que impide cambiar el propio `es_admin` de
+  `false` a `true`. La instrucción inicial para hacer administrador a Vincent queda
+  comentada y exige sustituir su correo.
+
+  Matriz comprobada: sin sesión no se lee ni escribe ninguna tabla; un usuario lee solo su
+  perfil, sus permisos y los espacios/accesos cuyo `rol` tiene asignado; un administrador
+  lee y actualiza todos los perfiles, gestiona permisos y crea, cambia o borra espacios y
+  accesos. Ninguna sesión autenticada puede darse a sí misma el nivel de administrador.
+
+  `supabase/LEEME.md` explica la instalación y contiene la tabla completa de permisos.
+  Comprobación local: validación estructural de 4 tablas con RLS, 14 pares de políticas
+  `drop/create`, 4 funciones `security definer` con `search_path = ''`, ninguna política
+  para `anon`, ningún secreto ni URL; `git diff --check` limpio; 19 de 19 pruebas del
+  directorio pasan; sitio publicado sin errores de consola. No hay PostgreSQL/Supabase de
+  prueba disponible en esta sesión, por lo que el SQL no se ejecutó contra una base real;
+  la prueba con usuarios y consultas reales corresponde a la Etapa 5 (T-011). El
+  Organizador debe revisar las restricciones, privilegios, disparadores y cada política
+  antes de entregarle el archivo a Vincent.
 
 ### T-008 — Pantalla de inicio de sesión y carga desde Supabase (Etapa 2)
 
@@ -515,3 +535,11 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
 - **Archivos:** `enlaces.js`
 - **Notas de entrega:** `url` de "Gestión Interna PMO": "" → enlace dado por Vincent (no
   repetido en otro acceso). Único cambio. Pruebas 19 de 19.
+
+### D-016 — Directa: Material Educativo (PMO)
+
+- **Estado:** Para revisión (2026-10-01)
+- **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent
+- **Archivos:** `enlaces.js`
+- **Notas de entrega:** `url` de "Material Educativo" (Accesos Directos del PMO): "" → enlace
+  dado por Vincent (no repetido en otro acceso). Único cambio. Pruebas 19 de 19.
