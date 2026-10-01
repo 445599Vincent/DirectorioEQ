@@ -28,6 +28,16 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ---
 
+## 2026-10-01 — Claude (Contenido)
+- **Pedido:** tarea T-010 parte 1 (asignada por la directora): generar con un script el SQL que
+  carga en Supabase las áreas, clientes y accesos de `enlaces.js`.
+- **Cambios:** nuevos `no-subir/datos-supabase.sql` y `no-subir/generar-datos-supabase.mjs`
+  (fuera de Git, no se publican): 21 espacios y 42 accesos; reejecutable sin duplicar.
+  Comprobado contra `enlaces.js` en una base de prueba, 0 diferencias. No se tocó
+  `enlaces.js` ni nada del sitio.
+- **Pendiente:** ejecutarlo en Supabase (T-011) y la parte 2 (dejar solo `PROCESOS` y
+  `GENERALES` en `enlaces.js`).
+
 ## 2026-10-01 — Claude
 - **Pedido:** revisar la T-007 y seguir con el plan de Supabase.
 - **Cambios:** T-007 aprobada tras revisar cada política. T-008 (inicio de sesión y carga

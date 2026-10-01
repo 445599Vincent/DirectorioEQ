@@ -402,7 +402,7 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
 
 ### T-010 — Pasar los enlaces a Supabase y quitarlos del archivo público (Etapa 4)
 
-- **Estado:** Parte 1 asignada (2026-10-01); la parte 2 espera la T-011
+- **Estado:** Parte 1 para revisión (2026-10-01); la parte 2 espera la T-011
 - **Asignada a:** Ejecutador (Contenido) — Claude Sonnet 5.5, esfuerzo medio
 - **Archivos:** `no-subir/datos-supabase.sql` (fuera de Git: la carpeta `no-subir/` está en
   `.gitignore`); en la parte 2, `enlaces.js`.
@@ -419,6 +419,33 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
   coinciden con `enlaces.js`. **No subir ese archivo a GitHub.**
 - **Parte 2 (después de la T-011):** dejar en `enlaces.js` solo `PROCESOS` y `GENERALES`.
 - **Notas de entrega:**
+  Parte 1 hecha. Archivos (fuera de Git, en `no-subir/`): `datos-supabase.sql` (82 líneas) y el
+  script que lo genera, `generar-datos-supabase.mjs`; para rehacerlo tras cambiar `enlaces.js`:
+  `node no-subir/generar-datos-supabase.mjs`. No se subió nada a GitHub (`git check-ignore` lo
+  confirma).
+
+  Inserta **21 espacios** (13 áreas + 8 clientes) y **42 accesos** (6 de ellos con `url` vacía),
+  según `enlaces.js` de hoy. Las herramientas `GENERALES` no se cargan. 7 áreas no tienen accesos
+  (siguen como en el sitio). Todo el SQL es una sola transacción: borra los espacios que va a
+  cargar (los accesos se borran en cascada) y los vuelve a insertar, así que se puede ejecutar
+  varias veces sin duplicar.
+
+  Reglas aplicadas: `tipo` área/cliente; `rol` = `id` en áreas y `pmo` en clientes; `proceso` solo
+  en áreas; `estado` solo en clientes; `proyectos_de_clientes` solo en `pmo`; `orden` según la
+  posición (áreas primero, luego clientes); en los accesos, `grupo` = título del grupo,
+  `orden_grupo` y `orden` según posición; los clientes llevan el icono `cliente` (como hace
+  `index.html`) y su `logo`.
+
+  Cómo se comprobó (no hay Supabase de prueba): recreé las dos tablas con las mismas columnas y
+  restricciones de `esquema.sql` (checks de tipo/estado/proceso/rol, clave foránea con borrado
+  en cascada) en una base SQLite de prueba, ejecuté el SQL **dos veces** y comparé cada campo de
+  cada espacio y de cada acceso con los datos leídos de `enlaces.js`: 21/21 espacios y 42/42
+  accesos iguales, 0 diferencias, sin duplicados tras la segunda ejecución. Lo que no se pudo
+  probar: la sintaxis exacta de PostgreSQL (`begin`/`commit`, `delete … where id in`) y las
+  políticas RLS; conviene ejecutarlo en Supabase en la T-011.
+
+  Atención para la parte 2: el SQL refleja `enlaces.js` de hoy; si se cargan más enlaces antes
+  de la T-011, hay que regenerarlo con el script.
 
 ### T-011 — Prueba controlada (Etapa 5)
 
