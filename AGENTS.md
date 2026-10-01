@@ -41,7 +41,7 @@ Es un sitio estático sin compilación ni dependencias.
 | `_config.yml` | Configuración de GitHub Pages: evita que los archivos internos (`.md`) se publiquen en el sitio. |
 | `netlify.toml` | Hacía lo mismo en Netlify, el alojamiento anterior. |
 | `CONFIGURAR-INICIO-DE-SESION.md` | Instrucciones para el administrador de TI: cómo registrar la app en Microsoft Entra ID. No se publica en el sitio. |
-| `tests/directorio.test.mjs` | Pruebas automáticas de la navegación del hub (Codex las creó). Correr con `node --test tests/directorio.test.mjs` antes de cada `git push`. |
+| `tests/directorio.test.mjs` | Pruebas automáticas de la navegación del hub y de los datos de `enlaces.js` (identificadores, campos, URLs, estados, logos, rutas). Las mantiene Codex. Correr con `node --test tests/directorio.test.mjs` antes de cada `git push`. |
 
 ## Cómo está organizado el hub
 
@@ -111,7 +111,8 @@ cada persona. Todo vive en la constante `AUTH` al inicio del script de `index.ht
    commit y push de esa reserva antes de editar; si están ocupados, avisa al usuario y espera.
 2. Hacer el cambio y probarlo abriendo la página (p. ej. `python -m http.server 5500`;
    si el puerto está ocupado por el otro agente, usar otro puerto).
-3. Correr `node --test tests/directorio.test.mjs` y que pasen las cuatro pruebas.
+3. Correr `node --test tests/directorio.test.mjs` y que pasen **todas** las pruebas (hoy son 14:
+   navegación y validación de los datos de `enlaces.js`).
 4. **Registrar el cambio en `BITACORA.md`** (ver formato abajo) y **borrar tu reserva de
    `EN-CURSO.md`**, en el mismo commit.
 5. `git add` **solo de los archivos que reservaste** más `BITACORA.md` y `EN-CURSO.md`

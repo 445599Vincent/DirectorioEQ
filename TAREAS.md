@@ -52,7 +52,7 @@ oscuro, estadísticas).
 
 ### T-001 — Pruebas automáticas de los datos
 
-- **Estado:** Para revisión
+- **Estado:** Completada (revisada por la directora el 2026-10-01)
 - **Tipo:** Directa (aprobada por Vincent el 2026-09-30)
 - **Asignada a:** Codex (Ingeniería)
 - **Archivos:** `tests/directorio.test.mjs`
@@ -72,6 +72,10 @@ oscuro, estadísticas).
   completa pasa con 14 pruebas. `index.html` y `enlaces.js` no cambiaron. La directora debe
   ejecutar `node --test tests/directorio.test.mjs` y revisar que el alcance coincida con
   los criterios de aceptación.
+- **Revisión de la directora:** aprobada. Las 14 pruebas pasan; `index.html` y `enlaces.js`
+  no cambiaron. Comprobé en una copia aparte que cada validación falla cuando se introduce
+  su error: identificador repetido, estado inválido, logo inexistente, ruta interna rota,
+  URL sin HTTPS y URL repetida. `AGENTS.md` ya pide correr todas las pruebas, no cuatro.
 
 ### T-002 — Uniformar nombres y descripciones de los accesos
 
