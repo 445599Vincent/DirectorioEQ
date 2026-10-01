@@ -367,5 +367,5 @@ const GENERALES = [
   { nombre: "Outlook", descripcion: "Correo y calendario.", url: "https://outlook.office.com/", icono: "correo" },
   { nombre: "Teams", descripcion: "Chat, reuniones y llamadas.", url: "https://teams.microsoft.com/", icono: "teams" },
   { nombre: "OneDrive", descripcion: "Tus archivos personales de trabajo.", url: "https://www.microsoft365.com/onedrive", icono: "nube" },
-  { nombre: "Sitio web", descripcion: "Sitio web de Ecco Qualitá (eccoqualita.com).", url: "https://eccoqualita.com/", icono: "eccoqualita" },
+  { nombre: "Sitio Web", descripcion: "Sitio web de Ecco Qualitá (eccoqualita.com).", url: "https://eccoqualita.com/", icono: "eccoqualita" },
 ];

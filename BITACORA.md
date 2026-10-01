@@ -30,6 +30,12 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ---
 
+## 2026-10-01 — Claude (Contenido)
+- **Pedido:** tarea T-004 (parte 1): renombrar "Sitio web" → "Sitio Web" en Herramientas generales.
+- **Cambios:** solo ese nombre en `enlaces.js`. Pruebas: 14 de 14 pasan. La parte 2 (lista de
+  datos que faltan) se presentó a Vincent en el chat.
+- **Pendiente:** cargar los datos que Vincent entregue (18 enlaces, logo de Atómica Publicidad).
+
 ## 2026-09-30 — Codex
 - **Pedido:** ejecutar T-001, aprobada por Vincent: ampliar las pruebas automáticas de los
   datos del directorio.

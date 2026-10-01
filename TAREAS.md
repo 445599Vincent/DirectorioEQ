@@ -195,3 +195,7 @@ oscuro, estadísticas).
   ese nombre; la lista del punto 2 cubre los 18 accesos pendientes, el logo y los dos
   Planner.
 - **Notas de entrega:**
+  Parte 1 hecha: "Sitio web" → "Sitio Web" (único cambio en `enlaces.js`; pruebas 14 de 14).
+  Parte 2 hecha: lista de los 18 accesos con `url` vacía, el logo de Atómica Publicidad y la
+  pregunta por los Planner de RR. HH. y Calidad presentada a Vincent en el chat. La tarea sigue
+  abierta para la parte 3 (cargar lo que él entregue como tareas Directas).

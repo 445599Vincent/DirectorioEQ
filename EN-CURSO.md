@@ -32,4 +32,3 @@ Formato de la hora: `AAAA-MM-DD HH:MM` (hora local de República Dominicana).
 
 | Agente | Sesión | Desde | Archivos | Tarea |
 |---|---|---|---|---|
-| Claude | Ejecutador (Contenido) | 2026-10-01 10:25 | `enlaces.js` | T-004 — Ajuste "Sitio Web" y datos pendientes |
