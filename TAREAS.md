@@ -250,3 +250,11 @@ oscuro, estadísticas).
   Planner de Soluciones Globales: enlace → "" (queda pendiente); Planner de Fintax: "" →
   ese enlace. Pruebas 19 de 19. Para la directora: Soluciones Globales queda con su Planner
   pendiente, que antes parecía cargado.
+
+### D-004 — Directa: Planner de Agroplast, Planificación Estratégica
+
+- **Estado:** Para revisión (2026-10-01)
+- **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent (dato 10 de T-004)
+- **Archivos:** `enlaces.js`
+- **Notas de entrega:** `url` de "Planner de Planificación Estratégica" (Agroplast): "" →
+  enlace dado por Vincent (no repetido en otro acceso). Único cambio. Pruebas 19 de 19.

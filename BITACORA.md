@@ -11,7 +11,7 @@ El formato de cada entrada está en `AGENTS.md`.
   desconectar el proyecto viejo en Netlify, que quedó congelado.
 - Enlaces del PMO que faltan: Gestión Interna PMO y las tres tarjetas de "Accesos Directos".
 - Enlace del SharePoint de los clientes Soluciones Globales y OMP.
-- Enlace del Planner del cliente Fintax Consulting.
+- Enlace del Planner del cliente Soluciones Globales.
 - Enlace del SharePoint del cliente Urban Empresa Constructora.
 - Enlaces pendientes de Agroplast: Planner de cada uno de sus tres servicios. AgilTech
   Solutions y Atómica Publicidad (cerrados) siguen sin SharePoint; Atómica tampoco tiene
@@ -30,6 +30,12 @@ El formato de cada entrada está en `AGENTS.md`.
   el proveedor de TI, no Vincent directamente — falta coordinar con esa persona.
 
 ---
+
+## 2026-10-01 — Claude (Contenido)
+- **Pedido:** cargar el Planner de Planificación Estratégica de Agroplast (pedido directo).
+- **Cambios:** la tarjeta "Planner de Planificación Estratégica" ya tiene su enlace
+  (`enlaces.js`). Pruebas: 19 de 19 pasan.
+- **Pendiente:** quedan 13 datos por recibir (ver T-004).
 
 ## 2026-10-01 — Claude (Contenido)
 - **Pedido:** cargar el Planner de Fintax; el enlace que dio Vincent ya estaba en Soluciones
