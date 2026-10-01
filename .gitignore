@@ -1,2 +1,4 @@
 .claude/
 *.zip
+# Archivos con datos internos que no deben publicarse (p. ej. la carga de Supabase)
+no-subir/

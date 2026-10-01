@@ -288,7 +288,7 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
 
 ### T-007 — Base de datos y reglas de seguridad (Etapa 1)
 
-- **Estado:** Para revisión (2026-10-01)
+- **Estado:** Completada (revisada por la directora el 2026-10-01)
 - **Asignada a:** Codex (Ingeniería) — **GPT-6 Astra, esfuerzo alto** (es la pieza de
   seguridad; un error expone enlaces)
 - **Archivos:** `supabase/esquema.sql` (nuevo), `supabase/LEEME.md` (nuevo)
@@ -345,16 +345,53 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
   la prueba con usuarios y consultas reales corresponde a la Etapa 5 (T-011). El
   Organizador debe revisar las restricciones, privilegios, disparadores y cada política
   antes de entregarle el archivo a Vincent.
+- **Revisión de la directora:** aprobada, política por política. Sin sesión no hay ningún
+  privilegio (se revoca todo a `anon` y no hay políticas para ese rol); RLS activo en las
+  cuatro tablas; funciones `security definer` con `search_path` vacío, en un esquema
+  `privado` que la API no expone; nadie puede insertar perfiles (los crea el disparador,
+  siempre sin administrador); solo administradores escriben permisos, espacios y accesos;
+  los accesos heredan el permiso de su espacio; las restricciones obligan a que un cliente
+  dependa siempre de `pmo` y un área de sí misma; el disparador impide el autoascenso aunque
+  una política cambie por error. Observaciones menores, sin riesgo: el `correo` del perfil
+  no se actualiza si se cambia el correo en Supabase, y el `nombre` lo pone el administrador.
+  Falta la prueba con una base real (T-011).
 
 ### T-008 — Pantalla de inicio de sesión y carga desde Supabase (Etapa 2)
 
-- **Estado:** Pendiente (espera la Etapa 0 y la T-007)
-- **Asignada a:** Codex — GPT-6 Sol, esfuerzo alto
-- **Archivos:** `index.html`, `tests/`
-- **Qué hacer (resumen; se detalla al asignarla):** inicio de sesión con correo y
-  contraseña, "olvidé mi contraseña" y cierre de sesión; la página carga áreas, clientes y
-  accesos desde Supabase según los permisos; mensajes claros si no tiene áreas o si
-  Supabase no responde.
+- **Estado:** Asignada (2026-10-01)
+- **Asignada a:** Codex (Ingeniería) — GPT-6 Sol, esfuerzo alto
+- **Archivos:** `index.html`, `tests/directorio.test.mjs`
+- **Qué hacer:**
+  1. Interruptor `SUPABASE = { activo: false, url, clavePublica }` al inicio del script,
+     con la URL y la clave pública registradas arriba. **Con `activo: false` el sitio debe
+     funcionar exactamente como hoy** (datos de `enlaces.js`, sin inicio de sesión): así el
+     sitio publicado no cambia mientras se desarrolla. Se enciende en la T-011.
+  2. Con `activo: true`: cargar la librería oficial `@supabase/supabase-js` versión 2 desde
+     jsDelivr solo en ese caso (excepción aprobada a la regla de dependencias, como antes con
+     MSAL) y mostrar la pantalla de inicio de sesión (reutilizar la existente) con correo,
+     contraseña, "¿Olvidaste tu contraseña?" (envía el correo de recuperación con
+     `redirectTo` = la dirección del sitio) y "Cerrar sesión" en el encabezado.
+  3. Cuando la persona llega desde un correo de invitación o de recuperación, pedirle una
+     contraseña nueva (dos veces) y guardarla antes de mostrar el directorio.
+  4. Tras iniciar sesión, leer `espacios` y `accesos` (ordenados por `orden`,
+     `orden_grupo`, `orden`) y convertirlos a las mismas estructuras `AREAS` y `CLIENTES`
+     que usa hoy la página, para reutilizar el dibujo, el buscador, los contadores y las
+     etiquetas. `PROCESOS` y `GENERALES` siguen viniendo de `enlaces.js`. No usar las
+     `AREAS`/`CLIENTES` de `enlaces.js` cuando `activo` es `true`.
+  5. Mensajes claros: usuario sin áreas asignadas; Supabase no responde o el proyecto está
+     en pausa; correo o contraseña incorrectos. Nunca mostrar una página vacía.
+  6. Quitar el código de Microsoft (`AUTH`, MSAL, `puedeVer`/`rolDe` basados en roles de
+     Microsoft): la base de datos ya decide qué ve cada uno.
+  7. Pruebas: con `activo: false` todo sigue igual (las 19 actuales pasan); la conversión
+     de filas de Supabase a `AREAS`/`CLIENTES` con datos de ejemplo; y la página dibujada con
+     un cliente de Supabase simulado (sin red), incluido el caso sin áreas.
+- **No hacer:** no encender `activo`; no escribir correos, contraseñas ni la clave secreta;
+  no tocar `enlaces.js` ni `supabase/`.
+- **Límite conocido:** los agentes no pueden iniciar sesión con contraseñas reales, así que
+  la prueba de punta a punta la hará Vincent en la T-011. Indicarlo en las notas.
+- **Criterios de aceptación:** todas las pruebas pasan; con `activo: false` el sitio
+  publicado se ve y funciona igual que antes; sin errores en la consola.
+- **Notas de entrega:**
 
 ### T-009 — Panel de administración (Etapa 3)
 
@@ -365,11 +402,23 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
 
 ### T-010 — Pasar los enlaces a Supabase y quitarlos del archivo público (Etapa 4)
 
-- **Estado:** Pendiente
-- **Asignada a:** Ejecutador y Vincent
-- **Qué hacer (resumen):** generar desde `enlaces.js` un archivo de carga **fuera del
-  repositorio**, que Vincent pega en Supabase; después dejar `enlaces.js` sin áreas,
-  clientes ni enlaces.
+- **Estado:** Parte 1 asignada (2026-10-01); la parte 2 espera la T-011
+- **Asignada a:** Ejecutador (Contenido) — Claude Sonnet 5.5, esfuerzo medio
+- **Archivos:** `no-subir/datos-supabase.sql` (fuera de Git: la carpeta `no-subir/` está en
+  `.gitignore`); en la parte 2, `enlaces.js`.
+- **Parte 1 — archivo de carga:** generar desde `enlaces.js`, con un script y no a mano,
+  un SQL que inserte todas las áreas y clientes en `public.espacios` y todos sus accesos en
+  `public.accesos`, siguiendo exactamente las columnas y restricciones de
+  `supabase/esquema.sql`: `tipo` 'area'/'cliente'; `rol` = el `id` en áreas y `pmo` en
+  clientes; `proceso` solo en áreas; `estado` solo en clientes; `proyectos_de_clientes`
+  solo en `pmo`; `orden` según el orden actual; en cada acceso, `grupo` = título del grupo,
+  `orden_grupo` y `orden` según su posición; `url` vacía para los pendientes. Debe poder
+  ejecutarse más de una vez sin duplicar (borrar y volver a insertar dentro de una
+  transacción, o `on conflict`). Las herramientas `GENERALES` no se cargan.
+  Entregar en las notas: cuántos espacios y accesos inserta y cómo se comprobó que
+  coinciden con `enlaces.js`. **No subir ese archivo a GitHub.**
+- **Parte 2 (después de la T-011):** dejar en `enlaces.js` solo `PROCESOS` y `GENERALES`.
+- **Notas de entrega:**
 
 ### T-011 — Prueba controlada (Etapa 5)
 

@@ -28,6 +28,13 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ---
 
+## 2026-10-01 — Claude
+- **Pedido:** revisar la T-007 y seguir con el plan de Supabase.
+- **Cambios:** T-007 aprobada tras revisar cada política. T-008 (inicio de sesión y carga
+  desde Supabase, apagada por un interruptor) asignada a Codex y T-010 parte 1 (archivo de
+  carga de datos) al Ejecutador. Nueva carpeta ignorada `no-subir/` en `.gitignore`.
+- **Pendiente:** Vincent ejecuta el esquema y se hace administrador.
+
 ## 2026-10-01 — Claude (Contenido)
 - **Pedido:** cargar el enlace de Material Educativo del PMO (pedido directo).
 - **Cambios:** la tarjeta "Material Educativo" ya tiene su enlace (`enlaces.js`). Pruebas:
