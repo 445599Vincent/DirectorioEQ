@@ -227,6 +227,38 @@ oscuro, estadísticas).
 - **Revisión de la directora (partes 1 y 2):** aprobadas. El diff solo cambia el nombre;
   pruebas en verde; publicado y comprobado sin caché. La tarea sigue En curso por la parte 3.
 
+### T-005 — Que el equipo vea siempre la versión más reciente de los enlaces
+
+- **Estado:** Propuesta (espera aprobación de Vincent)
+- **Asignada a:** Codex (Ingeniería) — GPT-6 Sol, esfuerzo medio
+- **Archivos:** `index.html`, `tests/directorio.test.mjs`
+- **Origen:** propuesta del Ejecutador. Tras cada carga de contenido, el navegador sigue
+  usando hasta 10 minutos una copia vieja de `enlaces.js` (GitHub Pages envía
+  `Cache-Control: max-age=600`); Vincent no veía el Planner único de Agroplast.
+- **Qué hacer:** que `index.html` pida siempre la versión vigente de `enlaces.js`, **sin
+  que nadie tenga que cambiar un número de versión a mano** (el Ejecutador no toca
+  `index.html`). Por ejemplo, cargar `enlaces.js` con una marca de tiempo en la dirección,
+  manteniendo que los datos estén cargados antes de que corra el script principal. Si
+  `enlaces.js` no carga, mostrar un mensaje claro en lugar de una página vacía.
+- **No hacer:** sin dependencias; no tocar `enlaces.js` ni `AUTH`; no cambiar el orden en
+  que se ejecutan los datos y la página sin adaptar las pruebas.
+- **Criterios de aceptación:** todas las pruebas pasan; en el navegador, `enlaces.js` se
+  pide con la marca y responde desde el servidor (no desde la caché); probado en escritorio
+  y móvil; sin errores en la consola.
+- **Notas de entrega:**
+
+### T-006 — Ruta de navegación y botón de volver
+
+- **Estado:** Propuesta (espera aprobación de Vincent)
+- **Asignada a:** Codex (Ingeniería) — GPT-6 Sol, esfuerzo alto
+- **Archivos:** `index.html`, `tests/directorio.test.mjs`
+- **Qué hacer:** línea de ruta visible en cada página interna ("Inicio › Gestión de
+  Proyectos (PMO) › Proyectos Cerrados › Banco Central"), con cada tramo enlazado salvo el
+  último; botón de volver de al menos 44 px de alto; y una página "No encontramos esa
+  página" con enlace al inicio cuando la dirección (`#/…`) no existe, en lugar de mostrar
+  el inicio sin aviso. Detalle se completa al asignarla.
+- **Notas de entrega:**
+
 ### D-001 — Directa: SharePoint de Agroplast, Planificación Estratégica
 
 - **Estado:** Completada (revisada por la directora el 2026-10-01)
