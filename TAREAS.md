@@ -446,6 +446,13 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
 
   Atención para la parte 2: el SQL refleja `enlaces.js` de hoy; si se cargan más enlaces antes
   de la T-011, hay que regenerarlo con el script.
+- **Revisión de la directora (parte 1):** aprobada. El archivo sigue fuera de Git (ignorado
+  por `.gitignore`, 0 archivos de `no-subir/` en el repositorio). Comprobado contra
+  `enlaces.js`: 21 espacios y 42 accesos, las 36 URLs con enlace presentes, los 6 pendientes
+  con `url` vacía, sin textos con apóstrofos que rompan el SQL; columnas y valores
+  coherentes con las restricciones de `supabase/esquema.sql` (rol, proceso, estado,
+  `proyectos_de_clientes` solo en `pmo`). Transacción con borrar e insertar: reejecutable.
+  La prueba real será al ejecutarlo en Supabase.
 
 ### T-011 — Prueba controlada (Etapa 5)
 
