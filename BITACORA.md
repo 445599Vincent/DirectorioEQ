@@ -31,6 +31,12 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ---
 
+## 2026-10-01 — Claude (Contenido)
+- **Pedido:** cargar el enlace de Gestión Interna PMO (pedido directo).
+- **Cambios:** la tarjeta "Gestión Interna PMO" ya tiene su enlace (`enlaces.js`); con esto
+  las secciones de contenido del PMO quedan completas. Pruebas: 19 de 19 pasan.
+- **Pendiente:** quedan 8 datos por recibir (ver T-004).
+
 ## 2026-10-01 — Claude
 - **Pedido:** controlar el acceso a los enlaces con usuario y contraseña, de modo que cada
   persona solo vea lo autorizado.

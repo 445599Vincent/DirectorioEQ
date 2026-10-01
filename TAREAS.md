@@ -507,3 +507,11 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
   "" → enlaces dados por Vincent (ninguno repetido en otro acceso). Con D-012 y D-013, las 6
   carpetas del grupo "Carpetas de Recursos Humanos" tienen enlace. Único cambio: dos `url`.
   Pruebas 19 de 19.
+
+### D-015 — Directa: Gestión Interna PMO
+
+- **Estado:** Para revisión (2026-10-01)
+- **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent
+- **Archivos:** `enlaces.js`
+- **Notas de entrega:** `url` de "Gestión Interna PMO": "" → enlace dado por Vincent (no
+  repetido en otro acceso). Único cambio. Pruebas 19 de 19.

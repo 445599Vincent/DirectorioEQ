@@ -122,7 +122,7 @@ const AREAS = [
           { nombre: "Portafolio", descripcion: "Vista general de todos los proyectos.", url: "https://eccoqualita2102.sharepoint.com/:f:/s/PROJECTMANAGEMENTOFFICE/IgD0Z6RYpx6JQ7Uack4Sub25AQNVIAL3jdjjeupHs8vzIJ0?e=WeyYhI", icono: "sharepoint" },
           { nombre: "Proyectos Cerrados", descripcion: "Archivo de proyectos finalizados.", url: "#/proyectos-cerrados", icono: "archivo" },
           { nombre: "Lecciones Aprendidas", descripcion: "Aprendizajes documentados de cada proyecto.", url: "https://eccoqualita2102.sharepoint.com/:f:/s/PROJECTMANAGEMENTOFFICE/IgByijg0MMP1R4dhYo2ZP49vASkNuzQ5twVgawb6-LEABpQ?e=FoqapX", icono: "sharepoint" },
-          { nombre: "Gestión Interna PMO", descripcion: "Organización y documentos internos del PMO.", url: "", icono: "sharepoint" },
+          { nombre: "Gestión Interna PMO", descripcion: "Organización y documentos internos del PMO.", url: "https://eccoqualita2102.sharepoint.com/:f:/s/PROJECTMANAGEMENTOFFICE/IgDaA1LlTOTrSp8OXeFOsJQfAT5R4g-dIFDfhyH-GAcNkdk?e=FJUcaC", icono: "sharepoint" },
         ],
       },
       {
