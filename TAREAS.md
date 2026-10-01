@@ -137,7 +137,7 @@ oscuro, estadísticas).
 
 ### T-003 — Contadores reales y etiquetas de estado en las tarjetas
 
-- **Estado:** En curso
+- **Estado:** Para revisión
 - **Asignada a:** Codex (Ingeniería) — modelo GPT-6 Sol, esfuerzo medio
 - **Archivos:** `index.html`, `tests/directorio.test.mjs`
 - **Problema:** las tarjetas de áreas y clientes cuentan los enlaces pendientes como si
@@ -177,7 +177,15 @@ oscuro, estadísticas).
 - **Criterios de aceptación:** todas las pruebas pasan; `enlaces.js` sin cambios; probado
   en escritorio y móvil (375 px) sin desbordes; contraste de las etiquetas ≥ 4,5:1
   indicado en las "Notas de entrega".
-- **Notas de entrega:**
+- **Notas de entrega:** `index.html` muestra el conteo real de disponibles y pendientes,
+  añade las píldoras "Activo"/"Cerrado" solo a clientes y cambia la etiqueta de la portada
+  a "Cliente activo" o "Cliente cerrado". `tests/directorio.test.mjs` cubre los cinco casos
+  fijos pedidos, compara todas las tarjetas con los datos actuales y verifica estados en
+  PMO, cerrados y búsqueda; pasan 19 pruebas. Probado en escritorio (1280 px) y móvil
+  (375 px), sin desborde horizontal ni de tarjetas y sin errores del navegador. Contraste:
+  "Activo", blanco `#ffffff` sobre `#0a4950`, 10,09:1; "Cerrado", gris `#646464` sobre
+  `#f6f5ef`, 5,42:1. `enlaces.js` y `AUTH` no cambiaron. El Organizador debe revisar los
+  textos de conteo, las etiquetas en los tres contextos y la presentación a 375 px.
 
 ### T-004 — Ajuste "Sitio Web" y recolección de datos pendientes
 
@@ -231,3 +239,14 @@ oscuro, estadísticas).
   Agroplast (ahora son 3 disponibles y 3 pendientes): hay que contar desde `enlaces.js`.
 - **Revisión de la directora:** aprobada. El diff solo cambia las `url` indicadas, las
   pruebas pasan (14 de 14 en la versión subida) y el sitio publicado ya las muestra.
+
+### D-003 — Directa: Planner de Fintax (movido desde Soluciones Globales)
+
+- **Estado:** Para revisión (2026-10-01)
+- **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent (dato 8 de T-004)
+- **Archivos:** `enlaces.js`
+- **Notas de entrega:** el enlace de Planner dado para Fintax ya estaba cargado en Soluciones
+  Globales. Vincent confirmó que es de Fintax y pidió quitarlo del otro cliente. Cambios:
+  Planner de Soluciones Globales: enlace → "" (queda pendiente); Planner de Fintax: "" →
+  ese enlace. Pruebas 19 de 19. Para la directora: Soluciones Globales queda con su Planner
+  pendiente, que antes parecía cargado.

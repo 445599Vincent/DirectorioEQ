@@ -5,16 +5,17 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ## Pendientes generales
 
-- La directora debe revisar T-001: pruebas automáticas de los datos entregadas por Codex.
+- El Organizador debe revisar T-003: contadores reales y etiquetas de estado entregados por
+  Codex.
 - Avisar al equipo de la dirección oficial (https://directorio.eccoqualita.com) y borrar o
   desconectar el proyecto viejo en Netlify, que quedó congelado.
 - Enlaces del PMO que faltan: Gestión Interna PMO y las tres tarjetas de "Accesos Directos".
 - Enlace del SharePoint de los clientes Soluciones Globales y OMP.
 - Enlace del Planner del cliente Fintax Consulting.
 - Enlace del SharePoint del cliente Urban Empresa Constructora.
-- Clientes nuevos sin enlaces: Agroplast (activo: SharePoint y Planner de cada uno de sus
-  tres servicios), AgilTech Solutions y Atómica Publicidad (cerrados: SharePoint). Atómica
-  tampoco tiene logo.
+- Enlaces pendientes de Agroplast: Planner de cada uno de sus tres servicios. AgilTech
+  Solutions y Atómica Publicidad (cerrados) siguen sin SharePoint; Atómica tampoco tiene
+  logo.
 - Planner de Recursos Humanos y de Calidad: confirmar si existen y sus enlaces.
 - Siete áreas del mapa de procesos están sin accesos: Planificación, Comunicaciones,
   Servicios Generales, Mantenimiento de Infraestructura, TIC, Legal y Seguridad. Faltan
@@ -29,6 +30,24 @@ El formato de cada entrada está en `AGENTS.md`.
   el proveedor de TI, no Vincent directamente — falta coordinar con esa persona.
 
 ---
+
+## 2026-10-01 — Claude (Contenido)
+- **Pedido:** cargar el Planner de Fintax; el enlace que dio Vincent ya estaba en Soluciones
+  Globales y él indicó que corresponde a Fintax y que se quite del otro cliente.
+- **Cambios:** el Planner de Fintax Consulting ya tiene su enlace y el Planner de Soluciones
+  Globales quedó pendiente (`enlaces.js`). Pruebas: 19 de 19 pasan.
+- **Pendiente:** enlace del Planner de Soluciones Globales (quedan 14 datos por recibir, ver T-004).
+
+## 2026-10-01 — Codex
+- **Pedido:** ejecutar T-003: mostrar contadores reales y etiquetas de estado en las
+  tarjetas de áreas y clientes.
+- **Cambios:** `index.html` ahora separa accesos disponibles y pendientes, muestra
+  "Activo" o "Cerrado" en las tarjetas de clientes y refleja el estado en la portada de
+  cada cliente. `tests/directorio.test.mjs` añadió cinco pruebas de comportamiento, con
+  casos fijos y comparación dinámica de todas las tarjetas. Pasan 19 pruebas. Se comprobó
+  en escritorio y móvil a 375 px, sin desbordes ni errores. Los contrastes son 10,09:1
+  para "Activo" y 5,42:1 para "Cerrado".
+- **Pendiente:** revisión del Organizador para marcar T-003 como completada.
 
 ## 2026-10-01 — Claude (Contenido)
 - **Pedido:** cargar los SharePoint de Agroplast para Programa EHS y Gerencia de Calidad

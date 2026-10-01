@@ -234,7 +234,7 @@ const CLIENTES = [
         titulo: "Accesos del proyecto",
         enlaces: [
           { nombre: "SharePoint del proyecto", descripcion: "Documentos y entregables del cliente.", url: "", icono: "sharepoint" },
-          { nombre: "Planner del proyecto", descripcion: "Tareas y seguimiento del proyecto.", url: "https://planner.cloud.microsoft/webui/v1/plan/IXemCIoX50WH7WRXfwVKnGUADegf?tid=f0b59f88-a70a-4207-864a-406a47180842", icono: "planner" },
+          { nombre: "Planner del proyecto", descripcion: "Tareas y seguimiento del proyecto.", url: "", icono: "planner" },
         ],
       },
     ],
@@ -266,7 +266,7 @@ const CLIENTES = [
         titulo: "Accesos del proyecto",
         enlaces: [
           { nombre: "SharePoint del proyecto", descripcion: "Documentos y entregables del cliente.", url: "https://eccoqualita2102.sharepoint.com/sites/FintaxConsulting/SitePages/CollabHome.aspx", icono: "sharepoint" },
-          { nombre: "Planner del proyecto", descripcion: "Tareas y seguimiento del proyecto.", url: "", icono: "planner" },
+          { nombre: "Planner del proyecto", descripcion: "Tareas y seguimiento del proyecto.", url: "https://planner.cloud.microsoft/webui/v1/plan/IXemCIoX50WH7WRXfwVKnGUADegf?tid=f0b59f88-a70a-4207-864a-406a47180842", icono: "planner" },
         ],
       },
     ],

@@ -32,4 +32,3 @@ Formato de la hora: `AAAA-MM-DD HH:MM` (hora local de República Dominicana).
 
 | Agente | Sesión | Desde | Archivos | Tarea |
 |---|---|---|---|---|
-| Claude | Ejecutador (Contenido) | 2026-10-01 10:41 | `enlaces.js` | D-003 — Planner de Fintax (mover desde Soluciones Globales) |
