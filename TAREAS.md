@@ -161,10 +161,17 @@ oscuro, estadísticas).
      azulado para "Activo"; gris de texto sobre fondo gris claro para "Cerrado"). El
      estado debe leerse por el texto, no solo por el color, y el contraste del texto de
      las etiquetas debe ser al menos 4,5:1.
-  5. Pruebas nuevas en `tests/directorio.test.mjs`: el conteo de Agroplast ("6
-     pendientes"), Banco Central ("1 disponible"), Soluciones Globales ("1 disponible · 1
-     pendiente") y un área sin accesos ("Sin accesos todavía"); las tarjetas de clientes
-     cerrados dicen "Cerrado" y las de activos "Activo"; las de áreas no llevan etiqueta.
+  5. Pruebas nuevas en `tests/directorio.test.mjs`. **Corrección de la directora
+     (2026-10-01):** no fijar números de los datos reales, porque el Ejecutador sigue
+     cargando enlaces (Agroplast ya tiene 3 disponibles y 3 pendientes). En su lugar:
+     a) probar el texto del contador con casos fijos (2/1, 1/0, 0/6, 1/1, 0/0 →
+        "2 disponibles · 1 pendiente", "1 disponible", "6 pendientes",
+        "1 disponible · 1 pendiente", "Sin accesos todavía"), y
+     b) comprobar que cada tarjeta de área y cliente muestra el conteo que corresponde a
+        sus accesos de `enlaces.js`, calculado en la prueba contando las `url` vacías y
+        no vacías.
+     Además: las tarjetas de clientes cerrados dicen "Cerrado", las de activos "Activo" y
+     las de áreas no llevan etiqueta.
 - **No hacer:** no tocar `enlaces.js`, `AUTH` ni el buscador más allá de que muestre la
   etiqueta; sin dependencias nuevas.
 - **Criterios de aceptación:** todas las pruebas pasan; `enlaces.js` sin cambios; probado
@@ -199,21 +206,28 @@ oscuro, estadísticas).
   Parte 2 hecha: lista de los 18 accesos con `url` vacía, el logo de Atómica Publicidad y la
   pregunta por los Planner de RR. HH. y Calidad presentada a Vincent en el chat. La tarea sigue
   abierta para la parte 3 (cargar lo que él entregue como tareas Directas).
+- **Revisión de la directora (partes 1 y 2):** aprobadas. El diff solo cambia el nombre;
+  pruebas en verde; publicado y comprobado sin caché. La tarea sigue En curso por la parte 3.
 
 ### D-001 — Directa: SharePoint de Agroplast, Planificación Estratégica
 
-- **Estado:** Para revisión (2026-10-01)
+- **Estado:** Completada (revisada por la directora el 2026-10-01)
 - **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent (dato 9 de T-004)
 - **Archivos:** `enlaces.js`
 - **Notas de entrega:** `url` de "SharePoint de Planificación Estratégica" (Agroplast): "" →
   enlace dado por Vincent. Es el único cambio. Pruebas 14 de 14.
+- **Revisión de la directora:** aprobada. El diff solo cambia las `url` indicadas, las
+  pruebas pasan (14 de 14 en la versión subida) y el sitio publicado ya las muestra.
+
 
 ### D-002 — Directa: SharePoint de Agroplast, Programa EHS y Gerencia de Calidad
 
-- **Estado:** Para revisión (2026-10-01)
+- **Estado:** Completada (revisada por la directora el 2026-10-01)
 - **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent (datos 13 y 11 de T-004)
 - **Archivos:** `enlaces.js`
 - **Notas de entrega:** `url` de "SharePoint del Programa EHS" y de "SharePoint de Gerencia de
   Calidad" (Agroplast): "" → enlaces dados por Vincent. Son los únicos cambios. Con los datos
   actuales, la prueba nueva de Codex (T-003, sin subir) falla porque fija "6 pendientes" para
   Agroplast (ahora son 3 disponibles y 3 pendientes): hay que contar desde `enlaces.js`.
+- **Revisión de la directora:** aprobada. El diff solo cambia las `url` indicadas, las
+  pruebas pasan (14 de 14 en la versión subida) y el sitio publicado ya las muestra.
