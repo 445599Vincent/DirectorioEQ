@@ -350,3 +350,13 @@ oscuro, estadísticas).
   URLs repetidas, las 19 pruebas pasan y el sitio publicado ya lo muestra.
   Cambio de estructura pedido por Vincent: el enlace del Planner de Planificación
   Estratégica (D-004) quedó reemplazado por el Planner único que él indicó.
+
+### D-009 — Directa: Expedientes de clientes en Gestión Comercial
+
+- **Estado:** Para revisión (2026-10-01)
+- **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent
+- **Archivos:** `enlaces.js`
+- **Notas de entrega:** acceso nuevo "Expedientes de Clientes" en el grupo "Accesos principales"
+  de Gestión Comercial (después de Planner Comercial), con el enlace de la carpeta dado por
+  Vincent, icono `sharepoint` y la descripción "Carpeta con los expedientes de los clientes."
+  (redacción mía; la tarea no la dio). Único cambio: una línea agregada. Pruebas 19 de 19.

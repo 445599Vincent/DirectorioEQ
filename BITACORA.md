@@ -31,6 +31,12 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ---
 
+## 2026-10-01 — Claude (Contenido)
+- **Pedido:** agregar la carpeta de Comercial con los expedientes de los clientes (pedido directo).
+- **Cambios:** nueva tarjeta "Expedientes de Clientes" en Gestión Comercial, con su enlace de
+  SharePoint (`enlaces.js`). Pruebas: 19 de 19 pasan.
+- **Pendiente:** Nada de este pedido. Siguen 10 datos por recibir (ver T-004).
+
 ## 2026-10-01 — Claude
 - **Pedido:** revisar la T-003 de Codex; destrabar al Ejecutador, cuya carga de Agroplast
   fallaba en una prueba de la T-003.

@@ -32,4 +32,3 @@ Formato de la hora: `AAAA-MM-DD HH:MM` (hora local de República Dominicana).
 
 | Agente | Sesión | Desde | Archivos | Tarea |
 |---|---|---|---|---|
-| Claude | Ejecutador (Contenido) | 2026-10-01 11:18 | `enlaces.js` | D-009 — Expedientes de clientes en Comercial |

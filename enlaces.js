@@ -94,6 +94,7 @@ const AREAS = [
           { nombre: "SharePoint Comercial", descripcion: "Documentos del área comercial.", url: "https://eccoqualita2102.sharepoint.com/sites/ECCOCOMERCIAL", icono: "sharepoint" },
           { nombre: "Planner Comercial", descripcion: "Tareas y seguimiento del área comercial.", url: "https://planner.cloud.microsoft/webui/v1/plan/jynw7IFF90WClrnHUHpE-2UAHols?tid=f0b59f88-a70a-4207-864a-406a47180842", icono: "planner" },
           { nombre: "HubSpot", descripcion: "CRM: gestión de clientes, contactos y oportunidades.", url: "https://app.hubspot.com/", icono: "hubspot" },
+          { nombre: "Expedientes de Clientes", descripcion: "Carpeta con los expedientes de los clientes.", url: "https://eccoqualita2102.sharepoint.com/:f:/s/ECCOCOMERCIAL/IgA6Tio2wHHtTKk787z9w6OjAcdmUa0zYlhAiGzcujjxNM0?e=S1DQiC", icono: "sharepoint" },
         ],
       },
     ],
