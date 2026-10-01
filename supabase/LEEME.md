@@ -1,0 +1,56 @@
+# Base de datos del Directorio Ecco Qualitá
+
+Este directorio contiene la base segura que usará el inicio de sesión propio del
+Directorio. Todavía no cambia la página web ni mueve los enlaces actuales.
+
+## Qué crea `esquema.sql`
+
+- `perfiles`: una ficha por cada usuario de Supabase. Todo usuario nuevo empieza con
+  `es_admin = false`.
+- `permisos`: las áreas que puede consultar cada usuario.
+- `espacios`: las áreas y los clientes. Cada cliente exige el permiso `pmo`.
+- `accesos`: los enlaces de cada área o cliente.
+- Reglas RLS: la base de datos decide qué filas puede leer o cambiar cada sesión.
+- Un esquema privado para las comprobaciones de permisos. No se expone en la API.
+
+El archivo también crea perfiles para usuarios que ya existan cuando se ejecute. Si se
+vuelve a ejecutar, no borra datos ni devuelve administradores a `false`.
+
+## Cómo ejecutarlo
+
+1. En Supabase, abre el proyecto **Directorio EQ**.
+2. Abre **SQL Editor** y crea una consulta nueva.
+3. Copia el archivo `esquema.sql` completo, pégalo y pulsa **Run** una sola vez.
+4. Comprueba que aparecen las cuatro tablas en **Table Editor**.
+5. Crea el usuario de Vincent desde la administración de usuarios de Supabase, si todavía
+   no existe. No compartas su contraseña ni la escribas en este repositorio.
+6. Al final de `esquema.sql` hay una instrucción comentada. Sustituye el texto por el
+   correo real de Vincent, quita los guiones iniciales y ejecuta únicamente esa instrucción
+   para convertirlo en el primer administrador.
+
+La instrucción final solo se ejecuta desde el SQL Editor. Una persona normal no puede usar
+la página ni la API para hacerse administradora a sí misma.
+
+## Quién puede hacer qué
+
+| Acción | Sin iniciar sesión | Usuario | Administrador |
+|---|---:|---:|---:|
+| Leer su propio perfil | No | Sí | Sí |
+| Leer perfiles de otras personas | No | No | Sí |
+| Cambiar perfiles | No | No | Sí |
+| Leer sus propios permisos | No | Sí | Sí |
+| Leer permisos de otras personas | No | No | Sí |
+| Crear, cambiar o borrar permisos | No | No | Sí |
+| Leer áreas y clientes permitidos | No | Sí | Sí, todos |
+| Leer accesos permitidos | No | Sí | Sí, todos |
+| Crear, cambiar o borrar áreas, clientes y accesos | No | No | Sí |
+| Darse a sí mismo el nivel de administrador | No | No | No |
+
+Las herramientas generales no se guardan todavía en estas tablas: seguirán en el código
+y serán visibles para cualquier persona que haya iniciado sesión, como define el proyecto.
+
+## Comprobación pendiente
+
+El archivo se revisa política por política antes de entregarlo. La prueba real con usuarios
+de distinto nivel se hará en la Etapa 5 (T-011), usando el proyecto de Supabase y cuentas
+creadas por Vincent. Este repositorio no contiene claves secretas ni contraseñas.
