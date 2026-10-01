@@ -32,6 +32,12 @@ El formato de cada entrada está en `AGENTS.md`.
 ---
 
 ## 2026-10-01 — Claude (Contenido)
+- **Pedido:** cargar el enlace de Reportes de Consultores del SharePoint del PMO (pedido directo).
+- **Cambios:** la tarjeta "Reportes de Consultores" ya tiene su enlace (`enlaces.js`).
+  Pruebas: 19 de 19 pasan.
+- **Pendiente:** quedan 9 datos por recibir (ver T-004).
+
+## 2026-10-01 — Claude (Contenido)
 - **Pedido:** agregar la carpeta de Comercial con los expedientes de los clientes (pedido directo).
 - **Cambios:** nueva tarjeta "Expedientes de Clientes" en Gestión Comercial, con su enlace de
   SharePoint (`enlaces.js`). Pruebas: 19 de 19 pasan.

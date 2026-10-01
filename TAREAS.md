@@ -360,3 +360,11 @@ oscuro, estadísticas).
   de Gestión Comercial (después de Planner Comercial), con el enlace de la carpeta dado por
   Vincent, icono `sharepoint` y la descripción "Carpeta con los expedientes de los clientes."
   (redacción mía; la tarea no la dio). Único cambio: una línea agregada. Pruebas 19 de 19.
+
+### D-010 — Directa: Reportes de Consultores (PMO)
+
+- **Estado:** Para revisión (2026-10-01)
+- **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent
+- **Archivos:** `enlaces.js`
+- **Notas de entrega:** `url` de "Reportes de Consultores" (Accesos Directos del PMO): "" →
+  enlace dado por Vincent (no repetido en otro acceso). Único cambio. Pruebas 19 de 19.

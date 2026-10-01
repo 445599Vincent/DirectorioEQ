@@ -128,7 +128,7 @@ const AREAS = [
       {
         titulo: "Accesos Directos",
         enlaces: [
-          { nombre: "Reportes de Consultores", descripcion: "Reportes de avance que entregan los consultores.", url: "", icono: "sharepoint" },
+          { nombre: "Reportes de Consultores", descripcion: "Reportes de avance que entregan los consultores.", url: "https://eccoqualita2102.sharepoint.com/:f:/s/PROJECTMANAGEMENTOFFICE/IgCRFraWGk45Q4hcJs4rq3o4AZHcES6BDf5h9I0PFd4K4gU?e=ZMnlHM", icono: "sharepoint" },
           { nombre: "Plantillas PMO", descripcion: "Plantillas de uso interno del PMO.", url: "", icono: "sharepoint" },
           { nombre: "Material Educativo", descripcion: "Material de apoyo y consulta del PMO.", url: "", icono: "sharepoint" },
         ],
