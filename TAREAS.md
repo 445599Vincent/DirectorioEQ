@@ -252,7 +252,7 @@ oscuro, estadísticas).
 
 ### D-003 — Directa: Planner de Fintax (movido desde Soluciones Globales)
 
-- **Estado:** Para revisión (2026-10-01)
+- **Estado:** Completada (revisada por la directora el 2026-10-01)
 - **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent (dato 8 de T-004)
 - **Archivos:** `enlaces.js`
 - **Notas de entrega:** el enlace de Planner dado para Fintax ya estaba cargado en Soluciones
@@ -260,42 +260,52 @@ oscuro, estadísticas).
   Planner de Soluciones Globales: enlace → "" (queda pendiente); Planner de Fintax: "" →
   ese enlace. Pruebas 19 de 19. Para la directora: Soluciones Globales queda con su Planner
   pendiente, que antes parecía cargado.
+- **Revisión de la directora:** aprobada. El diff solo toca los accesos indicados, no hay
+  URLs repetidas, las 19 pruebas pasan y el sitio publicado ya lo muestra.
 
 ### D-004 — Directa: Planner de Agroplast, Planificación Estratégica
 
-- **Estado:** Para revisión (2026-10-01)
+- **Estado:** Completada (revisada por la directora el 2026-10-01)
 - **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent (dato 10 de T-004)
 - **Archivos:** `enlaces.js`
 - **Notas de entrega:** `url` de "Planner de Planificación Estratégica" (Agroplast): "" →
   enlace dado por Vincent (no repetido en otro acceso). Único cambio. Pruebas 19 de 19.
+- **Revisión de la directora:** aprobada. El diff solo toca los accesos indicados, no hay
+  URLs repetidas, las 19 pruebas pasan y el sitio publicado ya lo muestra.
 
 ### D-005 — Directa: Planner de Calidad
 
-- **Estado:** Para revisión (2026-10-01)
+- **Estado:** Completada (revisada por la directora el 2026-10-01)
 - **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent (dato 1 de T-004)
 - **Archivos:** `enlaces.js`
 - **Notas de entrega:** `url` de "Planner Calidad": "" → enlace dado por Vincent (no repetido
   en otro acceso). Único cambio. Pruebas 19 de 19.
+- **Revisión de la directora:** aprobada. El diff solo toca los accesos indicados, no hay
+  URLs repetidas, las 19 pruebas pasan y el sitio publicado ya lo muestra.
 
 ### D-006 — Directa: SharePoint de Soluciones Globales
 
-- **Estado:** Para revisión (2026-10-01)
+- **Estado:** Completada (revisada por la directora el 2026-10-01)
 - **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent (dato 7 de T-004)
 - **Archivos:** `enlaces.js`
 - **Notas de entrega:** `url` de "SharePoint del proyecto" (Soluciones Globales): "" → enlace
   dado por Vincent (no repetido en otro acceso). Único cambio. Pruebas 19 de 19.
+- **Revisión de la directora:** aprobada. El diff solo toca los accesos indicados, no hay
+  URLs repetidas, las 19 pruebas pasan y el sitio publicado ya lo muestra.
 
 ### D-007 — Directa: Planner de Soluciones Globales
 
-- **Estado:** Para revisión (2026-10-01)
+- **Estado:** Completada (revisada por la directora el 2026-10-01)
 - **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent
 - **Archivos:** `enlaces.js`
 - **Notas de entrega:** `url` de "Planner del proyecto" (Soluciones Globales): "" → enlace dado
   por Vincent (no repetido en otro acceso). Único cambio. Pruebas 19 de 19.
+- **Revisión de la directora:** aprobada. El diff solo toca los accesos indicados, no hay
+  URLs repetidas, las 19 pruebas pasan y el sitio publicado ya lo muestra.
 
 ### D-008 — Directa: Agroplast con un solo Planner
 
-- **Estado:** Para revisión (2026-10-01)
+- **Estado:** Completada (revisada por la directora el 2026-10-01)
 - **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent
 - **Archivos:** `enlaces.js`
 - **Notas de entrega:** se quitaron los 3 Planner por servicio de Agroplast (el de Planificación
@@ -304,3 +314,7 @@ oscuro, estadísticas).
   accesos. Vincent pidió subirlo de inmediato. Aviso: hasta que Codex suba su corrección, la
   prueba "el contador cubre combinaciones fijas…" falla en el repositorio (fijaba 6 URLs para
   agroplast); con su copia local pasa 19 de 19.
+- **Revisión de la directora:** aprobada. El diff solo toca los accesos indicados, no hay
+  URLs repetidas, las 19 pruebas pasan y el sitio publicado ya lo muestra.
+  Cambio de estructura pedido por Vincent: el enlace del Planner de Planificación
+  Estratégica (D-004) quedó reemplazado por el Planner único que él indicó.
