@@ -274,3 +274,11 @@ oscuro, estadísticas).
 - **Archivos:** `enlaces.js`
 - **Notas de entrega:** `url` de "SharePoint del proyecto" (Soluciones Globales): "" → enlace
   dado por Vincent (no repetido en otro acceso). Único cambio. Pruebas 19 de 19.
+
+### D-007 — Directa: Planner de Soluciones Globales
+
+- **Estado:** Para revisión (2026-10-01)
+- **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent
+- **Archivos:** `enlaces.js`
+- **Notas de entrega:** `url` de "Planner del proyecto" (Soluciones Globales): "" → enlace dado
+  por Vincent (no repetido en otro acceso). Único cambio. Pruebas 19 de 19.

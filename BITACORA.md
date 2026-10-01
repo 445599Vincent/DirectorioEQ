@@ -32,6 +32,13 @@ El formato de cada entrada está en `AGENTS.md`.
 ---
 
 ## 2026-10-01 — Claude (Contenido)
+- **Pedido:** cargar el Planner de Soluciones Globales (pedido directo).
+- **Cambios:** la tarjeta "Planner del proyecto" de Soluciones Globales ya tiene su enlace
+  (`enlaces.js`); había quedado pendiente al mover el enlace anterior a Fintax. Soluciones
+  Globales queda completo. Pruebas: 19 de 19 pasan.
+- **Pendiente:** quedan 10 datos por recibir (ver T-004).
+
+## 2026-10-01 — Claude (Contenido)
 - **Pedido:** cargar el SharePoint de Soluciones Globales (pedido directo).
 - **Cambios:** la tarjeta "SharePoint del proyecto" de Soluciones Globales ya tiene su enlace
   (`enlaces.js`). Pruebas: 19 de 19 pasan.
