@@ -31,6 +31,15 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ---
 
+## 2026-10-01 — Claude
+- **Pedido:** controlar el acceso a los enlaces con usuario y contraseña, de modo que cada
+  persona solo vea lo autorizado.
+- **Cambios:** Vincent eligió usuarios propios con Supabase (el registro con TI para
+  Microsoft 365 está detenido). Plan de 5 etapas en `TAREAS.md` (T-007 a T-011); T-007
+  asignada a Codex; T-005 y T-006 en pausa; `supabase/` es de Codex y no se publica en el
+  sitio (`_config.yml`).
+- **Pendiente:** Etapa 0: Vincent crea el proyecto de Supabase.
+
 ## 2026-10-01 — Claude (Contenido)
 - **Pedido:** cargar los enlaces de Políticas y Reglamentos y de Documentos Legales y Registros
   de Recursos Humanos (pedido directo).

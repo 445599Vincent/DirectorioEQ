@@ -9,7 +9,7 @@ asignadas a ellos**. Vincent (el usuario) aprueba cada tarea antes de que se asi
 | Rol | Agente | Archivos propios |
 |---|---|---|
 | Directora | Claude — sesión "Organizador" | `TAREAS.md`, `AGENTS.md`, `CONFIGURAR-INICIO-DE-SESION.md`, `_config.yml`; revisión final de todo |
-| Ingeniería | Codex | `index.html`, `tests/` |
+| Ingeniería | Codex | `index.html`, `tests/`, `supabase/` |
 | Contenido | Claude — sesión "Ejecutador" | `enlaces.js`, `logos/` |
 
 `BITACORA.md` y `EN-CURSO.md` los editan todos, siempre con cambios puntuales.
@@ -229,7 +229,8 @@ oscuro, estadísticas).
 
 ### T-005 — Que el equipo vea siempre la versión más reciente de los enlaces
 
-- **Estado:** Propuesta (espera aprobación de Vincent)
+- **Estado:** En pausa (2026-10-01): probablemente innecesaria, porque con Supabase los
+  enlaces se leerán directo de la base de datos y no de `enlaces.js`.
 - **Asignada a:** Codex (Ingeniería) — GPT-6 Sol, esfuerzo medio
 - **Archivos:** `index.html`, `tests/directorio.test.mjs`
 - **Origen:** propuesta del Ejecutador. Tras cada carga de contenido, el navegador sigue
@@ -249,7 +250,8 @@ oscuro, estadísticas).
 
 ### T-006 — Ruta de navegación y botón de volver
 
-- **Estado:** Propuesta (espera aprobación de Vincent)
+- **Estado:** En pausa (2026-10-01): se hará después del inicio de sesión, para no editar
+  `index.html` dos veces.
 - **Asignada a:** Codex (Ingeniería) — GPT-6 Sol, esfuerzo alto
 - **Archivos:** `index.html`, `tests/directorio.test.mjs`
 - **Qué hacer:** línea de ruta visible en cada página interna ("Inicio › Gestión de
@@ -258,6 +260,97 @@ oscuro, estadísticas).
   página" con enlace al inicio cuando la dirección (`#/…`) no existe, en lugar de mostrar
   el inicio sin aviso. Detalle se completa al asignarla.
 - **Notas de entrega:**
+
+## Proyecto: inicio de sesión con usuarios propios (Supabase)
+
+Aprobado por Vincent el 2026-10-01. Cada persona entra con correo y contraseña; Vincent
+crea los usuarios y les asigna áreas desde un panel de administración. Los enlaces salen de
+`enlaces.js` y se guardan en Supabase, que solo entrega a cada usuario los de sus áreas
+(reglas de seguridad de la base de datos, "RLS"). Los clientes dependen del permiso del
+área `pmo`. Las herramientas `GENERALES` siguen en el código, visibles para cualquier
+usuario que haya iniciado sesión. El código de Microsoft (`AUTH`, MSAL) queda sin uso.
+
+**Reglas de este proyecto:** en el sitio y en el repositorio solo pueden aparecer la URL
+del proyecto de Supabase y la clave **pública** (`sb_publishable_…`). La clave secreta
+(`sb_secret_…` / `service_role`) y la contraseña de la base de datos **nunca** se escriben
+en el repositorio, en `BITACORA.md` ni en mensajes entre agentes. Los agentes no crean
+cuentas ni inician sesión con contraseñas: eso lo hace Vincent.
+
+Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1** T-007 ·
+**2** T-008 · **3** T-009 · **4** T-010 · **5** T-011.
+
+### T-007 — Base de datos y reglas de seguridad (Etapa 1)
+
+- **Estado:** Asignada (2026-10-01)
+- **Asignada a:** Codex (Ingeniería) — **GPT-6 Astra, esfuerzo alto** (es la pieza de
+  seguridad; un error expone enlaces)
+- **Archivos:** `supabase/esquema.sql` (nuevo), `supabase/LEEME.md` (nuevo)
+- **Qué hacer:** un solo archivo SQL que Vincent pegará una vez en el "SQL Editor" de
+  Supabase, que se pueda volver a ejecutar sin romper nada, con:
+  1. Tablas en el esquema `public`:
+     - `perfiles` (`id` uuid = `auth.users.id`, `correo`, `nombre`, `es_admin` boolean
+       por defecto `false`, fecha de creación). Se crea sola para cada usuario nuevo con un
+       disparador sobre `auth.users`, siempre con `es_admin = false`.
+     - `permisos` (`usuario_id` → `perfiles`, `area_id` texto; clave primaria de ambos).
+     - `espacios` (áreas y clientes con los mismos campos que hoy tiene `enlaces.js`:
+       `id`, `tipo` 'area' o 'cliente', `nombre`, `descripcion`, `icono`, `proceso`,
+       `estado`, `logo`, `proyectos_de_clientes`, `orden`) más `rol`: el área cuyo permiso
+       se exige para verlo (su propio `id` en las áreas; `pmo` en los clientes). Restricciones
+       `check` equivalentes a las pruebas actuales (tipo, estado de clientes, proceso).
+     - `accesos` (`id`, `espacio_id` → `espacios`, `grupo`, `orden_grupo`, `nombre`,
+       `descripcion`, `url` —vacía = pendiente—, `icono`, `orden`).
+  2. RLS activado en las cuatro tablas, sin ninguna política para el rol `anon` (quien no
+     inició sesión no ve nada). Funciones auxiliares `security definer` con `search_path`
+     fijo: `es_admin()` y `puede_ver(rol)` (admin, o tiene ese `area_id` en `permisos`).
+     - `espacios` y `accesos`: leer solo si `puede_ver(rol)` (en `accesos`, el `rol` de su
+       espacio); crear, modificar y borrar solo administradores.
+     - `perfiles`: cada usuario lee el suyo; los administradores leen y modifican todos.
+       **Nadie puede darse `es_admin` a sí mismo.**
+     - `permisos`: cada usuario lee los suyos; solo administradores escriben.
+  3. Al final, comentada, la instrucción para que Vincent se haga administrador a sí mismo
+     una sola vez (cambiando el correo).
+  4. `supabase/LEEME.md`: en lenguaje sencillo, qué crea el archivo, cómo ejecutarlo y una
+     tabla de quién puede hacer qué.
+- **No hacer:** no tocar `index.html` ni `enlaces.js` todavía; no poner URLs de enlaces
+  reales, claves ni contraseñas en estos archivos.
+- **Criterios de aceptación:** el SQL es válido para PostgreSQL 15+ de Supabase; ninguna
+  tabla queda sin RLS; las "Notas de entrega" incluyen la tabla de permisos y cómo se
+  comprobó (si no hay base de datos de prueba disponible, decirlo; la prueba real se hace
+  en la Etapa 5). La directora revisa política por política antes de pasárselo a Vincent.
+- **Notas de entrega:**
+
+### T-008 — Pantalla de inicio de sesión y carga desde Supabase (Etapa 2)
+
+- **Estado:** Pendiente (espera la Etapa 0 y la T-007)
+- **Asignada a:** Codex — GPT-6 Sol, esfuerzo alto
+- **Archivos:** `index.html`, `tests/`
+- **Qué hacer (resumen; se detalla al asignarla):** inicio de sesión con correo y
+  contraseña, "olvidé mi contraseña" y cierre de sesión; la página carga áreas, clientes y
+  accesos desde Supabase según los permisos; mensajes claros si no tiene áreas o si
+  Supabase no responde.
+
+### T-009 — Panel de administración (Etapa 3)
+
+- **Estado:** Pendiente
+- **Asignada a:** Codex — GPT-6 Sol, esfuerzo alto
+- **Qué hacer (resumen):** para administradores, ver usuarios, asignarles áreas o hacerlos
+  administradores, y crear, editar o quitar áreas, clientes y accesos.
+
+### T-010 — Pasar los enlaces a Supabase y quitarlos del archivo público (Etapa 4)
+
+- **Estado:** Pendiente
+- **Asignada a:** Ejecutador y Vincent
+- **Qué hacer (resumen):** generar desde `enlaces.js` un archivo de carga **fuera del
+  repositorio**, que Vincent pega en Supabase; después dejar `enlaces.js` sin áreas,
+  clientes ni enlaces.
+
+### T-011 — Prueba controlada (Etapa 5)
+
+- **Estado:** Pendiente
+- **Asignada a:** Organizador y Vincent
+- **Qué hacer (resumen):** con dos usuarios (Vincent administrador y uno con una sola área)
+  comprobar en la página **y consultando Supabase directamente** que cada uno solo obtiene
+  lo suyo; recién entonces se avisa al equipo.
 
 ### D-001 — Directa: SharePoint de Agroplast, Planificación Estratégica
 

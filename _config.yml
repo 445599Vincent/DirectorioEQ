@@ -9,3 +9,4 @@ exclude:
   - CONFIGURAR-INICIO-DE-SESION.md
   - EN-CURSO.md
   - TAREAS.md
+  - supabase
