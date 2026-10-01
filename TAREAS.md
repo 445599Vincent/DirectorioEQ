@@ -137,7 +137,7 @@ oscuro, estadísticas).
 
 ### T-003 — Contadores reales y etiquetas de estado en las tarjetas
 
-- **Estado:** Para revisión
+- **Estado:** Completada (revisada por la directora el 2026-10-01, con un ajuste)
 - **Asignada a:** Codex (Ingeniería) — modelo GPT-6 Sol, esfuerzo medio
 - **Archivos:** `index.html`, `tests/directorio.test.mjs`
 - **Problema:** las tarjetas de áreas y clientes cuentan los enlaces pendientes como si
@@ -186,6 +186,16 @@ oscuro, estadísticas).
   "Activo", blanco `#ffffff` sobre `#0a4950`, 10,09:1; "Cerrado", gris `#646464` sobre
   `#f6f5ef`, 5,42:1. `enlaces.js` y `AUTH` no cambiaron. El Organizador debe revisar los
   textos de conteo, las etiquetas en los tres contextos y la presentación a 375 px.
+- **Revisión de la directora:** aprobada. El código de `index.html` cumple los cuatro
+  puntos; publicado y comprobado sin caché: "Activo"/"Cerrado" en PMO, Proyectos Cerrados y
+  buscador, portada "Cliente cerrado", conteos reales y sin desborde a 375 px. **Ajuste
+  hecho por la directora:** la prueba de casos fijos sobrescribía las URLs de los accesos
+  reales y exigía que Agroplast tuviera exactamente 6, lo que bloqueaba al Ejecutador
+  (Vincent pidió unificar sus Planner). `fijarUrls()` ahora reemplaza los accesos por
+  accesos de prueba; pasan las 19 pruebas con los datos subidos y con los del Ejecutador.
+  **Incidente:** el código de esta tarea quedó dentro del commit `addb5a3` del Ejecutador
+  ("Reservar enlaces.js…") porque el índice de Git es compartido; ver la regla nueva en
+  `AGENTS.md`.
 
 ### T-004 — Ajuste "Sitio Web" y recolección de datos pendientes
 
@@ -282,3 +292,15 @@ oscuro, estadísticas).
 - **Archivos:** `enlaces.js`
 - **Notas de entrega:** `url` de "Planner del proyecto" (Soluciones Globales): "" → enlace dado
   por Vincent (no repetido en otro acceso). Único cambio. Pruebas 19 de 19.
+
+### D-008 — Directa: Agroplast con un solo Planner
+
+- **Estado:** Para revisión (2026-10-01)
+- **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent
+- **Archivos:** `enlaces.js`
+- **Notas de entrega:** se quitaron los 3 Planner por servicio de Agroplast (el de Planificación
+  Estratégica tenía el enlace de D-004) y se agregó un solo "Planner de Agroplast" con el enlace
+  que dio Vincent, en su propia sección arriba de los servicios. Agroplast pasa de 6 a 4
+  accesos. Vincent pidió subirlo de inmediato. Aviso: hasta que Codex suba su corrección, la
+  prueba "el contador cubre combinaciones fijas…" falla en el repositorio (fijaba 6 URLs para
+  agroplast); con su copia local pasa 19 de 19.

@@ -32,5 +32,3 @@ Formato de la hora: `AAAA-MM-DD HH:MM` (hora local de República Dominicana).
 
 | Agente | Sesión | Desde | Archivos | Tarea |
 |---|---|---|---|---|
-| Claude | Ejecutador (Contenido) | 2026-10-01 11:02 | `enlaces.js` | D-008 — Agroplast: un solo Planner |
-| Claude | Organizador (directora) | 2026-10-01 11:10 | `tests/directorio.test.mjs` | Revisión de T-003: prueba de contadores independiente de los datos reales |

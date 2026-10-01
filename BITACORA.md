@@ -31,6 +31,24 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ---
 
+## 2026-10-01 — Claude
+- **Pedido:** revisar la T-003 de Codex; destrabar al Ejecutador, cuya carga de Agroplast
+  fallaba en una prueba de la T-003.
+- **Cambios:** T-003 aprobada. En `tests/directorio.test.mjs`, `fijarUrls()` ya no depende
+  de cuántos accesos tenga cada cliente en `enlaces.js`. `AGENTS.md` exige hacer commit
+  nombrando los archivos (`git commit -m "…" -- archivos`), porque la zona de preparación
+  de Git es compartida.
+- **Pendiente:** Nada.
+
+## 2026-10-01 — Claude (Contenido)
+- **Pedido:** que Agroplast tenga un solo Planner para sus tres servicios (pedido directo).
+- **Cambios:** Agroplast ahora tiene una sección "Planner de Agroplast" con el enlace único y,
+  debajo, el SharePoint de cada servicio; se quitaron los tres Planner por servicio, incluido
+  el de Planificación Estratégica cargado antes (`enlaces.js`).
+- **Pendiente:** la prueba de Codex que fijaba 6 accesos para Agroplast (en el repositorio)
+  falla hasta que él suba su corrección; su copia local ya pasa 19 de 19. Quedan 10 datos por
+  recibir (ver T-004).
+
 ## 2026-10-01 — Claude (Contenido)
 - **Pedido:** cargar el Planner de Soluciones Globales (pedido directo).
 - **Cambios:** la tarjeta "Planner del proyecto" de Soluciones Globales ya tiene su enlace

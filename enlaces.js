@@ -279,24 +279,27 @@ const CLIENTES = [
     logo: "logos/agroplast.png",
     grupos: [
       {
+        titulo: "Planner de Agroplast",
+        enlaces: [
+          { nombre: "Planner de Agroplast", descripcion: "Tareas y seguimiento de los tres servicios del cliente.", url: "https://planner.cloud.microsoft/webui/v1/plan/tcdzKbSUXkStXYjxI5FbUWUAFYF_?tid=f0b59f88-a70a-4207-864a-406a47180842", icono: "planner" },
+        ],
+      },
+      {
         titulo: "Planificación Estratégica",
         enlaces: [
           { nombre: "SharePoint de Planificación Estratégica", descripcion: "Documentos y entregables del servicio.", url: "https://eccoqualita2102.sharepoint.com/:u:/r/sites/Agroplast-CONSULTORA3DiseodelProcesoEstratgicodePlanificacin/SitePages/CollabHome.aspx?d=w69758b1d9b9a4be08c7725c31516bae7&csf=1&web=2&share=IQAdi3VpmpvgS4x3JcMVFrrnAQ6y-BYHjPzGoY0CsnpAhFg&e=p6cx4X", icono: "sharepoint" },
-          { nombre: "Planner de Planificación Estratégica", descripcion: "Tareas y seguimiento del servicio.", url: "https://planner.cloud.microsoft/webui/v1/plan/-Z19N_H6FkqBLu7JnglquWUAE6TK?tid=f0b59f88-a70a-4207-864a-406a47180842", icono: "planner" },
         ],
       },
       {
         titulo: "Gerencia de Calidad",
         enlaces: [
           { nombre: "SharePoint de Gerencia de Calidad", descripcion: "Documentos y entregables del servicio.", url: "https://eccoqualita2102.sharepoint.com/:u:/r/sites/Agroplast-TERCERIZACINDELAGERENCIADECALIDAD/SitePages/CollabHome.aspx?d=w32fadb05dbca4aee8fb4f75c2837a25c&csf=1&web=2&share=IQAF2_oyytvuSo-091woN6JcAfdnQK04mgxvf_i7j_y67EI&e=H35kSd", icono: "sharepoint" },
-          { nombre: "Planner de Gerencia de Calidad", descripcion: "Tareas y seguimiento del servicio.", url: "", icono: "planner" },
         ],
       },
       {
         titulo: "Programa de Salud Ocupacional EHS",
         enlaces: [
           { nombre: "SharePoint del Programa EHS", descripcion: "Documentos y entregables del servicio.", url: "https://eccoqualita2102.sharepoint.com/:u:/r/sites/Agroplast-TERCERIZACINDELAREADEEHS/SitePages/CollabHome.aspx?d=w7cea2ee7296046bc82c0c568bb685026&csf=1&web=2&share=IQDnLup8YCm8RoLAxWi7aFAmAYy9kb5wMEkNeuI991ly2YA&e=hktn0N", icono: "sharepoint" },
-          { nombre: "Planner del Programa EHS", descripcion: "Tareas y seguimiento del servicio.", url: "", icono: "planner" },
         ],
       },
     ],
