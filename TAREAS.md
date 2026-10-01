@@ -379,3 +379,11 @@ oscuro, estadísticas).
   de orden. Descripciones cortas redactadas por mí; la de "Documentos Legales y Registros" es
   genérica porque la captura la mostraba cortada. Las subcarpetas no se registraron, por
   indicación de Vincent. Pruebas 19 de 19. Suma 6 accesos pendientes a la lista.
+
+### D-012 — Directa: Reclutamiento y Selección (Recursos Humanos)
+
+- **Estado:** Para revisión (2026-10-01)
+- **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent
+- **Archivos:** `enlaces.js`
+- **Notas de entrega:** `url` de "Reclutamiento y Selección": "" → enlace dado por Vincent (no
+  repetido en otro acceso). Único cambio. Pruebas 19 de 19.

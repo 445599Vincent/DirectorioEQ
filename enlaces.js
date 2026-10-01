@@ -182,7 +182,7 @@ const AREAS = [
       {
         titulo: "Carpetas de Recursos Humanos",
         enlaces: [
-          { nombre: "Reclutamiento y Selección", descripcion: "Vacantes, perfiles de puesto, banco de talento y formatos del proceso de selección.", url: "", icono: "sharepoint" },
+          { nombre: "Reclutamiento y Selección", descripcion: "Vacantes, perfiles de puesto, banco de talento y formatos del proceso de selección.", url: "https://eccoqualita2102.sharepoint.com/:f:/s/RecursosHumanos/IgBfyKRWVJ_mTqjrNWcAlF9oAVobGz1HrObkzpXX3e5MAYA?e=wtzRuF", icono: "sharepoint" },
           { nombre: "Plantillas de Contratación", descripcion: "Ofertas, contratos, acuerdos y correos modelo para contratar.", url: "", icono: "sharepoint" },
           { nombre: "Expedientes de Personal Activo", descripcion: "Expedientes del personal activo.", url: "", icono: "sharepoint" },
           { nombre: "Expedientes de Personal Inactivo", descripcion: "Expedientes del personal inactivo.", url: "", icono: "sharepoint" },
