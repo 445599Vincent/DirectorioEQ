@@ -276,6 +276,10 @@ del proyecto de Supabase y la clave **pública** (`sb_publishable_…`). La clav
 en el repositorio, en `BITACORA.md` ni en mensajes entre agentes. Los agentes no crean
 cuentas ni inician sesión con contraseñas: eso lo hace Vincent.
 
+**Proyecto de Supabase:** "Directorio EQ", región East US (North Virginia),
+URL `https://yvhractjxuvfjaldhgdo.supabase.co` (pública, se puede usar en el código). Clave
+pública (`sb_publishable_…`): pendiente de que Vincent la entregue.
+
 Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1** T-007 ·
 **2** T-008 · **3** T-009 · **4** T-010 · **5** T-011.
 
