@@ -32,4 +32,4 @@ Formato de la hora: `AAAA-MM-DD HH:MM` (hora local de República Dominicana).
 
 | Agente | Sesión | Desde | Archivos | Tarea |
 |---|---|---|---|---|
-| Codex | Ingeniería | 2026-10-01 16:16 | `supabase/esquema.sql`, `supabase/LEEME.md` | T-007 |
+| Claude | Ejecutador (Contenido) | 2026-10-01 16:28 | `enlaces.js` | D-016 — Material Educativo (PMO) |
