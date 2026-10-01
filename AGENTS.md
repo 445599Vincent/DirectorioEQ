@@ -119,6 +119,11 @@ cada persona. Todo vive en la constante `AUTH` al inicio del script de `index.ht
    (nunca `git add .` ni `git add -A`: las sesiones comparten la misma carpeta y así se
    suben cambios a medias de otro agente), `git commit` con mensaje en español,
    `git pull --rebase` y `git push`.
+   **Haz siempre el commit nombrando tus archivos:**
+   `git commit -m "mensaje" -- archivo1 archivo2`. Las sesiones comparten también la
+   "zona de preparación" de Git: un `git commit` sin nombres de archivo se lleva lo que otro
+   agente haya preparado con `git add` (así el código de la T-003 de Codex terminó dentro de
+   un commit del Ejecutador).
    Si `git pull --rebase` se niega porque hay cambios sin guardar de **otro** agente en la
    carpeta (compartimos la misma), no uses `--autostash` ni `git stash`: haz `git fetch` y
    `git rev-list --left-right --count origin/main...HEAD`. Si el primer número es 0, nadie

@@ -299,10 +299,18 @@ function tarjetaDe(contenido, id) {
   return coincidencia[1];
 }
 
+// Reemplaza los accesos del espacio por accesos de prueba con esas URLs, para que los
+// casos fijos no dependan de cuántos accesos tenga hoy cada área o cliente en enlaces.js.
 function fijarUrls(espacio, urls) {
-  const accesos = espacio.grupos.flatMap(({ enlaces }) => enlaces);
-  assert.equal(accesos.length, urls.length, `Cantidad de URLs de prueba incorrecta para ${espacio.id}`);
-  accesos.forEach((acceso, indice) => { acceso.url = urls[indice]; });
+  espacio.grupos = [{
+    titulo: "Accesos de prueba",
+    enlaces: urls.map((url, indice) => ({
+      nombre: `Acceso de prueba ${indice + 1}`,
+      descripcion: "Acceso de prueba.",
+      url,
+      icono: "enlace",
+    })),
+  }];
 }
 
 function resumenEsperado(espacio) {
