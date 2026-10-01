@@ -32,6 +32,16 @@ El formato de cada entrada está en `AGENTS.md`.
 ---
 
 ## 2026-10-01 — Claude (Contenido)
+- **Pedido:** registrar las 6 carpetas principales de Recursos Humanos (pedido directo, con una
+  captura del árbol de carpetas; solo las principales, sin subcarpetas).
+- **Cambios:** nuevo grupo "Carpetas de Recursos Humanos" en esa área, con 6 tarjetas:
+  Reclutamiento y Selección, Plantillas de Contratación, Expedientes de Personal Activo,
+  Expedientes de Personal Inactivo, Políticas y Reglamentos, Documentos Legales y Registros
+  (`enlaces.js`). Todas quedan como "Enlace pendiente", porque no se dieron sus enlaces.
+  Pruebas: 19 de 19 pasan.
+- **Pendiente:** los enlaces de las 6 carpetas.
+
+## 2026-10-01 — Claude (Contenido)
 - **Pedido:** cargar el enlace de Reportes de Consultores del SharePoint del PMO (pedido directo).
 - **Cambios:** la tarjeta "Reportes de Consultores" ya tiene su enlace (`enlaces.js`).
   Pruebas: 19 de 19 pasan.

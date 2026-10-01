@@ -179,6 +179,17 @@ const AREAS = [
           { nombre: "Planner Recursos Humanos", descripcion: "Tareas internas del área de Recursos Humanos.", url: "", icono: "planner" },
         ],
       },
+      {
+        titulo: "Carpetas de Recursos Humanos",
+        enlaces: [
+          { nombre: "Reclutamiento y Selección", descripcion: "Vacantes, perfiles de puesto, banco de talento y formatos del proceso de selección.", url: "", icono: "sharepoint" },
+          { nombre: "Plantillas de Contratación", descripcion: "Ofertas, contratos, acuerdos y correos modelo para contratar.", url: "", icono: "sharepoint" },
+          { nombre: "Expedientes de Personal Activo", descripcion: "Expedientes del personal activo.", url: "", icono: "sharepoint" },
+          { nombre: "Expedientes de Personal Inactivo", descripcion: "Expedientes del personal inactivo.", url: "", icono: "sharepoint" },
+          { nombre: "Políticas y Reglamentos", descripcion: "Políticas y reglamentos internos.", url: "", icono: "sharepoint" },
+          { nombre: "Documentos Legales y Registros", descripcion: "Documentos legales y registros del personal.", url: "", icono: "sharepoint" },
+        ],
+      },
     ],
   },
   {

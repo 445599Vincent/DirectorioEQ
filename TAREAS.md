@@ -368,3 +368,14 @@ oscuro, estadísticas).
 - **Archivos:** `enlaces.js`
 - **Notas de entrega:** `url` de "Reportes de Consultores" (Accesos Directos del PMO): "" →
   enlace dado por Vincent (no repetido en otro acceso). Único cambio. Pruebas 19 de 19.
+
+### D-011 — Directa: carpetas principales de Recursos Humanos
+
+- **Estado:** Para revisión (2026-10-01)
+- **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent
+- **Archivos:** `enlaces.js`
+- **Notas de entrega:** grupo nuevo "Carpetas de Recursos Humanos" con 6 tarjetas sin enlace
+  (`url: ""`), con icono `sharepoint`. Nombres tomados de la captura de Vincent, sin el número
+  de orden. Descripciones cortas redactadas por mí; la de "Documentos Legales y Registros" es
+  genérica porque la captura la mostraba cortada. Las subcarpetas no se registraron, por
+  indicación de Vincent. Pruebas 19 de 19. Suma 6 accesos pendientes a la lista.
