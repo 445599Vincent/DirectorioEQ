@@ -134,3 +134,40 @@ oscuro, estadísticas).
   mayúscula se acepta, y el texto nuevo de "Sitio web" también. Para ser coherentes con la
   regla 1, el nombre "Sitio web" debe pasar a "Sitio Web": queda como ajuste menor para la
   próxima tarea de Contenido.
+
+### T-003 — Contadores reales y etiquetas de estado en las tarjetas
+
+- **Estado:** Asignada (aprobada por Vincent el 2026-10-01)
+- **Asignada a:** Codex (Ingeniería) — modelo GPT-6 Sol, esfuerzo medio
+- **Archivos:** `index.html`, `tests/directorio.test.mjs`
+- **Problema:** las tarjetas de áreas y clientes cuentan los enlaces pendientes como si
+  fueran accesos ("Agroplast · 6 accesos" no tiene ninguno disponible) y las tarjetas de
+  clientes no dicen si el proyecto está activo o cerrado.
+- **Qué hacer:**
+  1. En `tarjetaEspacio()`, reemplazar "N accesos →" por el conteo real. Un acceso está
+     *disponible* si su `url` no está vacía (las rutas internas `#/…` cuentan como
+     disponibles) y *pendiente* si `url` es `""`. Textos, con singular y plural correctos:
+     - disponibles y pendientes: "2 disponibles · 1 pendiente →"
+     - solo disponibles: "1 disponible →"
+     - solo pendientes: "6 pendientes →"
+     - sin accesos: "Sin accesos todavía →" (como hoy)
+  2. En las tarjetas de clientes, una etiqueta visible con el texto **"Activo"** o
+     **"Cerrado"** según `estado`. Debe verse en "Proyectos Activos" del PMO, en la página
+     "Proyectos Cerrados" y en los resultados del buscador. Las tarjetas de áreas no la
+     llevan.
+  3. En la página de cada cliente, la etiqueta de la portada pasa de "Cliente" a
+     "Cliente activo" o "Cliente cerrado".
+  4. Estilo: etiqueta pequeña tipo píldora, con las variables CSS existentes (verde
+     azulado para "Activo"; gris de texto sobre fondo gris claro para "Cerrado"). El
+     estado debe leerse por el texto, no solo por el color, y el contraste del texto de
+     las etiquetas debe ser al menos 4,5:1.
+  5. Pruebas nuevas en `tests/directorio.test.mjs`: el conteo de Agroplast ("6
+     pendientes"), Banco Central ("1 disponible"), Soluciones Globales ("1 disponible · 1
+     pendiente") y un área sin accesos ("Sin accesos todavía"); las tarjetas de clientes
+     cerrados dicen "Cerrado" y las de activos "Activo"; las de áreas no llevan etiqueta.
+- **No hacer:** no tocar `enlaces.js`, `AUTH` ni el buscador más allá de que muestre la
+  etiqueta; sin dependencias nuevas.
+- **Criterios de aceptación:** todas las pruebas pasan; `enlaces.js` sin cambios; probado
+  en escritorio y móvil (375 px) sin desbordes; contraste de las etiquetas ≥ 4,5:1
+  indicado en las "Notas de entrega".
+- **Notas de entrega:**
