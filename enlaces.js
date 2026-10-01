@@ -281,7 +281,7 @@ const CLIENTES = [
       {
         titulo: "Planificación Estratégica",
         enlaces: [
-          { nombre: "SharePoint de Planificación Estratégica", descripcion: "Documentos y entregables del servicio.", url: "", icono: "sharepoint" },
+          { nombre: "SharePoint de Planificación Estratégica", descripcion: "Documentos y entregables del servicio.", url: "https://eccoqualita2102.sharepoint.com/:u:/r/sites/Agroplast-CONSULTORA3DiseodelProcesoEstratgicodePlanificacin/SitePages/CollabHome.aspx?d=w69758b1d9b9a4be08c7725c31516bae7&csf=1&web=2&share=IQAdi3VpmpvgS4x3JcMVFrrnAQ6y-BYHjPzGoY0CsnpAhFg&e=p6cx4X", icono: "sharepoint" },
           { nombre: "Planner de Planificación Estratégica", descripcion: "Tareas y seguimiento del servicio.", url: "", icono: "planner" },
         ],
       },

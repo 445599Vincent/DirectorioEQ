@@ -199,3 +199,11 @@ oscuro, estadísticas).
   Parte 2 hecha: lista de los 18 accesos con `url` vacía, el logo de Atómica Publicidad y la
   pregunta por los Planner de RR. HH. y Calidad presentada a Vincent en el chat. La tarea sigue
   abierta para la parte 3 (cargar lo que él entregue como tareas Directas).
+
+### D-001 — Directa: SharePoint de Agroplast, Planificación Estratégica
+
+- **Estado:** Para revisión (2026-10-01)
+- **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent (dato 9 de T-004)
+- **Archivos:** `enlaces.js`
+- **Notas de entrega:** `url` de "SharePoint de Planificación Estratégica" (Agroplast): "" →
+  enlace dado por Vincent. Es el único cambio. Pruebas 14 de 14.

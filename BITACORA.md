@@ -31,6 +31,12 @@ El formato de cada entrada está en `AGENTS.md`.
 ---
 
 ## 2026-10-01 — Claude (Contenido)
+- **Pedido:** cargar el SharePoint de Planificación Estratégica de Agroplast (pedido directo).
+- **Cambios:** la tarjeta "SharePoint de Planificación Estratégica" de Agroplast ya tiene su
+  enlace (`enlaces.js`). Pruebas: 14 de 14 pasan.
+- **Pendiente:** quedan 17 datos por recibir (ver T-004).
+
+## 2026-10-01 — Claude (Contenido)
 - **Pedido:** tarea T-004 (parte 1): renombrar "Sitio web" → "Sitio Web" en Herramientas generales.
 - **Cambios:** solo ese nombre en `enlaces.js`. Pruebas: 14 de 14 pasan. La parte 2 (lista de
   datos que faltan) se presentó a Vincent en el chat.
