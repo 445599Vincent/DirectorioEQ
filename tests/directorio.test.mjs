@@ -20,6 +20,15 @@ function clonar(valor) {
   return JSON.parse(JSON.stringify(valor));
 }
 
+function codigoDeDatos({ PROCESOS, AREAS, CLIENTES, GENERALES }) {
+  return `
+    const PROCESOS = ${JSON.stringify(PROCESOS)};
+    const AREAS = ${JSON.stringify(AREAS)};
+    const CLIENTES = ${JSON.stringify(CLIENTES)};
+    const GENERALES = ${JSON.stringify(GENERALES)};
+  `;
+}
+
 function validarIdsUnicos({ AREAS, CLIENTES }) {
   const vistos = new Set();
 
@@ -237,7 +246,7 @@ test("cada URL externa usa HTTPS", () => {
   assert.throws(() => validarUrlsSeguras(alterados), /URL externa sin HTTPS/);
 });
 
-function abrirRuta(hash, busqueda = "") {
+function abrirRuta(hash, busqueda = "", codigoEnlaces = enlaces) {
   const elementos = new Map();
   const volver = { href: "", textContent: "" };
 
@@ -273,15 +282,103 @@ function abrirRuta(hash, busqueda = "") {
     },
   });
 
-  vm.runInContext(enlaces, contexto, { filename: "enlaces.js" });
+  vm.runInContext(codigoEnlaces, contexto, { filename: "enlaces.js" });
   vm.runInContext(aplicacion, contexto, { filename: "index.html" });
 
   return {
     contenido: elemento("secciones").innerHTML,
+    etiqueta: elemento("portada-etiqueta").textContent,
     portada: elemento("portada-titulo").textContent,
     volver,
   };
 }
+
+function tarjetaDe(contenido, id) {
+  const coincidencia = contenido.match(new RegExp(`<a class="tarjeta" href="#/${id}">([\\s\\S]*?)</a>`));
+  assert.ok(coincidencia, `No se encontró la tarjeta #/${id}`);
+  return coincidencia[1];
+}
+
+function fijarUrls(espacio, urls) {
+  const accesos = espacio.grupos.flatMap(({ enlaces }) => enlaces);
+  assert.equal(accesos.length, urls.length, `Cantidad de URLs de prueba incorrecta para ${espacio.id}`);
+  accesos.forEach((acceso, indice) => { acceso.url = urls[indice]; });
+}
+
+function resumenEsperado(espacio) {
+  const accesos = espacio.grupos.flatMap(({ enlaces }) => enlaces);
+  if (!accesos.length) return "Sin accesos todavía →";
+
+  const disponibles = accesos.filter(({ url }) => url !== "").length;
+  const pendientes = accesos.length - disponibles;
+  const partes = [];
+  if (disponibles) partes.push(`${disponibles} ${disponibles === 1 ? "disponible" : "disponibles"}`);
+  if (pendientes) partes.push(`${pendientes} ${pendientes === 1 ? "pendiente" : "pendientes"}`);
+  return `${partes.join(" · ")} →`;
+}
+
+test("el contador cubre combinaciones fijas de accesos disponibles y pendientes", () => {
+  const datos = cargarDatos();
+  fijarUrls(datos.AREAS.find(({ id }) => id === "calidad"), ["https://uno.example", "https://dos.example", ""]);
+  fijarUrls(datos.AREAS.find(({ id }) => id === "administrativa-financiera"), ["https://uno.example"]);
+  fijarUrls(datos.CLIENTES.find(({ id }) => id === "agroplast"), ["", "", "", "", "", ""]);
+  fijarUrls(datos.CLIENTES.find(({ id }) => id === "soluciones-globales"), ["https://uno.example", ""]);
+
+  const codigo = codigoDeDatos(datos);
+  const inicio = abrirRuta("#/", "", codigo);
+  const pmo = abrirRuta("#/pmo", "", codigo);
+
+  assert.match(tarjetaDe(inicio.contenido, "calidad"), /2 disponibles · 1 pendiente →/);
+  assert.match(tarjetaDe(inicio.contenido, "administrativa-financiera"), /1 disponible →/);
+  assert.match(tarjetaDe(pmo.contenido, "agroplast"), /6 pendientes →/);
+  assert.match(tarjetaDe(pmo.contenido, "soluciones-globales"), /1 disponible · 1 pendiente →/);
+  assert.match(tarjetaDe(inicio.contenido, "planificacion"), /Sin accesos todavía →/);
+});
+
+test("cada tarjeta muestra el conteo que corresponde a los datos actuales", () => {
+  const datos = cargarDatos();
+  const inicio = abrirRuta("#/");
+  const pmo = abrirRuta("#/pmo");
+  const cerrados = abrirRuta("#/proyectos-cerrados");
+
+  for (const area of datos.AREAS) {
+    assert.ok(tarjetaDe(inicio.contenido, area.id).includes(resumenEsperado(area)), area.nombre);
+  }
+
+  for (const cliente of datos.CLIENTES) {
+    const contenido = cliente.estado === "cerrado" ? cerrados.contenido : pmo.contenido;
+    assert.ok(tarjetaDe(contenido, cliente.id).includes(resumenEsperado(cliente)), cliente.nombre);
+  }
+});
+
+test("las tarjetas de clientes muestran su estado y las áreas no", () => {
+  const inicio = abrirRuta("#/");
+  const pmo = abrirRuta("#/pmo");
+  const cerrados = abrirRuta("#/proyectos-cerrados");
+
+  assert.match(
+    tarjetaDe(pmo.contenido, "soluciones-globales"),
+    /<span class="estado estado-activo">Activo<\/span>/,
+  );
+  assert.match(
+    tarjetaDe(cerrados.contenido, "banco-central"),
+    /<span class="estado estado-cerrado">Cerrado<\/span>/,
+  );
+  assert.doesNotMatch(tarjetaDe(inicio.contenido, "planificacion"), /class="estado/);
+});
+
+test("los resultados del buscador conservan la etiqueta del cliente", () => {
+  const activo = abrirRuta("#/", "Soluciones Globales");
+  const cerrado = abrirRuta("#/", "Banco Central");
+
+  assert.match(tarjetaDe(activo.contenido, "soluciones-globales"), />Activo<\/span>/);
+  assert.match(tarjetaDe(cerrado.contenido, "banco-central"), />Cerrado<\/span>/);
+});
+
+test("la portada indica si el cliente está activo o cerrado", () => {
+  assert.equal(abrirRuta("#/soluciones-globales").etiqueta, "Cliente activo");
+  assert.equal(abrirRuta("#/banco-central").etiqueta, "Cliente cerrado");
+});
 
 test("el PMO separa los proyectos activos de la página de proyectos cerrados", () => {
   const vista = abrirRuta("#/pmo");

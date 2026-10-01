@@ -130,6 +130,13 @@
   .tarjeta p { margin: 0; font-size: 14px; line-height: 1.5; flex: 1; }
   .origen { font-size: 12px; font-weight: 500; color: var(--teal); margin-bottom: -6px; }
   .abrir { font-size: 12px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--teal); }
+  .estado {
+    align-self: flex-start; padding: 5px 9px; border-radius: 48px;
+    font-size: 11px; font-weight: 700; line-height: 1; letter-spacing: .4px;
+    text-transform: uppercase;
+  }
+  .estado-activo { color: var(--blanco); background: var(--teal-oscuro); }
+  .estado-cerrado { color: var(--texto); background: var(--fondo); border: 1px solid var(--borde); }
 
   .tarjeta.pendiente { border-style: dashed; background: transparent; cursor: not-allowed; }
   .tarjeta.pendiente .icono { background: rgba(0, 0, 0, .05); }
@@ -328,16 +335,34 @@
       </${enlace.url ? "a" : "div"}>`;
   }
 
+  function resumenAccesos(espacio) {
+    const enlaces = enlacesDe(espacio);
+    if (!enlaces.length) return "Sin accesos todavía →";
+
+    const disponibles = enlaces.filter(enlace => enlace.url).length;
+    const pendientes = enlaces.length - disponibles;
+    const partes = [];
+    if (disponibles) partes.push(`${disponibles} ${disponibles === 1 ? "disponible" : "disponibles"}`);
+    if (pendientes) partes.push(`${pendientes} ${pendientes === 1 ? "pendiente" : "pendientes"}`);
+    return `${partes.join(" · ")} →`;
+  }
+
+  function etiquetaEstado(espacio) {
+    if (espacio.tipo !== "Cliente") return "";
+    const estado = espacio.estado === "cerrado" ? "Cerrado" : "Activo";
+    return `<span class="estado estado-${espacio.estado}">${estado}</span>`;
+  }
+
   function tarjetaEspacio(espacio) {
-    const total = enlacesDe(espacio).length;
     return `
       <a class="tarjeta" href="#/${espacio.id}">
         ${espacio.logo
           ? `<span class="icono logo propio"><img src="${espacio.logo}" alt="" data-icono="${espacio.icono}"></span>`
           : icono(espacio.icono)}
+        ${etiquetaEstado(espacio)}
         <strong>${espacio.nombre}</strong>
         <p>${espacio.descripcion}</p>
-        <span class="abrir">${total ? `${total} ${total === 1 ? "acceso" : "accesos"} →` : "Sin accesos todavía →"}</span>
+        <span class="abrir">${resumenAccesos(espacio)}</span>
       </a>`;
   }
 
@@ -366,7 +391,8 @@
     let html;
 
     if (espacio) {
-      portada(espacio.tipo, espacio.nombre, espacio.descripcion, true);
+      const etiquetaPortada = espacio.tipo === "Cliente" ? `Cliente ${espacio.estado}` : espacio.tipo;
+      portada(etiquetaPortada, espacio.nombre, espacio.descripcion, true);
       // Los clientes activos vuelven al PMO; los cerrados, a su listado separado.
       const padre = espacio.tipo === "Cliente" && AREAS.find(a => a.proyectosDeClientes);
       const regresoCerrados = espacio.tipo === "Cliente" && espacio.estado === "cerrado";
