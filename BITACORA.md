@@ -32,6 +32,12 @@ El formato de cada entrada está en `AGENTS.md`.
 ---
 
 ## 2026-10-01 — Claude (Contenido)
+- **Pedido:** cargar el Planner del área de Calidad de Ecco Qualitá (pedido directo).
+- **Cambios:** la tarjeta "Planner Calidad" ya tiene su enlace (`enlaces.js`). Con esto queda
+  resuelta la pregunta de si ese Planner existe. Pruebas: 19 de 19 pasan.
+- **Pendiente:** quedan 12 datos por recibir (ver T-004).
+
+## 2026-10-01 — Claude (Contenido)
 - **Pedido:** cargar el Planner de Planificación Estratégica de Agroplast (pedido directo).
 - **Cambios:** la tarjeta "Planner de Planificación Estratégica" ya tiene su enlace
   (`enlaces.js`). Pruebas: 19 de 19 pasan.

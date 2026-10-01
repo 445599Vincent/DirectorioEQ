@@ -67,7 +67,7 @@ const AREAS = [
         titulo: "Accesos principales",
         enlaces: [
           { nombre: "SharePoint Calidad", descripcion: "Sistema de Gestión de Calidad (SGC): procesos y documentación del área.", url: "https://eccoqualita2102.sharepoint.com/sites/GerenciadeCalidadEQ", icono: "sharepoint" },
-          { nombre: "Planner Calidad", descripcion: "Tareas internas del área de Calidad.", url: "", icono: "planner" },
+          { nombre: "Planner Calidad", descripcion: "Tareas internas del área de Calidad.", url: "https://planner.cloud.microsoft/webui/v1/plan/YuHxUve2h0SyOTkWNdYyDWUAAys6?tid=f0b59f88-a70a-4207-864a-406a47180842", icono: "planner" },
           { nombre: "Listado Maestro de Documentos", descripcion: "MAT-SGC-01: listado maestro de documentos internos.", url: "https://eccoqualita2102.sharepoint.com/sites/GerenciadeCalidadEQ/Lists/Listado%20Maestro%20Documentos%20InternosMATSGC01%20%20V01/AllItems.aspx?env=WebViewList", icono: "sharepoint" },
         ],
       },

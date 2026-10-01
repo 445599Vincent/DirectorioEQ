@@ -258,3 +258,11 @@ oscuro, estadísticas).
 - **Archivos:** `enlaces.js`
 - **Notas de entrega:** `url` de "Planner de Planificación Estratégica" (Agroplast): "" →
   enlace dado por Vincent (no repetido en otro acceso). Único cambio. Pruebas 19 de 19.
+
+### D-005 — Directa: Planner de Calidad
+
+- **Estado:** Para revisión (2026-10-01)
+- **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent (dato 1 de T-004)
+- **Archivos:** `enlaces.js`
+- **Notas de entrega:** `url` de "Planner Calidad": "" → enlace dado por Vincent (no repetido
+  en otro acceso). Único cambio. Pruebas 19 de 19.
