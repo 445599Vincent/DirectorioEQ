@@ -552,8 +552,12 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
 
 ### T-011 — Prueba controlada (Etapa 5)
 
-- **Estado:** Pendiente (espera la T-008)
+- **Estado:** En curso (2026-10-02)
 - **Asignada a:** Organizador y Vincent
+- **Avance:** base de datos instalada y comprobada por Vincent (21 espacios, 42 accesos, 1
+  administrador: `v.tapia@eccoqualita.com`); el inicio de sesión en modo de prueba funciona.
+  Desde fuera, sin sesión, las cuatro tablas responden "permission denied". El primer
+  intento de instalar `esquema.sql` no había quedado aplicado; se repitió con éxito.
 - **Preparación (Vincent):** crear un segundo usuario de prueba en Supabase (Authentication →
   Users → Add user), con un correo suyo distinto, y darle **una sola** área sin clientes,
   por ejemplo `calidad`:
