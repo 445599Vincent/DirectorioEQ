@@ -28,6 +28,12 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ---
 
+## 2026-10-02 — Claude
+- **Pedido:** revisar la T-008.
+- **Cambios:** T-008 aprobada; T-012 (modo de prueba con `?prueba=supabase`) asignada al
+  Ejecutador para hacer la T-011 en el sitio real sin afectar al equipo.
+- **Pendiente:** Vincent confirma los conteos de Supabase y crea el usuario de prueba.
+
 ## 2026-10-01 — Claude (Ingeniería, reemplazando a Codex)
 - **Pedido:** tarea T-008 (asignada por la directora): pantalla de inicio de sesión con
   Supabase y carga de áreas y accesos desde la base de datos.

@@ -363,7 +363,7 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
 
 ### T-008 — Pantalla de inicio de sesión y carga desde Supabase (Etapa 2)
 
-- **Estado:** Para revisión (2026-10-01)
+- **Estado:** Completada (revisada por la directora el 2026-10-02)
 - **Asignada a:** Ejecutador (reemplaza a Codex hasta el 2026-10-06) — **Claude Opus 5.5,
   esfuerzo alto** (toca el inicio de sesión y la recuperación de contraseña)
 - **Archivos:** `index.html`, `tests/directorio.test.mjs`
@@ -446,6 +446,12 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
 
   **Para la directora:** `AGENTS.md` (sección "Inicio de sesión y accesos por rol", y "hoy son
   14" pruebas) y `CONFIGURAR-INICIO-DE-SESION.md` todavía describen Microsoft.
+- **Revisión de la directora:** aprobada. 33 pruebas pasan; interruptor en `false` y el sitio
+  publicado sin cambios; solo la clave pública en el código; código de Microsoft eliminado;
+  textos escapados y solo enlaces `https://` o `#/`; mensajes claros para credenciales,
+  servicio caído, enlace vencido y usuario sin áreas; "olvidé mi contraseña" no revela qué
+  correos existen. Observación menor: la librería se pide como `supabase-js@2` sin versión
+  exacta; fijarla en una tarea futura.
 
 ### T-009 — Panel de administración (Etapa 3)
 
@@ -507,6 +513,24 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
   coherentes con las restricciones de `supabase/esquema.sql` (rol, proceso, estado,
   `proyectos_de_clientes` solo en `pmo`). Transacción con borrar e insertar: reejecutable.
   La prueba real será al ejecutarlo en Supabase.
+
+### T-012 — Modo de prueba con Supabase en el sitio publicado
+
+- **Estado:** Asignada (2026-10-02)
+- **Asignada a:** Ejecutador (Ingeniería mientras no está Codex) — Claude Sonnet 5.5,
+  esfuerzo medio
+- **Archivos:** `index.html`, `tests/directorio.test.mjs`
+- **Qué hacer:** que el modo Supabase se encienda también si la dirección lleva
+  `?prueba=supabase` (por ejemplo `https://directorio.eccoqualita.com/?prueba=supabase`),
+  aunque `SUPABASE.activo` siga en `false`. Así Vincent hace la T-011 en el sitio real sin
+  cambiar lo que ve el equipo. El modo debe mantenerse al volver de los correos de
+  invitación y recuperación (que regresan sin ese parámetro): recordarlo en
+  `sessionStorage` y conservarlo en `redirectTo`. Agregar un aviso discreto "Modo de
+  prueba" en el encabezado mientras esté activo. No cambia la seguridad: los datos los
+  sigue protegiendo Supabase.
+- **Criterios de aceptación:** sin el parámetro, el sitio idéntico al actual; con él, la
+  pantalla de inicio de sesión; pruebas para ambos casos.
+- **Notas de entrega:**
 
 ### T-011 — Prueba controlada (Etapa 5)
 
