@@ -28,6 +28,21 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ---
 
+## 2026-10-01 — Claude (Ingeniería, reemplazando a Codex)
+- **Pedido:** tarea T-008 (asignada por la directora): pantalla de inicio de sesión con
+  Supabase y carga de áreas y accesos desde la base de datos.
+- **Cambios:** `index.html`: interruptor `SUPABASE` (apagado) con la URL y la clave pública;
+  con él encendido, inicio de sesión con correo y contraseña, recuperación de contraseña,
+  creación de contraseña al llegar desde un correo de invitación o recuperación, carga de
+  `espacios` y `accesos` convertidos a `AREAS`/`CLIENTES`, avisos claros y "Cerrar sesión".
+  Se quitó todo el código de Microsoft (`AUTH`, MSAL, roles). Los textos se escapan y solo se
+  enlazan direcciones `https://` o internas. `tests/directorio.test.mjs`: 14 pruebas nuevas
+  con un Supabase simulado, sin red (33 en total, todas pasan). Con el interruptor apagado
+  el sitio dibuja exactamente lo mismo que el publicado (comparado página por página).
+- **Pendiente:** la prueba de punta a punta con usuarios reales la hace Vincent en la T-011.
+  `AGENTS.md` y `CONFIGURAR-INICIO-DE-SESION.md` todavía describen el inicio de sesión con
+  Microsoft (archivos de la directora).
+
 ## 2026-10-01 — Claude
 - **Pedido:** avanzar mientras el Ejecutador hace la T-008.
 - **Cambios:** `AGENTS.md` describe el inicio de sesión con Supabase (en lugar de Microsoft)

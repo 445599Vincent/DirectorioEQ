@@ -363,7 +363,7 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
 
 ### T-008 — Pantalla de inicio de sesión y carga desde Supabase (Etapa 2)
 
-- **Estado:** En curso (2026-10-01)
+- **Estado:** Para revisión (2026-10-01)
 - **Asignada a:** Ejecutador (reemplaza a Codex hasta el 2026-10-06) — **Claude Opus 5.5,
   esfuerzo alto** (toca el inicio de sesión y la recuperación de contraseña)
 - **Archivos:** `index.html`, `tests/directorio.test.mjs`
@@ -398,6 +398,54 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
 - **Criterios de aceptación:** todas las pruebas pasan; con `activo: false` el sitio
   publicado se ve y funciona igual que antes; sin errores en la consola.
 - **Notas de entrega:**
+  Hecho por el Ejecutador (Claude Opus 5.5) en lugar de Codex. Archivos: `index.html` y
+  `tests/directorio.test.mjs`; no se tocaron `enlaces.js` ni `supabase/`.
+
+  1. **Interruptor:** `const SUPABASE = { activo: false, url, clavePublica }` al inicio del
+     script, con la URL y la clave pública del proyecto. Apagado, el sitio no descarga nada
+     nuevo y usa `AREAS`/`CLIENTES` de `enlaces.js`. Comprobado en el navegador: el contenido
+     dibujado es idéntico byte a byte al del sitio publicado en 7 páginas (inicio, PMO,
+     Proyectos Cerrados, Banco Central, Recursos Humanos, Agroplast, Comercial), sin errores en
+     la consola.
+  2. **Encendido:** carga `@supabase/supabase-js@2` desde jsDelivr (solo en ese caso) y reutiliza
+     la pantalla de inicio de sesión, ahora con correo, contraseña, "¿Olvidaste tu contraseña?"
+     (`resetPasswordForEmail` con `redirectTo` = dirección del sitio; mismo mensaje exista o no
+     la cuenta) y "Cerrar sesión" en el encabezado (borra lo que se veía en la página).
+  3. **Invitación o recuperación:** si la dirección trae `type=invite` o `type=recovery` (o llega
+     el evento `PASSWORD_RECOVERY`), pide la contraseña nueva dos veces (mínimo 8 caracteres)
+     y la guarda con `updateUser` antes de mostrar el directorio; la marca se conserva en
+     `sessionStorage` por si la persona recarga. Después se limpia la dirección (`#/`).
+  4. **Datos:** lee `espacios` (orden) y `accesos` (orden_grupo, orden) y los convierte con
+     `convertirFilas()` a las mismas `AREAS`/`CLIENTES`; `PROCESOS` y `GENERALES` siguen de
+     `enlaces.js`. Si `enlaces.js` ya no trae `AREAS`/`CLIENTES` (T-010 parte 2), no falla.
+  5. **Mensajes:** sin áreas asignadas (aviso + herramientas generales); Supabase no responde
+     o está en pausa (límite de 15 s, aviso en lugar de página vacía); correo o contraseña
+     incorrectos; cuenta sin confirmar; demasiados intentos; enlace de correo vencido.
+  6. **Microsoft:** se quitaron `AUTH`, MSAL, `puedeVer`, `rolDe` y `MIS_ROLES`; la base decide
+     qué ve cada uno. La página Proyectos Cerrados avisa si la persona no tiene el área PMO.
+  7. **Pruebas:** 14 nuevas (33 en total, todas pasan): interruptor apagado y sin clave secreta;
+     sin código de Microsoft; la conversión devuelve exactamente `AREAS`/`CLIENTES` de
+     `enlaces.js` a partir de las filas (desordenadas a propósito); agrupación y PMO; y la
+     página con un cliente de Supabase simulado sin red: sesión iniciada, sin áreas, Supabase
+     caído, contraseña incorrecta, inicio de sesión correcto, recuperación, invitación (incluye
+     contraseñas distintas), enlace vencido, cerrar sesión y textos peligrosos escapados.
+     Comprobado rompiendo el código a propósito que dos de ellas fallan cuando deben.
+
+  **Extra (seguridad):** como los textos ahora vienen de una base de datos, se escapan antes de
+  ponerlos en la página y solo se enlazan direcciones `https://` o internas (`#/`); con los
+  datos actuales no cambia nada de lo que se ve.
+
+  **Comprobado con la librería real** (copia temporal encendida dentro de `no-subir/`, ya
+  borrada): carga sin errores, muestra la pantalla de inicio de sesión (también en celular) y
+  el aviso de enlace vencido. No se intentó iniciar sesión ni se enviaron correos.
+
+  **Límite conocido:** los agentes no pueden iniciar sesión con contraseñas reales; la prueba de
+  punta a punta (invitar, crear contraseña, entrar, ver solo sus áreas, recuperar contraseña,
+  cerrar sesión) la hace Vincent en la T-011. Para que funcione, la plantilla del correo debe
+  llevar de vuelta al sitio, y el SQL de la T-010 debe estar cargado.
+
+  **Para la directora:** `AGENTS.md` (sección "Inicio de sesión y accesos por rol", y "hoy son
+  14" pruebas) y `CONFIGURAR-INICIO-DE-SESION.md` todavía describen Microsoft.
 
 ### T-009 — Panel de administración (Etapa 3)
 

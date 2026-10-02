@@ -419,3 +419,387 @@ test("el buscador encuentra Banco Central", () => {
 
   assert.match(vista.contenido, /href="#\/banco-central"/);
 });
+
+// --- Inicio de sesión con Supabase (T-008) --------------------------------------
+// Estas pruebas no usan la red ni contraseñas reales: la página se ejecuta con un
+// cliente de Supabase simulado. La prueba de punta a punta la hace Vincent (T-011).
+
+const SITIO = "https://directorio.eccoqualita.com/";
+
+test("el interruptor de Supabase está apagado y solo lleva datos públicos", () => {
+  assert.match(aplicacion, /const SUPABASE = \{\s*activo: false,/);
+  assert.match(aplicacion, /url: "https:\/\/yvhractjxuvfjaldhgdo\.supabase\.co"/);
+  assert.match(aplicacion, /clavePublica: "sb_publishable_[^"]+"/);
+  assert.doesNotMatch(pagina, /sb_secret_|service_role/);
+});
+
+test("ya no queda código del inicio de sesión de Microsoft", () => {
+  assert.doesNotMatch(pagina, /msal|login\.microsoftonline/i);
+  assert.doesNotMatch(pagina, /\bAUTH\b|puedeVer|MIS_ROLES/);
+});
+
+// Filas como las que guarda la carga de la T-010 (mismas reglas que supabase/esquema.sql).
+function filasDesde({ AREAS, CLIENTES }) {
+  const espacios = [];
+  const accesos = [];
+  const todos = [
+    ...AREAS.map((area) => ({ ...area, tipo: "area" })),
+    ...CLIENTES.map((cliente) => ({ icono: "cliente", ...cliente, tipo: "cliente" })),
+  ];
+  todos.forEach((espacio, orden) => {
+    const esArea = espacio.tipo === "area";
+    espacios.push({
+      id: espacio.id,
+      tipo: espacio.tipo,
+      nombre: espacio.nombre,
+      descripcion: espacio.descripcion,
+      icono: espacio.icono,
+      proceso: esArea ? espacio.proceso : null,
+      estado: esArea ? null : espacio.estado,
+      logo: espacio.logo || null,
+      proyectos_de_clientes: Boolean(espacio.proyectosDeClientes),
+      orden,
+      rol: esArea ? espacio.id : "pmo",
+    });
+    espacio.grupos.forEach((grupo, ordenGrupo) => grupo.enlaces.forEach((acceso, ordenAcceso) => {
+      accesos.push({
+        espacio_id: espacio.id,
+        grupo: grupo.titulo,
+        orden_grupo: ordenGrupo,
+        nombre: acceso.nombre,
+        descripcion: acceso.descripcion,
+        url: acceso.url,
+        icono: acceso.icono,
+        orden: ordenAcceso,
+      });
+    }));
+  });
+  return { espacios, accesos };
+}
+
+function contextoDeAplicacion() {
+  const contexto = vm.createContext({
+    console,
+    location: { hash: "#/" },
+    window: { addEventListener() {}, scrollTo() {} },
+    document: {
+      getElementById: () => ({ value: "", style: {}, classList: { toggle() {} }, addEventListener() {}, querySelectorAll: () => [] }),
+      querySelector: () => ({ href: "", textContent: "" }),
+    },
+  });
+  vm.runInContext(enlaces, contexto, { filename: "enlaces.js" });
+  vm.runInContext(aplicacion, contexto, { filename: "index.html" });
+  return contexto;
+}
+
+test("las filas de Supabase se convierten en las mismas AREAS y CLIENTES de enlaces.js", () => {
+  const datos = cargarDatos();
+  const { espacios, accesos } = filasDesde(datos);
+  const contexto = contextoDeAplicacion();
+
+  // Desordenadas a propósito: la conversión debe respetar "orden" y "orden_grupo".
+  const convertidos = clonar(contexto.convertirFilas([...espacios].reverse(), [...accesos].reverse()));
+
+  assert.deepEqual(convertidos.AREAS, datos.AREAS);
+  assert.deepEqual(convertidos.CLIENTES, datos.CLIENTES.map((cliente) => ({ icono: "cliente", ...cliente })));
+});
+
+test("la conversión agrupa los accesos por grupo y marca solo el área del PMO", () => {
+  const contexto = contextoDeAplicacion();
+  const convertidos = clonar(contexto.convertirFilas(
+    [
+      { id: "cliente-x", tipo: "cliente", nombre: "Cliente X", descripcion: "", icono: "cliente", proceso: null, estado: "cerrado", logo: "logos/x.png", proyectos_de_clientes: false, orden: 2 },
+      { id: "pmo", tipo: "area", nombre: "PMO", descripcion: "Proyectos.", icono: "proyectos", proceso: "operativo", estado: null, logo: null, proyectos_de_clientes: true, orden: 1 },
+      { id: "calidad", tipo: "area", nombre: "Calidad", descripcion: "SGC.", icono: "calidad", proceso: "estrategico", estado: null, logo: null, proyectos_de_clientes: false, orden: 0 },
+    ],
+    [
+      { espacio_id: "pmo", grupo: "Segundo", orden_grupo: 1, nombre: "C", descripcion: "", url: "", icono: "enlace", orden: 0 },
+      { espacio_id: "pmo", grupo: "Primero", orden_grupo: 0, nombre: "B", descripcion: "", url: "https://b.example", icono: "enlace", orden: 1 },
+      { espacio_id: "pmo", grupo: "Primero", orden_grupo: 0, nombre: "A", descripcion: "", url: "https://a.example", icono: "enlace", orden: 0 },
+    ],
+  ));
+
+  assert.deepEqual(convertidos.AREAS.map(({ id }) => id), ["calidad", "pmo"]);
+  assert.equal(convertidos.AREAS[0].proyectosDeClientes, undefined);
+  assert.equal(convertidos.AREAS[1].proyectosDeClientes, true);
+  assert.deepEqual(convertidos.AREAS[0].grupos, []);
+  assert.deepEqual(
+    convertidos.AREAS[1].grupos.map(({ titulo, enlaces }) => [titulo, enlaces.map(({ nombre }) => nombre)]),
+    [["Primero", ["A", "B"]], ["Segundo", ["C"]]],
+  );
+  assert.deepEqual(convertidos.CLIENTES, [{
+    id: "cliente-x", nombre: "Cliente X", descripcion: "", icono: "cliente", grupos: [],
+    logo: "logos/x.png", estado: "cerrado",
+  }]);
+});
+
+// Datos de ejemplo que entregaría la base a una persona con el área del PMO.
+const FILAS_DE_EJEMPLO = {
+  espacios: [
+    { id: "pmo", tipo: "area", nombre: "Área de prueba PMO", descripcion: "Proyectos.", icono: "proyectos", proceso: "operativo", estado: null, logo: null, proyectos_de_clientes: true, orden: 0 },
+    { id: "cliente-prueba", tipo: "cliente", nombre: "Cliente de Prueba", descripcion: "Proyecto en curso.", icono: "cliente", proceso: null, estado: "activo", logo: null, proyectos_de_clientes: false, orden: 1 },
+  ],
+  accesos: [
+    { espacio_id: "pmo", grupo: "Accesos principales", orden_grupo: 0, nombre: "SharePoint de prueba", descripcion: "Sitio.", url: "https://prueba.example", icono: "sharepoint", orden: 0 },
+  ],
+};
+
+function clienteSupabaseFalso({ sesion = null, filas = FILAS_DE_EJEMPLO, errorDatos = null, errorEntrar = null } = {}) {
+  const llamadas = [];
+  const sesionDe = (correo) => ({ access_token: "token-de-prueba", user: { email: correo } });
+  let sesionActual = sesion;
+  const responder = (valor) => Promise.resolve(valor);
+
+  return {
+    llamadas,
+    auth: {
+      getSession() {
+        llamadas.push(["getSession"]);
+        return responder({ data: { session: sesionActual }, error: null });
+      },
+      onAuthStateChange() {
+        llamadas.push(["onAuthStateChange"]);
+        return { data: { subscription: { unsubscribe() {} } } };
+      },
+      signInWithPassword(credenciales) {
+        llamadas.push(["signInWithPassword", credenciales.email]);
+        if (errorEntrar) return responder({ data: { session: null, user: null }, error: errorEntrar });
+        sesionActual = sesionDe(credenciales.email);
+        return responder({ data: { session: sesionActual, user: sesionActual.user }, error: null });
+      },
+      resetPasswordForEmail(correo, opciones) {
+        llamadas.push(["resetPasswordForEmail", correo, opciones]);
+        return responder({ data: {}, error: null });
+      },
+      updateUser(cambios) {
+        llamadas.push(["updateUser", Object.keys(cambios)]);
+        return responder({ data: { user: sesionActual?.user }, error: null });
+      },
+      signOut() {
+        llamadas.push(["signOut"]);
+        sesionActual = null;
+        return responder({ error: null });
+      },
+    },
+    from(tabla) {
+      llamadas.push(["from", tabla]);
+      const resultado = errorDatos
+        ? { data: null, error: errorDatos }
+        : { data: tabla === "espacios" ? filas.espacios : filas.accesos, error: null };
+      const consulta = {
+        select: () => consulta,
+        order: () => consulta,
+        then: (cumplir, fallar) => Promise.resolve(resultado).then(cumplir, fallar),
+      };
+      return consulta;
+    },
+  };
+}
+
+// Ejecuta la página con el interruptor encendido y el cliente simulado, sin red.
+async function abrirConSupabase({ hash = "#/", cliente = clienteSupabaseFalso() } = {}) {
+  const elementos = new Map();
+  const volver = { href: "", textContent: "" };
+  const historial = [];
+
+  function elemento(id) {
+    if (!elementos.has(id)) {
+      const oyentes = {};
+      elementos.set(id, {
+        id,
+        value: "",
+        textContent: "",
+        innerHTML: "",
+        className: "",
+        disabled: false,
+        style: {},
+        classList: { toggle() {} },
+        querySelectorAll() { return []; },
+        addEventListener(tipo, oyente) { (oyentes[tipo] ||= []).push(oyente); },
+        async disparar(tipo) {
+          for (const oyente of oyentes[tipo] || []) await oyente({ preventDefault() {} });
+          await esperar();
+        },
+      });
+    }
+    return elementos.get(id);
+  }
+
+  const location = { hash, origin: "https://directorio.eccoqualita.com", pathname: "/", search: "" };
+  const contexto = vm.createContext({
+    console,
+    Date,
+    setTimeout,
+    clearTimeout,
+    URLSearchParams,
+    location,
+    history: { replaceState: (estado, titulo, url) => historial.push(url) },
+    window: {
+      supabase: { createClient: (url, clave) => { cliente.llamadas.push(["createClient", url, clave]); return cliente; } },
+      addEventListener() {},
+      scrollTo() {},
+    },
+    document: {
+      getElementById: elemento,
+      querySelector(selector) {
+        if (selector === ".volver") return volver;
+        throw new Error(`Selector no contemplado en la prueba: ${selector}`);
+      },
+      createElement() { throw new Error("No se debe descargar nada en la prueba"); },
+    },
+  });
+
+  vm.runInContext(enlaces, contexto, { filename: "enlaces.js" });
+  vm.runInContext(aplicacion.replace(/activo: false,/, "activo: true,"), contexto, { filename: "index.html" });
+  await esperar();
+
+  return {
+    cliente,
+    elemento,
+    historial,
+    contenido: () => elemento("secciones").innerHTML,
+    pantalla: () => ({
+      directorio: elemento("app").style.display !== "none",
+      entrar: elemento("login").style.display === "flex" && elemento("panel-entrar").style.display !== "none",
+      nueva: elemento("login").style.display === "flex" && elemento("panel-nueva").style.display !== "none",
+    }),
+    mensaje: () => elemento("login-mensaje").textContent,
+  };
+}
+
+// Deja terminar todas las promesas del cliente simulado (responde al instante).
+const esperar = () => new Promise((resolver) => setImmediate(resolver));
+
+test("con Supabase encendido y sesión iniciada se dibujan solo las áreas que entrega la base", async () => {
+  const vista = await abrirConSupabase({ cliente: clienteSupabaseFalso({ sesion: { user: { email: "persona@ejemplo.com" } } }) });
+
+  assert.deepEqual(vista.pantalla(), { directorio: true, entrar: false, nueva: false });
+  assert.match(tarjetaDe(vista.contenido(), "pmo"), /Área de prueba PMO/);
+  assert.doesNotMatch(vista.contenido(), /href="#\/calidad"/, "no debe usar las áreas de enlaces.js");
+  assert.match(vista.contenido(), /Herramientas generales/);
+  assert.match(vista.elemento("sesion").innerHTML, /persona@ejemplo\.com[\s\S]*Cerrar sesión/);
+  assert.ok(vista.cliente.llamadas.some(([accion, tabla]) => accion === "from" && tabla === "espacios"));
+  assert.ok(vista.cliente.llamadas.some(([accion, tabla]) => accion === "from" && tabla === "accesos"));
+});
+
+test("una persona sin áreas asignadas ve un aviso y las herramientas generales", async () => {
+  const vista = await abrirConSupabase({
+    cliente: clienteSupabaseFalso({ sesion: { user: { email: "sin.areas@ejemplo.com" } }, filas: { espacios: [], accesos: [] } }),
+  });
+
+  assert.match(vista.contenido(), /todavía no tiene áreas asignadas/);
+  assert.match(vista.contenido(), /Herramientas generales/);
+});
+
+test("si Supabase no responde se avisa en vez de mostrar una página vacía", async () => {
+  const vista = await abrirConSupabase({
+    cliente: clienteSupabaseFalso({ sesion: { user: { email: "persona@ejemplo.com" } }, errorDatos: { message: "Failed to fetch", status: 0 } }),
+  });
+
+  assert.match(vista.contenido(), /No pudimos conectar con el directorio/);
+  assert.match(vista.contenido(), /Herramientas generales/);
+});
+
+test("sin sesión se pide iniciar sesión y se explica un correo o contraseña incorrectos", async () => {
+  const vista = await abrirConSupabase({
+    cliente: clienteSupabaseFalso({ errorEntrar: { status: 400, code: "invalid_credentials", message: "Invalid login credentials" } }),
+  });
+
+  assert.deepEqual(vista.pantalla(), { directorio: false, entrar: true, nueva: false });
+  assert.equal(vista.contenido(), "", "no se dibuja nada antes de iniciar sesión");
+
+  vista.elemento("correo").value = "persona@ejemplo.com";
+  vista.elemento("contrasena").value = "contraseña-de-prueba";
+  await vista.elemento("panel-entrar").disparar("submit");
+
+  assert.equal(vista.mensaje(), "Correo o contraseña incorrectos.");
+  assert.deepEqual(vista.pantalla(), { directorio: false, entrar: true, nueva: false });
+});
+
+test("al iniciar sesión se carga el directorio desde la base", async () => {
+  const vista = await abrirConSupabase();
+
+  vista.elemento("correo").value = "persona@ejemplo.com";
+  vista.elemento("contrasena").value = "contraseña-de-prueba";
+  await vista.elemento("panel-entrar").disparar("submit");
+
+  assert.deepEqual(vista.pantalla(), { directorio: true, entrar: false, nueva: false });
+  assert.match(tarjetaDe(vista.contenido(), "pmo"), /Área de prueba PMO/);
+  assert.equal(vista.elemento("contrasena").value, "", "la contraseña no queda escrita en el formulario");
+});
+
+test("¿Olvidaste tu contraseña? envía el correo de recuperación hacia el sitio", async () => {
+  const vista = await abrirConSupabase();
+
+  vista.elemento("correo").value = "persona@ejemplo.com";
+  await vista.elemento("enlace-olvido").disparar("click");
+
+  const llamada = vista.cliente.llamadas.find(([accion]) => accion === "resetPasswordForEmail");
+  assert.ok(llamada, "debe pedir el correo de recuperación");
+  assert.equal(llamada[1], "persona@ejemplo.com");
+  assert.equal(llamada[2].redirectTo, SITIO);
+  assert.match(vista.mensaje(), /te llegará un enlace/);
+});
+
+test("quien llega desde una invitación crea su contraseña antes de ver el directorio", async () => {
+  const vista = await abrirConSupabase({
+    hash: "#access_token=token-de-prueba&type=invite",
+    cliente: clienteSupabaseFalso({ sesion: { user: { email: "nueva@ejemplo.com" } } }),
+  });
+
+  assert.deepEqual(vista.pantalla(), { directorio: false, entrar: false, nueva: true });
+  assert.equal(vista.contenido(), "");
+
+  vista.elemento("nueva-1").value = "ClaveDePrueba123";
+  vista.elemento("nueva-2").value = "OtraClaveDePrueba";
+  await vista.elemento("panel-nueva").disparar("submit");
+  assert.equal(vista.mensaje(), "Las dos contraseñas no coinciden.");
+  assert.ok(!vista.cliente.llamadas.some(([accion]) => accion === "updateUser"));
+
+  vista.elemento("nueva-2").value = "ClaveDePrueba123";
+  await vista.elemento("panel-nueva").disparar("submit");
+
+  assert.ok(vista.cliente.llamadas.some(([accion, campos]) => accion === "updateUser" && campos.includes("password")));
+  assert.deepEqual(vista.pantalla(), { directorio: true, entrar: false, nueva: false });
+  assert.deepEqual(vista.historial, ["/#/"], "se quitan de la dirección los datos del correo");
+});
+
+test("un enlace de correo vencido muestra un aviso claro", async () => {
+  const vista = await abrirConSupabase({
+    hash: "#error=access_denied&error_code=otp_expired&error_description=Email+link+is+invalid+or+has+expired",
+  });
+
+  assert.deepEqual(vista.pantalla(), { directorio: false, entrar: true, nueva: false });
+  assert.match(vista.mensaje(), /ya no es válido/);
+});
+
+test("cerrar sesión vuelve a la pantalla de inicio y borra lo que se veía", async () => {
+  const vista = await abrirConSupabase({ cliente: clienteSupabaseFalso({ sesion: { user: { email: "persona@ejemplo.com" } } }) });
+
+  await vista.elemento("cerrar-sesion").disparar("click");
+
+  assert.ok(vista.cliente.llamadas.some(([accion]) => accion === "signOut"));
+  assert.deepEqual(vista.pantalla(), { directorio: false, entrar: true, nueva: false });
+  assert.equal(vista.contenido(), "");
+});
+
+test("los textos que vienen de la base se escapan antes de mostrarse", async () => {
+  const filas = clonar(FILAS_DE_EJEMPLO);
+  filas.espacios[0].nombre = '<img src=x onerror="alert(1)">';
+  filas.accesos[0].url = "javascript:alert(1)";
+  const vista = await abrirConSupabase({
+    hash: "#/pmo",
+    cliente: clienteSupabaseFalso({ sesion: { user: { email: "persona@ejemplo.com" } }, filas }),
+  });
+
+  assert.doesNotMatch(vista.contenido(), /<img src=x/);
+  assert.match(vista.contenido(), /&lt;img src=x/);
+  assert.doesNotMatch(vista.contenido(), /javascript:/, "una dirección peligrosa no se convierte en enlace");
+  assert.match(vista.contenido(), /Enlace pendiente/);
+
+  const inicio = await abrirConSupabase({
+    cliente: clienteSupabaseFalso({ sesion: { user: { email: "persona@ejemplo.com" } }, filas }),
+  });
+  assert.doesNotMatch(inicio.contenido(), /<img src=x/);
+  assert.match(tarjetaDe(inicio.contenido(), "pmo"), /&lt;img src=x/);
+});

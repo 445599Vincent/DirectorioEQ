@@ -32,4 +32,3 @@ Formato de la hora: `AAAA-MM-DD HH:MM` (hora local de República Dominicana).
 
 | Agente | Sesión | Desde | Archivos | Tarea |
 |---|---|---|---|---|
-| Claude | Ejecutador (Ingeniería) | 2026-10-01 22:47 | `index.html`, `tests/directorio.test.mjs` | T-008 — Inicio de sesión y carga desde Supabase |
