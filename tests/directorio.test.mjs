@@ -583,6 +583,7 @@ function clienteSupabaseFalso({
       },
       updateUser(cambios) {
         llamadas.push(["updateUser", Object.keys(cambios)]);
+        if (errores.updateUser) return responder({ data: { user: null }, error: errores.updateUser });
         return responder({ data: { user: sesionActual?.user }, error: null });
       },
       signOut() {
@@ -592,6 +593,17 @@ function clienteSupabaseFalso({
       },
     },
     bd,
+    // Igual que la función de supabase/migracion-002: solo cambia la fila de quien llama.
+    rpc(nombre) {
+      llamadas.push(["rpc", nombre]);
+      const error = errores[`rpc:${nombre}`];
+      if (error) return responder({ data: null, error });
+      if (nombre === "contrasena_cambiada") {
+        bd.perfiles.filter(({ id }) => id === sesionActual?.user?.id)
+          .forEach((perfil) => { perfil.debe_cambiar_contrasena = false; });
+      }
+      return responder({ data: null, error: null });
+    },
     from(tabla) {
       llamadas.push(["from", tabla]);
       return consultaFalsa(tabla, bd, llamadas, { errorDatos, errores });
@@ -996,7 +1008,7 @@ test("un administrador ve el enlace y la lista de usuarios con sus áreas", asyn
   assert.match(ana, /value="calidad"\s+>/, "Calidad sin marcar");
   assert.match(contenido, /da acceso también a todos[\s\S]*los clientes/);
   assert.match(contenido, /supabase\.com\/dashboard\/project\/yvhractjxuvfjaldhgdo\/auth\/users/);
-  assert.match(contenido, /Invite user/);
+  assert.match(contenido, /Create new user/);
 });
 
 test("el administrador guarda las áreas desde el formulario", async () => {
@@ -1091,4 +1103,135 @@ test("los correos y nombres del panel se escapan", async () => {
 
   assert.doesNotMatch(vista.contenido(), /<img src=x|<script>/);
   assert.match(vista.contenido(), /&lt;img src=x/);
+});
+
+// --- Contraseña temporal (T-014) ----------------------------------------------------
+
+const migracion002 = readFileSync(new URL("../supabase/migracion-002-contrasena-temporal.sql", import.meta.url), "utf8");
+const PERFIL_TEMPORAL = { id: "u-temp", correo: "temporal@ejemplo.com", nombre: "", es_admin: false, debe_cambiar_contrasena: true };
+
+function clienteTemporal(opciones = {}) {
+  return clienteSupabaseFalso({
+    sesion: { user: { id: PERFIL_TEMPORAL.id, email: PERFIL_TEMPORAL.correo } },
+    perfiles: [PERFIL_ADMIN, PERFIL_TEMPORAL],
+    permisos: [{ usuario_id: PERFIL_TEMPORAL.id, area_id: "pmo" }],
+    ...opciones,
+  });
+}
+
+async function escribirContrasena(vista, clave = "ClaveNuevaDePrueba1") {
+  vista.elemento("nueva-1").value = clave;
+  vista.elemento("nueva-2").value = clave;
+  await vista.elemento("panel-nueva").disparar("submit");
+}
+
+test("con la contraseña temporal pendiente no se ve el directorio hasta cambiarla", async () => {
+  const vista = await abrirConSupabase({ cliente: clienteTemporal() });
+
+  assert.deepEqual(vista.pantalla(), { directorio: false, entrar: false, nueva: true });
+  assert.match(vista.elemento("nueva-texto").textContent, /contraseña actual es temporal/);
+  assert.notEqual(vista.elemento("cancelar-cambio").style.display, "", "no se puede saltar el cambio");
+  assert.equal(vista.contenido(), "");
+  assert.ok(!vista.cliente.llamadas.some(([tipo, tabla]) => tipo === "bd" && tabla === "accesos"),
+    "no se piden los enlaces antes del cambio");
+
+  await escribirContrasena(vista);
+
+  assert.ok(vista.cliente.llamadas.some(([accion, campos]) => accion === "updateUser" && campos.includes("password")));
+  assert.ok(vista.cliente.llamadas.some(([accion, nombre]) => accion === "rpc" && nombre === "contrasena_cambiada"));
+  assert.equal(vista.cliente.bd.perfiles.find(({ id }) => id === "u-temp").debe_cambiar_contrasena, false);
+  assert.deepEqual(vista.pantalla(), { directorio: true, entrar: false, nueva: false });
+  assert.match(tarjetaDe(vista.contenido(), "pmo"), /Área de prueba PMO/);
+});
+
+test("la función de la base se llama solo después de guardar la contraseña", async () => {
+  const vista = await abrirConSupabase({
+    cliente: clienteTemporal({ errores: { updateUser: { status: 422, code: "same_password" } } }),
+  });
+
+  await escribirContrasena(vista);
+
+  assert.equal(vista.mensaje(), "La contraseña nueva debe ser distinta de la anterior.");
+  assert.ok(!vista.cliente.llamadas.some(([accion]) => accion === "rpc"));
+  assert.deepEqual(vista.pantalla(), { directorio: false, entrar: false, nueva: true });
+});
+
+test("si la base no registra el cambio, la persona igual entra y no queda atrapada", async () => {
+  const vista = await abrirConSupabase({
+    cliente: clienteTemporal({ errores: { "rpc:contrasena_cambiada": { status: 0, message: "Failed to fetch" } } }),
+  });
+
+  await escribirContrasena(vista);
+
+  assert.deepEqual(vista.pantalla(), { directorio: true, entrar: false, nueva: false });
+});
+
+test("cualquier usuario puede cambiar su contraseña desde el encabezado", async () => {
+  const vista = await abrirConSupabase({ hash: "#/pmo", cliente: clienteConUsuarios({ yo: PERFIL_ANA }) });
+
+  assert.match(vista.elemento("sesion").innerHTML, /Cambiar contraseña/);
+  await vista.elemento("cambiar-contrasena").disparar("click");
+  assert.deepEqual(vista.pantalla(), { directorio: false, entrar: false, nueva: true });
+  assert.equal(vista.elemento("cancelar-cambio").style.display, "", "se puede cancelar");
+
+  await vista.elemento("cancelar-cambio").disparar("click");
+  assert.deepEqual(vista.pantalla(), { directorio: true, entrar: false, nueva: false });
+  assert.ok(!vista.cliente.llamadas.some(([accion]) => accion === "updateUser"));
+
+  await vista.elemento("cambiar-contrasena").disparar("click");
+  await escribirContrasena(vista);
+
+  assert.ok(vista.cliente.llamadas.some(([accion]) => accion === "updateUser"));
+  assert.ok(vista.cliente.llamadas.some(([accion, nombre]) => accion === "rpc" && nombre === "contrasena_cambiada"));
+  assert.deepEqual(vista.pantalla(), { directorio: true, entrar: false, nueva: false });
+  assert.match(vista.contenido(), /Tu contraseña se cambió correctamente/);
+  assert.match(vista.contenido(), /SharePoint de prueba/, "sigue en la misma página");
+});
+
+test("el panel muestra la contraseña temporal pendiente y permite pedir el cambio", async () => {
+  const conMarca = { ...PERFIL_ANA, debe_cambiar_contrasena: false };
+  const vista = await abrirConSupabase({
+    hash: "#/admin",
+    cliente: clienteConUsuarios({ perfiles: [{ ...PERFIL_ADMIN, debe_cambiar_contrasena: false }, conMarca, PERFIL_TEMPORAL] }),
+  });
+  await esperar();
+  const tarjeta = (id) => vista.contenido().match(new RegExp(`data-usuario="${id}">([\\s\\S]*?)</form>`))[1];
+
+  assert.match(tarjeta("u-temp"), /Contraseña temporal pendiente/);
+  assert.doesNotMatch(tarjeta("u-temp"), /Pedir cambio de contraseña/);
+  assert.match(tarjeta("u-ana"), /Pedir cambio de contraseña/);
+
+  const formulario = { dataset: { usuario: "u-ana" } };
+  const boton = { disabled: false, closest: (selector) => (selector.startsWith("form") ? formulario : boton) };
+  await vista.elemento("secciones").disparar("click", { target: boton });
+  await esperar();
+
+  assert.match(vista.preguntas.at(-1), /¿Pedir a ana@ejemplo\.com que cambie su contraseña/);
+  assert.equal(vista.cliente.bd.perfiles.find(({ id }) => id === "u-ana").debe_cambiar_contrasena, true);
+  assert.match(tarjeta("u-ana"), /Contraseña temporal pendiente/);
+  assert.match(vista.contenido(), /ana@ejemplo\.com deberá crear una contraseña nueva/);
+});
+
+test("sin la migración 002 el panel no muestra la marca y nadie queda bloqueado", async () => {
+  const vista = await abrirConSupabase({ hash: "#/admin", cliente: clienteConUsuarios() });
+  await esperar();
+
+  assert.deepEqual(vista.pantalla(), { directorio: true, entrar: false, nueva: false });
+  assert.doesNotMatch(vista.contenido(), /Contraseña temporal pendiente|Pedir cambio de contraseña/);
+});
+
+test("la migración 002 solo deja que cada persona apague su propia marca", () => {
+  const sql = migracion002.replace(/--.*$/gm, "");
+  assert.match(sql, /add column debe_cambiar_contrasena boolean not null default true/);
+  assert.match(sql, /set debe_cambiar_contrasena = false\s+where es_admin;/, "administradores en false");
+
+  const funcion = sql.match(/create or replace function public\.contrasena_cambiada\(\)([\s\S]*?)\$\$;/);
+  assert.ok(funcion, "la función no recibe parámetros");
+  assert.match(funcion[1], /security definer/);
+  assert.match(funcion[1], /set search_path = ''/);
+  assert.match(funcion[1], /update public\.perfiles\s+set debe_cambiar_contrasena = false\s+where id = \(select auth\.uid\(\)\);/,
+    "solo la fila de quien la llama, y solo esa columna");
+  assert.match(sql, /revoke all on function public\.contrasena_cambiada\(\) from public, anon;/);
+  assert.match(sql, /grant execute on function public\.contrasena_cambiada\(\) to authenticated;/);
+  assert.doesNotMatch(sql, /drop policy|create policy|disable row level security/, "no cambia las reglas RLS");
 });

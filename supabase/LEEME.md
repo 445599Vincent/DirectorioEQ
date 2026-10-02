@@ -31,6 +31,30 @@ vuelve a ejecutar, no borra datos ni devuelve administradores a `false`.
 La instrucción final solo se ejecuta desde el SQL Editor. Una persona normal no puede usar
 la página ni la API para hacerse administradora a sí misma.
 
+## Migraciones (después de `esquema.sql`)
+
+Cada migración se ejecuta **una sola vez y en orden**, igual que `esquema.sql`: SQL Editor →
+consulta nueva → pegar el archivo completo → **Run**. Todas se pueden volver a ejecutar sin
+dañar nada. Ejecuta cada una **antes** de publicar la versión de la página que la necesita.
+
+### `migracion-002-contrasena-temporal.sql` (T-014)
+
+Para crear cuentas con una contraseña temporal que la persona cambia al entrar.
+
+- Agrega a `perfiles` la columna `debe_cambiar_contrasena`. Las cuentas nuevas empiezan en
+  `true`. Al ejecutarla, las cuentas que ya existen quedan en `true` si son usuarios normales
+  y en `false` si son administradores.
+- Crea la función `contrasena_cambiada()`, que la página llama cuando la persona guarda su
+  contraseña nueva. **Solo puede apagar la marca de quien la llama**: no recibe parámetros y
+  cambia únicamente la fila con el `id` de la sesión (`auth.uid()`).
+- Para comprobarla: en **Table Editor → perfiles** aparece la columna nueva.
+
+Cómo crear una cuenta con contraseña temporal: **Authentication → Users → Add user → Create
+new user**, correo y contraseña temporal, con **Auto Confirm User** marcado. Después, en el
+directorio, **Administración** → márcale sus áreas → **Guardar cambios**. Al entrar por primera
+vez, el directorio le pedirá crear su propia contraseña. Desde el panel también se puede
+**pedir el cambio de contraseña** otra vez.
+
 ## Quién puede hacer qué
 
 | Acción | Sin iniciar sesión | Usuario | Administrador |
@@ -45,6 +69,8 @@ la página ni la API para hacerse administradora a sí misma.
 | Leer accesos permitidos | No | Sí | Sí, todos |
 | Crear, cambiar o borrar áreas, clientes y accesos | No | No | Sí |
 | Darse a sí mismo el nivel de administrador | No | No | No |
+| Marcar su propia contraseña temporal como cambiada (`contrasena_cambiada()`) | No | Sí, solo la suya | Sí, solo la suya |
+| Quitar o poner la marca de contraseña temporal a otra persona | No | No | Sí (panel de administración) |
 
 Las herramientas generales no se guardan todavía en estas tablas: seguirán en el código
 y serán visibles para cualquier persona que haya iniciado sesión, como define el proyecto.

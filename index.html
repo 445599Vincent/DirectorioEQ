@@ -231,6 +231,12 @@
   .casilla { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: var(--titulos); padding: 3px 0; }
   .casilla input { margin-top: 4px; accent-color: var(--teal); }
   .casilla small { color: var(--texto); }
+  .estado-temporal { color: #6b4e0f; background: #fff4dc; border: 1px solid var(--dorado); }
+  .btn-secundario {
+    align-self: flex-start; padding: 8px 14px; border: 1px solid var(--teal); border-radius: 8px;
+    background: var(--blanco); color: var(--teal); font: inherit; font-size: 13px; font-weight: 500; cursor: pointer;
+  }
+  .btn-secundario:hover { background: rgba(16, 119, 130, .08); }
 </style>
 </head>
 <body>
@@ -263,7 +269,7 @@
       <a href="#" class="olvido" id="enlace-olvido">¿Olvidaste tu contraseña?</a>
     </form>
     <form id="panel-nueva" style="display:none">
-      <p>Crea tu contraseña para entrar al directorio. Usa al menos 8 caracteres.</p>
+      <p id="nueva-texto">Crea tu contraseña para entrar al directorio. Usa al menos 8 caracteres.</p>
       <label class="campo">Contraseña nueva
         <input id="nueva-1" type="password" autocomplete="new-password" minlength="8" required>
       </label>
@@ -271,6 +277,7 @@
         <input id="nueva-2" type="password" autocomplete="new-password" minlength="8" required>
       </label>
       <button class="btn-principal" id="btn-guardar" type="submit">Guardar contraseña</button>
+      <a href="#" class="olvido" id="cancelar-cambio" style="display:none">Cancelar y volver al directorio</a>
     </form>
     <p class="login-error" id="login-mensaje" role="alert" style="display:none"></p>
   </div>
@@ -384,6 +391,8 @@
   let ESPACIOS = [];
   // Aviso que encabeza el inicio (cuenta sin áreas o base de datos que no responde).
   let avisoInicio = "";
+  // Aviso de un momento (p. ej. "Tu contraseña se cambió"): se ve hasta cambiar de página.
+  let avisoPasajero = "";
   // true cuando ya hay datos para dibujar; antes no se dibuja nada.
   let listo = false;
 
@@ -614,7 +623,7 @@
           seccion("Para todo el equipo", "Herramientas generales", GENERALES.map(l => tarjetaEnlace(l)));
       }
     }
-    contenedor.innerHTML = html;
+    contenedor.innerHTML = avisoPasajero + html;
     for (const img of contenedor.querySelectorAll(".logo img")) {
       img.onerror = () => {
         img.parentElement.classList.remove("logo");
@@ -627,6 +636,7 @@
   window.addEventListener("hashchange", () => {
     if (!listo) return;
     buscar.value = "";
+    avisoPasajero = "";
     admin.estado = "sin-cargar";
     admin.mensaje = null;
     mostrar();
@@ -700,6 +710,22 @@
     return contrasenaPorCrear;
   }
 
+  // Por qué se pide una contraseña nueva: "correo" (invitación o recuperación),
+  // "temporal" (la cuenta la creó el administrador) o "voluntario" (desde el encabezado).
+  const TEXTOS_CONTRASENA = {
+    correo: "Crea tu contraseña para entrar al directorio. Usa al menos 8 caracteres.",
+    temporal: "Tu contraseña actual es temporal. Crea una propia para entrar al directorio. " +
+      "Usa al menos 8 caracteres.",
+    voluntario: "Escribe tu contraseña nueva. Usa al menos 8 caracteres.",
+  };
+  let motivoContrasena = "correo";
+  function pedirContrasena(motivo) {
+    motivoContrasena = motivo;
+    document.getElementById("nueva-texto").textContent = TEXTOS_CONTRASENA[motivo];
+    document.getElementById("cancelar-cambio").style.display = motivo === "voluntario" ? "" : "none";
+    verPantalla("nueva");
+  }
+
   // "entrar": correo y contraseña · "nueva": crear contraseña · "directorio": la página.
   function verPantalla(cual) {
     document.getElementById("app").style.display = cual === "directorio" ? "" : "none";
@@ -742,8 +768,14 @@
       <span class="sesion">
         <span class="quien">${esc(usuario?.email)}</span>
         ${miPerfil?.es_admin ? '<a href="#/admin" class="admin-enlace" id="enlace-admin">Administración</a>' : ""}
+        <a href="#" class="cerrar" id="cambiar-contrasena">Cambiar contraseña</a>
         <a href="#" class="cerrar" id="cerrar-sesion">Cerrar sesión</a>
       </span>`;
+    document.getElementById("cambiar-contrasena").addEventListener("click", e => {
+      e.preventDefault();
+      avisoLogin("");
+      pedirContrasena("voluntario");
+    });
     document.getElementById("cerrar-sesion").addEventListener("click", async e => {
       e.preventDefault();
       try {
@@ -758,6 +790,8 @@
     listo = false;
     sesionActual = null;
     miPerfil = null;
+    contrasenaYaCambiada = false;
+    avisoPasajero = "";
     admin.estado = "sin-cargar";
     admin.mensaje = null;
     usarDatos([], []);
@@ -772,10 +806,17 @@
     sesionActual = sesion;
     if (contrasenaPendiente()) {
       avisoLogin("");
-      verPantalla("nueva");
+      pedirContrasena("correo");
       return;
     }
     miPerfil = await cargarMiPerfil(sesion.user);
+    // Cuenta creada por el administrador con una contraseña temporal (T-014): antes de ver
+    // el directorio hay que crear una propia. No se carga nada del directorio hasta entonces.
+    if (miPerfil?.debe_cambiar_contrasena && !contrasenaYaCambiada) {
+      avisoLogin("");
+      pedirContrasena("temporal");
+      return;
+    }
     mostrarUsuario(sesion.user);
     try {
       const convertidos = await cargarDesdeSupabase();
@@ -805,8 +846,9 @@
   async function cargarMiPerfil(usuario) {
     if (!usuario?.id) return null;
     try {
+      // "*" para que funcione antes y después de la migración 002 (debe_cambiar_contrasena).
       const { data, error } = await conLimite(clienteSupabase.from("perfiles")
-        .select("id, correo, nombre, es_admin")
+        .select("*")
         .eq("id", usuario.id)
         .maybeSingle());
       if (error) throw error;
@@ -820,7 +862,7 @@
     admin.estado = "cargando";
     try {
       const [perfiles, permisos] = await conLimite(Promise.all([
-        clienteSupabase.from("perfiles").select("id, correo, nombre, es_admin").order("correo"),
+        clienteSupabase.from("perfiles").select("*").order("correo"),
         clienteSupabase.from("permisos").select("usuario_id, area_id"),
       ]));
       if (perfiles.error) throw perfiles.error;
@@ -923,6 +965,11 @@
       <form class="admin-usuario" data-usuario="${esc(perfil.id)}">
         <span class="correo">${esc(perfil.correo)}${perfil.id === miPerfil?.id ? " (tú)" : ""}</span>
         ${perfil.es_admin ? '<span class="estado estado-activo">Administrador</span>' : ""}
+        ${perfil.debe_cambiar_contrasena
+          ? '<span class="estado estado-temporal">Contraseña temporal pendiente</span>'
+          : perfil.debe_cambiar_contrasena === false
+            ? `<button class="btn-secundario" type="button" data-accion="pedir-cambio">Pedir cambio de contraseña</button>`
+            : ""}
         <label class="campo">Nombre
           <input name="nombre" type="text" value="${esc(perfil.nombre)}" autocomplete="off">
         </label>
@@ -950,8 +997,11 @@
         <ol>
           <li>Abre los <a href="${esc(PANEL_USUARIOS)}" target="_blank" rel="noopener">usuarios del
             proyecto en Supabase</a>.</li>
-          <li>Pulsa <b>Invite user</b> y escribe su correo.</li>
-          <li>Cuando acepte la invitación, aparecerá sola en esta lista: márcale sus áreas y guarda.</li>
+          <li>Pulsa <b>Add user → Create new user</b>, escribe su correo y una contraseña temporal, y
+            deja marcada <b>Auto Confirm User</b>.</li>
+          <li>Aparecerá sola en esta lista: márcale sus áreas y guarda.</li>
+          <li>Pásale la contraseña temporal. Al entrar por primera vez, el directorio le pedirá crear
+            una propia.</li>
         </ol>
       </div>
       ${pmo ? `<div class="admin-caja">El área <b>${esc(pmo.nombre)}</b> da acceso también a todos
@@ -971,6 +1021,39 @@
       </section>`;
   }
 
+  // Vuelve a marcar que la persona debe cambiar su contraseña al entrar (T-014).
+  async function pedirCambioDeContrasena(usuarioId) {
+    const perfil = admin.perfiles.find(p => p.id === usuarioId);
+    if (!perfil) return false;
+    if (!window.confirm(`¿Pedir a ${perfil.correo} que cambie su contraseña la próxima vez que entre?`)) return false;
+    let resultado = true;
+    try {
+      const { error } = await conLimite(clienteSupabase.from("perfiles")
+        .update({ debe_cambiar_contrasena: true }).eq("id", usuarioId));
+      if (error) throw error;
+      admin.mensaje = { tipo: "exito", texto: `${perfil.correo} deberá crear una contraseña nueva al entrar.` };
+    } catch (error) {
+      resultado = false;
+      admin.mensaje = { tipo: "error", texto: `No se pudo pedir el cambio de contraseña a ${perfil.correo}. ` +
+        mensajeDeError(error) };
+    }
+    const mensaje = admin.mensaje;
+    await cargarAdmin();
+    if (admin.estado === "listo") admin.mensaje = mensaje;
+    mostrar();
+    return resultado;
+  }
+
+  contenedor.addEventListener("click", async e => {
+    const boton = e.target?.closest?.('button[data-accion="pedir-cambio"]');
+    const formulario = boton?.closest("form[data-usuario]");
+    if (!formulario) return;
+    e.preventDefault();
+    boton.disabled = true;
+    await pedirCambioDeContrasena(formulario.dataset.usuario);
+    boton.disabled = false;
+  });
+
   // Un solo oyente para todos los formularios del panel (la página se vuelve a dibujar).
   contenedor.addEventListener("submit", async e => {
     const formulario = e.target?.closest?.("form[data-usuario]");
@@ -986,7 +1069,28 @@
     if (boton) boton.disabled = false;
   });
 
+  // Marca en la base que la persona ya no tiene contraseña temporal. La función solo puede
+  // cambiar la fila de quien la llama (ver supabase/migracion-002-contrasena-temporal.sql).
+  // Si falla, la contraseña igual quedó cambiada: se entra y se volverá a pedir la próxima vez.
+  let contrasenaYaCambiada = false;
+  async function registrarContrasenaCambiada() {
+    contrasenaYaCambiada = true;
+    try {
+      const { error } = await conLimite(clienteSupabase.rpc("contrasena_cambiada"));
+      if (error) throw error;
+      if (miPerfil) miPerfil.debe_cambiar_contrasena = false;
+    } catch {}
+  }
+
   function prepararFormularios() {
+    document.getElementById("cancelar-cambio").addEventListener("click", e => {
+      e.preventDefault();
+      document.getElementById("nueva-1").value = "";
+      document.getElementById("nueva-2").value = "";
+      avisoLogin("");
+      verPantalla("directorio");
+    });
+
     document.getElementById("panel-entrar").addEventListener("submit", async e => {
       e.preventDefault();
       const correo = document.getElementById("correo").value.trim();
@@ -1053,10 +1157,19 @@
         document.getElementById("nueva-1").value = "";
         document.getElementById("nueva-2").value = "";
         marcarContrasenaPendiente(false);
+        await registrarContrasenaCambiada();
+        if (motivoContrasena === "voluntario") {
+          avisoPasajero = aviso("Tu contraseña se cambió correctamente.");
+          verPantalla("directorio");
+          mostrar();
+          return;
+        }
         await entrarAlDirectorio(sesionActual);
       } catch (error) {
         avisoLogin(
-          error?.code === "weak_password" || error?.status === 422
+          error?.code === "same_password"
+            ? "La contraseña nueva debe ser distinta de la anterior."
+            : error?.code === "weak_password" || error?.status === 422
             ? "La contraseña no cumple los requisitos de seguridad. Prueba con una más larga que " +
               "mezcle letras y números."
             : esFallaDeServicio(error) ? MENSAJES.servicio
@@ -1096,7 +1209,7 @@
     clienteSupabase.auth.onAuthStateChange(evento => {
       if (evento === "PASSWORD_RECOVERY") {
         marcarContrasenaPendiente(true);
-        verPantalla("nueva");
+        pedirContrasena("correo");
       }
       if (evento === "SIGNED_OUT" && listo) salir();
     });
