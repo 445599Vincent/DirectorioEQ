@@ -463,16 +463,48 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
   correos existen. Observación menor: la librería se pide como `supabase-js@2` sin versión
   exacta; fijarla en una tarea futura.
 
-### T-009 — Panel de administración (Etapa 3)
+### T-009 — Panel de administración, parte A: usuarios y permisos (Etapa 3)
 
-- **Estado:** Pendiente
-- **Asignada a:** Codex — GPT-6 Sol, esfuerzo alto
-- **Qué hacer (resumen):** para administradores, ver usuarios, asignarles áreas o hacerlos
-  administradores, y crear, editar o quitar áreas, clientes y accesos.
+- **Estado:** Asignada (2026-10-02)
+- **Asignada a:** Ecco (Ingeniería, desde la web: rama `ecco/T-009` y pull request) —
+  **Claude Opus 5.5, esfuerzo alto**
+- **Archivos:** `index.html`, `tests/directorio.test.mjs`
+- **Qué hacer:** una página `#/admin`, visible y accesible **solo si el perfil del usuario
+  tiene `es_admin = true`** (para los demás, ni el enlace ni la página; si alguien escribe
+  `#/admin`, ver "No tienes acceso"). Un enlace "Administración" en el encabezado para los
+  administradores. En esa página:
+  1. Lista de usuarios (`perfiles`): correo, nombre, si es administrador y sus áreas.
+  2. Por usuario: editar el nombre; marcar o quitar "Administrador" (pedir confirmación;
+     avisar si alguien intenta quitarse a sí mismo y es el único administrador); asignar o
+     quitar áreas con casillas (una por cada área de `espacios` de tipo `area`), guardando
+     en `permisos`. Recordar en la pantalla que el área PMO da acceso a todos los clientes.
+  3. Crear usuarios no se puede desde la página con la clave pública: mostrar los pasos
+     ("Supabase → Authentication → Users → Invite user") con un enlace al panel de usuarios
+     de Supabase del proyecto; al aceptar la invitación, la persona aparece sola en la lista.
+  4. Mensajes de éxito y de error claros; la lista se actualiza después de cada cambio.
+- **Seguridad:** la página solo oculta botones; quien realmente decide es la base de datos
+  (RLS de `supabase/esquema.sql`), así que no hace falta ni se permite ninguna clave secreta.
+  Escapar todos los textos (correos y nombres).
+- **Pruebas:** con un cliente de Supabase simulado: un usuario normal no ve el enlace ni la
+  página; un administrador ve la lista, guarda áreas, cambia el nombre y el nivel; los
+  errores de la base se muestran.
+- **No hacer:** no encender `SUPABASE.activo`; no tocar `enlaces.js` ni `supabase/`.
+- **Notas de entrega:** en el pull request.
+
+### T-013 — Panel de administración, parte B: contenido (Etapa 3)
+
+- **Estado:** Pendiente (después de la T-009)
+- **Qué hacer (resumen):** desde `#/admin`, editar áreas y clientes (nombre, descripción,
+  estado, logo) y sus accesos (agregar, editar, ordenar y quitar; URL vacía, `https://` o
+  `#/`), y crear clientes nuevos, con las mismas validaciones que las pruebas actuales.
+  Cuando esté lista, el Ejecutador deja de editar `enlaces.js`: los cambios de contenido se
+  hacen en el panel.
 
 ### T-010 — Pasar los enlaces a Supabase y quitarlos del archivo público (Etapa 4)
 
-- **Estado:** Parte 1 para revisión (2026-10-01); la parte 2 espera la T-011
+- **Estado:** Parte 1 completada (2026-10-01); la parte 2 espera la T-011. **Hasta el
+  cambio definitivo, cada carga en `enlaces.js` debe regenerar el archivo de carga** y Vincent
+  volver a ejecutarlo en Supabase, para que ambos coincidan.
 - **Asignada a:** Ejecutador (Contenido) — Claude Sonnet 5.5, esfuerzo medio
 - **Archivos:** `no-subir/datos-supabase.sql` (fuera de Git: la carpeta `no-subir/` está en
   `.gitignore`); en la parte 2, `enlaces.js`.

@@ -28,6 +28,14 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ---
 
+## 2026-10-02 — Claude
+- **Pedido:** retomar el acceso por usuario.
+- **Cambios:** T-009 dividida: parte A (usuarios y permisos) asignada a Ecco; parte B
+  (contenido) como T-013. Regla temporal: cada cambio en `enlaces.js` regenera el archivo de
+  carga de Supabase hasta el cambio definitivo.
+- **Pendiente:** Vincent termina la T-011 (vista de administrador y de un usuario de prueba)
+  y vuelve a ejecutar el archivo de carga (se agregó Plantillas PMO).
+
 ## 2026-10-02 — Claude (Contenido)
 - **Pedido:** cargar el enlace de Plantillas PMO (pedido directo).
 - **Cambios:** la tarjeta "Plantillas PMO" ya tiene su enlace (`enlaces.js`) y se volvió a
