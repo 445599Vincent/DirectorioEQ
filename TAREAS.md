@@ -12,6 +12,11 @@ asignadas a ellos**. Vincent (el usuario) aprueba cada tarea antes de que se asi
 | Ingeniería | Codex | `index.html`, `tests/`, `supabase/` |
 | Contenido | Claude — sesión "Ejecutador" | `enlaces.js`, `logos/` |
 
+**Hasta el 2026-10-06 Codex no está disponible.** Mientras tanto el Ejecutador asume
+también el rol de Ingeniería (`index.html`, `tests/`, `supabase/`). Cuando Codex vuelva,
+debe leer `BITACORA.md` y `TAREAS.md` antes de tocar nada, porque sus archivos habrán
+cambiado.
+
 `BITACORA.md` y `EN-CURSO.md` los editan todos, siempre con cambios puntuales.
 
 Un agente solo toca archivos de otro rol si su tarea lo dice expresamente. Así dos agentes
@@ -358,8 +363,9 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
 
 ### T-008 — Pantalla de inicio de sesión y carga desde Supabase (Etapa 2)
 
-- **Estado:** Asignada (2026-10-01)
-- **Asignada a:** Codex (Ingeniería) — GPT-6 Sol, esfuerzo alto
+- **Estado:** Asignada (reasignada el 2026-10-01)
+- **Asignada a:** Ejecutador (reemplaza a Codex hasta el 2026-10-06) — **Claude Opus 5.5,
+  esfuerzo alto** (toca el inicio de sesión y la recuperación de contraseña)
 - **Archivos:** `index.html`, `tests/directorio.test.mjs`
 - **Qué hacer:**
   1. Interruptor `SUPABASE = { activo: false, url, clavePublica }` al inicio del script,

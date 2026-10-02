@@ -28,6 +28,13 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ---
 
+## 2026-10-01 — Claude
+- **Pedido:** Codex no estará disponible hasta el 2026-10-06; seguir con el Ejecutador.
+- **Cambios:** el Ejecutador asume temporalmente Ingeniería; T-008 reasignada al Ejecutador
+  (`TAREAS.md`).
+- **Pendiente:** Vincent confirma los conteos de Supabase (21 espacios, 42 accesos, 1
+  usuario, 1 administrador).
+
 ## 2026-10-01 — Claude (Contenido)
 - **Pedido:** tarea T-010 parte 1 (asignada por la directora): generar con un script el SQL que
   carga en Supabase las áreas, clientes y accesos de `enlaces.js`.
