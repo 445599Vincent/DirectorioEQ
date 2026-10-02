@@ -491,6 +491,38 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
 - **No hacer:** no encender `SUPABASE.activo`; no tocar `enlaces.js` ni `supabase/`.
 - **Notas de entrega:** en el pull request.
 
+### T-014 — Contraseña temporal: cambio obligatorio en el primer ingreso
+
+- **Estado:** Asignada (2026-10-02), **empezar cuando la T-009 esté integrada** (mismos
+  archivos)
+- **Asignada a:** Ecco (rama `ecco/T-014` y pull request) — Claude Opus 5.5, esfuerzo alto
+- **Archivos:** `supabase/migracion-002-contrasena-temporal.sql` (nuevo), `supabase/LEEME.md`,
+  `index.html`, `tests/directorio.test.mjs`
+- **Contexto:** Vincent creará él mismo las cuentas de unas 15 personas con una contraseña
+  temporal (el correo gratuito de Supabase solo envía unos pocos correos por hora, así que
+  no se usan invitaciones ni "olvidé mi contraseña" para todos). Como Vincent conoce esas
+  contraseñas, cada persona debe cambiarla al entrar por primera vez.
+- **Qué hacer:**
+  1. Migración SQL reejecutable: columna `perfiles.debe_cambiar_contrasena boolean not null
+     default true`; los perfiles que ya existen quedan en `false` salvo que no sean
+     administradores (k.moya → `true`, v.tapia → `false`). Una función
+     `public.contrasena_cambiada()` `security definer`, con `search_path` vacío, ejecutable
+     solo por `authenticated`, que pone en `false` **únicamente** la fila del propio usuario
+     (`auth.uid()`) y nada más. El administrador puede volver a ponerla en `true` (la
+     política de actualización de administradores ya lo permite).
+  2. En la página: si el perfil propio tiene `debe_cambiar_contrasena = true`, mostrar la
+     pantalla "Crea tu contraseña" (reutilizar la de invitación) antes del directorio; al
+     guardarla con `auth.updateUser`, llamar a `contrasena_cambiada()`.
+  3. Opción "Cambiar contraseña" en el encabezado para cualquier usuario con sesión.
+  4. En el panel de administración (T-009): mostrar si cada usuario tiene la contraseña
+     temporal pendiente y un botón "Pedir cambio de contraseña".
+  5. `supabase/LEEME.md`: cómo ejecutar la migración y la tabla de permisos actualizada.
+- **Pruebas:** con Supabase simulado: el usuario con la marca no ve el directorio hasta
+  cambiarla; tras cambiarla, entra; la opción del encabezado funciona; un usuario no puede
+  cambiar la marca de otro (explicar en las notas por qué la función lo impide).
+- **No hacer:** no encender `SUPABASE.activo`; no escribir contraseñas reales.
+- **Notas de entrega:** en el pull request.
+
 ### T-013 — Panel de administración, parte B: contenido (Etapa 3)
 
 - **Estado:** Pendiente (después de la T-009)

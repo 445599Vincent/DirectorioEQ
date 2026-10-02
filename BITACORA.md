@@ -29,6 +29,12 @@ El formato de cada entrada está en `AGENTS.md`.
 ---
 
 ## 2026-10-02 — Claude
+- **Pedido:** Vincent creará él mismo las cuentas del equipo (unas 15 personas).
+- **Cambios:** T-014 (cambio obligatorio de la contraseña temporal) asignada a Ecco, para
+  después de la T-009.
+- **Pendiente:** Vincent crea las cuentas; T-009 y T-014 de Ecco.
+
+## 2026-10-02 — Claude
 - **Pedido:** retomar el acceso por usuario.
 - **Cambios:** T-009 dividida: parte A (usuarios y permisos) asignada a Ecco; parte B
   (contenido) como T-013. Regla temporal: cada cambio en `enlaces.js` regenera el archivo de
