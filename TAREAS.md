@@ -739,3 +739,15 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
 - **Archivos:** `enlaces.js`
 - **Notas de entrega:** `url` de "Material Educativo" (Accesos Directos del PMO): "" → enlace
   dado por Vincent (no repetido en otro acceso). Único cambio. Pruebas 19 de 19.
+
+### D-017 — Directa: Plantillas PMO
+
+- **Estado:** Para revisión (2026-10-02)
+- **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent
+- **Archivos:** `enlaces.js` (y `no-subir/datos-supabase.sql`, fuera de Git)
+- **Notas de entrega:** `url` de "Plantillas PMO" (Accesos Directos del PMO): "" → enlace dado
+  por Vincent (no repetido en otro acceso). Único cambio en `enlaces.js`. Se regeneró el SQL de
+  carga con el script (21 espacios y 42 accesos; la única diferencia con el anterior es esa
+  dirección). Como Vincent ya instaló la base con el SQL anterior, la tarjeta solo tendrá el
+  enlace en Supabase si se vuelve a ejecutar `no-subir/datos-supabase.sql` (se puede repetir sin
+  duplicar). Pruebas 41 de 41.

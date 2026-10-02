@@ -28,6 +28,14 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ---
 
+## 2026-10-02 — Claude (Contenido)
+- **Pedido:** cargar el enlace de Plantillas PMO (pedido directo).
+- **Cambios:** la tarjeta "Plantillas PMO" ya tiene su enlace (`enlaces.js`) y se volvió a
+  generar `no-subir/datos-supabase.sql` (fuera de Git; 21 espacios y 42 accesos, solo cambia
+  esa dirección). Pruebas: 41 de 41 pasan.
+- **Pendiente:** la base de Supabase ya se cargó con el SQL anterior: para que tenga este
+  enlace hay que volver a ejecutar el SQL nuevo. Quedan 6 datos por recibir (ver T-004).
+
 ## 2026-10-02 — Claude (integrando el trabajo de Ecco)
 - **Pedido:** T-012, modo de prueba con Supabase.
 - **Cambios:** Ecco lo hizo en la rama `ecco/T-012` (pull request #1): con
