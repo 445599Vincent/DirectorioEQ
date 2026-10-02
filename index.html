@@ -160,6 +160,16 @@
   .sesion .quien { font-size: 13px; color: var(--texto); }
   .sesion .cerrar { font-size: 12px; font-weight: 500; color: var(--teal); text-decoration: none; }
   .sesion .cerrar:hover { text-decoration: underline; }
+  /* En pantallas angostas el encabezado usa dos líneas: el correo arriba y los enlaces debajo */
+  @media (max-width: 640px) {
+    header .contenedor { height: auto; min-height: 72px; padding-top: 10px; padding-bottom: 10px; gap: 12px; }
+    .cabecera-derecha { flex-wrap: wrap; justify-content: flex-end; row-gap: 4px; }
+    .sesion { flex-wrap: wrap; justify-content: flex-end; row-gap: 2px; min-width: 0; }
+    .sesion .quien {
+      flex-basis: 100%; text-align: right; min-width: 0;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+  }
 
   .login-pantalla {
     display: none; min-height: calc(100vh - 72px);
@@ -193,6 +203,34 @@
   .olvido { display: block; margin-top: 16px; text-align: center; font-size: 13px; color: var(--teal); }
   .login-error { color: #b42318; font-size: 13px; margin-top: 18px; }
   .login-info { color: var(--teal-oscuro); font-size: 13px; margin-top: 18px; }
+
+  /* Panel de administración (#/admin): solo lo ven los administradores */
+  .sesion .admin-enlace { font-size: 12px; font-weight: 700; color: var(--teal); text-decoration: none; }
+  .sesion .admin-enlace:hover { text-decoration: underline; }
+  .admin-caja {
+    background: var(--blanco); border: 1px solid var(--borde); border-radius: 16px;
+    padding: 20px 22px; margin-bottom: 18px; font-size: 14px;
+  }
+  .admin-caja ol { margin: 8px 0 0; padding-left: 20px; }
+  .admin-caja a { color: var(--teal); }
+  .admin-mensaje { border-radius: 12px; padding: 12px 16px; margin-bottom: 18px; font-size: 14px; }
+  .admin-mensaje.exito { background: rgba(16, 119, 130, .1); color: var(--teal-oscuro); }
+  .admin-mensaje.error { background: #fdecea; color: #b42318; }
+  .admin-lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
+  .admin-usuario {
+    background: var(--blanco); border: 1px solid var(--borde); border-radius: 16px; padding: 22px;
+    display: flex; flex-direction: column; gap: 12px; min-width: 0;
+  }
+  .admin-usuario .correo {
+    font-family: "DM Sans", sans-serif; font-weight: 700; font-size: 16px; color: var(--titulos);
+    overflow-wrap: anywhere;
+  }
+  .admin-usuario .campo { margin-bottom: 0; }
+  .admin-usuario fieldset { border: 1px solid var(--borde); border-radius: 12px; margin: 0; padding: 10px 14px 12px; }
+  .admin-usuario legend { padding: 0 6px; font-size: 13px; font-weight: 500; color: var(--titulos); }
+  .casilla { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: var(--titulos); padding: 3px 0; }
+  .casilla input { margin-top: 4px; accent-color: var(--teal); }
+  .casilla small { color: var(--texto); }
 </style>
 </head>
 <body>
@@ -507,6 +545,7 @@
     const id = decodeURIComponent(location.hash.replace(/^#\/?/, ""));
     const espacio = ESPACIOS.find(e => e.id === id);
     const esPaginaCerrados = id === "proyectos-cerrados";
+    const esPaginaAdmin = id === "admin";
     const volver = document.querySelector(".volver");
     let html;
 
@@ -519,6 +558,11 @@
       volver.href = regresoCerrados ? "#/proyectos-cerrados" : padre ? `#/${padre.id}` : "#/";
       volver.textContent = regresoCerrados ? "← Volver a Proyectos Cerrados"
         : padre ? `← Volver a ${padre.nombre}` : "← Volver al inicio";
+    } else if (esPaginaAdmin) {
+      portada("Administración", "Usuarios y permisos",
+        "Decide qué áreas ve cada persona del equipo y quién administra el directorio.", true);
+      volver.href = "#/";
+      volver.textContent = "← Volver al inicio";
     } else if (esPaginaCerrados) {
       portada("Gestión de Proyectos (PMO)", "Proyectos Cerrados",
         "Consulta los accesos de los proyectos finalizados.", true);
@@ -544,7 +588,9 @@
       document.getElementById("vacio").style.display = tarjetas.length ? "none" : "block";
     } else {
       document.getElementById("vacio").style.display = "none";
-      if (esPaginaCerrados) {
+      if (esPaginaAdmin) {
+        html = paginaAdmin();
+      } else if (esPaginaCerrados) {
         // Los clientes dependen del área del PMO: sin ella, la página no tiene nada que mostrar.
         html = areas.some(a => a.proyectosDeClientes)
           ? seccion("Gestión de Proyectos (PMO)", "Clientes con proyectos finalizados",
@@ -581,6 +627,8 @@
   window.addEventListener("hashchange", () => {
     if (!listo) return;
     buscar.value = "";
+    admin.estado = "sin-cargar";
+    admin.mensaje = null;
     mostrar();
     window.scrollTo(0, 0);
   });
@@ -693,6 +741,7 @@
     document.getElementById("sesion").innerHTML = `
       <span class="sesion">
         <span class="quien">${esc(usuario?.email)}</span>
+        ${miPerfil?.es_admin ? '<a href="#/admin" class="admin-enlace" id="enlace-admin">Administración</a>' : ""}
         <a href="#" class="cerrar" id="cerrar-sesion">Cerrar sesión</a>
       </span>`;
     document.getElementById("cerrar-sesion").addEventListener("click", async e => {
@@ -708,6 +757,9 @@
   function salir() {
     listo = false;
     sesionActual = null;
+    miPerfil = null;
+    admin.estado = "sin-cargar";
+    admin.mensaje = null;
     usarDatos([], []);
     avisoInicio = "";
     contenedor.innerHTML = "";
@@ -723,6 +775,7 @@
       verPantalla("nueva");
       return;
     }
+    miPerfil = await cargarMiPerfil(sesion.user);
     mostrarUsuario(sesion.user);
     try {
       const convertidos = await cargarDesdeSupabase();
@@ -738,6 +791,200 @@
     verPantalla("directorio");
     mostrar();
   }
+
+  // --- Panel de administración (#/admin, T-009) --------------------------------
+  // La página solo oculta o muestra botones: quien decide de verdad es la base de datos
+  // (reglas RLS de supabase/esquema.sql). Un usuario normal que llame a la API igual no
+  // puede leer perfiles ajenos ni cambiar permisos.
+  let miPerfil = null;
+  const admin = { estado: "sin-cargar", perfiles: [], permisos: [], mensaje: null };
+  const PROYECTO_SUPABASE = SUPABASE.url.replace(/^https:\/\/([^.]+)\..*$/, "$1");
+  const PANEL_USUARIOS = `https://supabase.com/dashboard/project/${PROYECTO_SUPABASE}/auth/users`;
+
+  // Perfil propio (nombre y si es administrador). Si falla, la persona entra como usuario normal.
+  async function cargarMiPerfil(usuario) {
+    if (!usuario?.id) return null;
+    try {
+      const { data, error } = await conLimite(clienteSupabase.from("perfiles")
+        .select("id, correo, nombre, es_admin")
+        .eq("id", usuario.id)
+        .maybeSingle());
+      if (error) throw error;
+      return data || null;
+    } catch {
+      return null;
+    }
+  }
+
+  async function cargarAdmin() {
+    admin.estado = "cargando";
+    try {
+      const [perfiles, permisos] = await conLimite(Promise.all([
+        clienteSupabase.from("perfiles").select("id, correo, nombre, es_admin").order("correo"),
+        clienteSupabase.from("permisos").select("usuario_id, area_id"),
+      ]));
+      if (perfiles.error) throw perfiles.error;
+      if (permisos.error) throw permisos.error;
+      admin.perfiles = perfiles.data || [];
+      admin.permisos = permisos.data || [];
+      admin.estado = "listo";
+    } catch (error) {
+      admin.estado = "error";
+      admin.mensaje = { tipo: "error", texto: "No se pudo cargar la lista de usuarios. " + mensajeDeError(error) };
+    }
+    if (listo && location.hash === "#/admin") mostrar();
+  }
+
+  const areasDe = usuarioId => admin.permisos.filter(p => p.usuario_id === usuarioId).map(p => p.area_id);
+
+  // Guarda los cambios de una persona: nombre, nivel de administrador y áreas.
+  // Devuelve true si se guardó todo.
+  async function guardarUsuario(usuarioId, { nombre, esAdmin, areasElegidas }) {
+    const perfil = admin.perfiles.find(p => p.id === usuarioId);
+    if (!perfil) return false;
+    const esUnoMismo = usuarioId === miPerfil?.id;
+    const nombreLimpio = String(nombre ?? "").trim();
+    const cambios = {};
+    if (nombreLimpio !== perfil.nombre) cambios.nombre = nombreLimpio;
+    if (Boolean(esAdmin) !== perfil.es_admin) cambios.es_admin = Boolean(esAdmin);
+
+    if (cambios.es_admin === false && esUnoMismo &&
+        admin.perfiles.filter(p => p.es_admin).length === 1) {
+      admin.mensaje = { tipo: "error", texto: "No puedes quitarte el nivel de administrador: eres el " +
+        "único administrador del directorio. Primero nombra a otra persona." };
+      mostrar();
+      return false;
+    }
+    if ("es_admin" in cambios) {
+      const pregunta = cambios.es_admin
+        ? `¿Hacer administrador a ${perfil.correo}? Podrá ver todas las áreas y cambiar los permisos de todos.`
+        : esUnoMismo
+          ? "¿Quitarte el nivel de administrador? Dejarás de ver este panel."
+          : `¿Quitar el nivel de administrador a ${perfil.correo}?`;
+      if (!window.confirm(pregunta)) return false;
+    }
+
+    const actuales = areasDe(usuarioId);
+    const elegidas = [...new Set(areasElegidas || [])];
+    const agregar = elegidas.filter(a => !actuales.includes(a));
+    const quitar = actuales.filter(a => !elegidas.includes(a));
+    if (!Object.keys(cambios).length && !agregar.length && !quitar.length) {
+      admin.mensaje = { tipo: "exito", texto: `No había cambios que guardar para ${perfil.correo}.` };
+      mostrar();
+      return true;
+    }
+
+    let resultado = true;
+    try {
+      if (Object.keys(cambios).length) {
+        const { error } = await conLimite(clienteSupabase.from("perfiles").update(cambios).eq("id", usuarioId));
+        if (error) throw error;
+      }
+      if (agregar.length) {
+        const { error } = await conLimite(clienteSupabase.from("permisos")
+          .insert(agregar.map(area_id => ({ usuario_id: usuarioId, area_id }))));
+        if (error) throw error;
+      }
+      if (quitar.length) {
+        const { error } = await conLimite(clienteSupabase.from("permisos").delete()
+          .eq("usuario_id", usuarioId).in("area_id", quitar));
+        if (error) throw error;
+      }
+      admin.mensaje = { tipo: "exito", texto: `Cambios guardados para ${perfil.correo}.` };
+    } catch (error) {
+      resultado = false;
+      admin.mensaje = { tipo: "error", texto: `No se pudieron guardar los cambios de ${perfil.correo}. ` +
+        (error?.code === "42501" ? "La base de datos no lo permitió: solo un administrador puede hacerlo."
+          : mensajeDeError(error)) };
+    }
+
+    // Si alguien cambió su propio nivel, se vuelve a leer su perfil (y el encabezado).
+    // Quien se quitó a sí mismo el nivel vuelve a cargar el directorio con sus áreas reales.
+    if (esUnoMismo && "es_admin" in cambios && sesionActual) {
+      miPerfil = await cargarMiPerfil(sesionActual.user);
+      if (!miPerfil?.es_admin) {
+        await entrarAlDirectorio(sesionActual);
+        return resultado;
+      }
+    }
+    const mensaje = admin.mensaje;
+    await cargarAdmin();
+    if (admin.estado === "listo") admin.mensaje = mensaje;
+    mostrar();
+    return resultado;
+  }
+
+  function tarjetaUsuario(perfil) {
+    const suyas = areasDe(perfil.id);
+    const casillas = areas.map(area => `
+          <label class="casilla"><input type="checkbox" name="area" value="${esc(area.id)}"
+            ${suyas.includes(area.id) ? "checked" : ""}> ${esc(area.nombre)}</label>`).join("");
+    return `
+      <form class="admin-usuario" data-usuario="${esc(perfil.id)}">
+        <span class="correo">${esc(perfil.correo)}${perfil.id === miPerfil?.id ? " (tú)" : ""}</span>
+        ${perfil.es_admin ? '<span class="estado estado-activo">Administrador</span>' : ""}
+        <label class="campo">Nombre
+          <input name="nombre" type="text" value="${esc(perfil.nombre)}" autocomplete="off">
+        </label>
+        <label class="casilla"><input type="checkbox" name="es_admin" ${perfil.es_admin ? "checked" : ""}>
+          <span>Administrador <small>(ve todas las áreas y clientes, y gestiona este panel)</small></span></label>
+        <fieldset>
+          <legend>Áreas que puede ver</legend>
+          ${casillas || "<p>No hay áreas cargadas.</p>"}
+        </fieldset>
+        <button class="btn-principal" type="submit">Guardar cambios</button>
+      </form>`;
+  }
+
+  function paginaAdmin() {
+    if (!miPerfil?.es_admin) {
+      return aviso("No tienes acceso a esta página. Solo la ven los administradores del directorio.");
+    }
+    if (admin.estado === "sin-cargar") cargarAdmin();
+    const mensaje = admin.mensaje
+      ? `<div class="admin-mensaje ${admin.mensaje.tipo}" role="status">${esc(admin.mensaje.texto)}</div>` : "";
+    const pmo = areas.find(a => a.proyectosDeClientes);
+    const ayuda = `
+      <div class="admin-caja">
+        <strong>Para agregar a una persona</strong>
+        <ol>
+          <li>Abre los <a href="${esc(PANEL_USUARIOS)}" target="_blank" rel="noopener">usuarios del
+            proyecto en Supabase</a>.</li>
+          <li>Pulsa <b>Invite user</b> y escribe su correo.</li>
+          <li>Cuando acepte la invitación, aparecerá sola en esta lista: márcale sus áreas y guarda.</li>
+        </ol>
+      </div>
+      ${pmo ? `<div class="admin-caja">El área <b>${esc(pmo.nombre)}</b> da acceso también a todos
+        los clientes (proyectos activos y cerrados).</div>` : ""}`;
+    const lista = admin.estado === "listo"
+      ? (admin.perfiles.length
+          ? `<div class="admin-lista">${admin.perfiles.map(tarjetaUsuario).join("")}</div>`
+          : aviso("Todavía no hay usuarios."))
+      : admin.estado === "error" ? "" : aviso("Cargando usuarios…");
+    return `
+      <section>
+        <div class="cabecera">
+          <span class="etiqueta">Administración</span>
+          <h2>Usuarios</h2>
+        </div>
+        ${mensaje}${ayuda}${lista}
+      </section>`;
+  }
+
+  // Un solo oyente para todos los formularios del panel (la página se vuelve a dibujar).
+  contenedor.addEventListener("submit", async e => {
+    const formulario = e.target?.closest?.("form[data-usuario]");
+    if (!formulario) return;
+    e.preventDefault();
+    const boton = formulario.querySelector("button[type=submit]");
+    if (boton) boton.disabled = true;
+    await guardarUsuario(formulario.dataset.usuario, {
+      nombre: formulario.elements.nombre.value,
+      esAdmin: formulario.elements.es_admin.checked,
+      areasElegidas: [...formulario.querySelectorAll('input[name="area"]:checked')].map(c => c.value),
+    });
+    if (boton) boton.disabled = false;
+  });
 
   function prepararFormularios() {
     document.getElementById("panel-entrar").addEventListener("submit", async e => {
