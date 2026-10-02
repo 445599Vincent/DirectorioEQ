@@ -590,6 +590,13 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
   administrador: `v.tapia@eccoqualita.com`); el inicio de sesión en modo de prueba funciona.
   Desde fuera, sin sesión, las cuatro tablas responden "permission denied". El primer
   intento de instalar `esquema.sql` no había quedado aplicado; se repitió con éxito.
+- **Resultado (2026-10-02):** prueba superada. Administrador (`v.tapia@`): ve las 13 áreas y
+  los clientes. Usuario normal (`k.moya@`): sin áreas veía solo las herramientas generales y
+  el aviso "sin áreas asignadas"; con el permiso `calidad` ve **solo** Gestión de la Calidad.
+  Como la página solo recibe de Supabase las filas permitidas, el buscador no puede mostrar
+  otras áreas. **Antes de encender para todos:** panel de usuarios (T-009), cuentas del
+  equipo con sus áreas, Redirect URL de producción, y en el mismo cambio encender
+  `SUPABASE.activo` y vaciar `enlaces.js` (T-010 parte 2).
 - **Preparación (Vincent):** crear un segundo usuario de prueba en Supabase (Authentication →
   Users → Add user), con un correo suyo distinto, y darle **una sola** área sin clientes,
   por ejemplo `calidad`:
