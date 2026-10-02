@@ -29,6 +29,13 @@ El formato de cada entrada está en `AGENTS.md`.
 ---
 
 ## 2026-10-01 — Claude
+- **Pedido:** avanzar mientras el Ejecutador hace la T-008.
+- **Cambios:** `AGENTS.md` describe el inicio de sesión con Supabase (en lugar de Microsoft)
+  y la carpeta `supabase/`; `CONFIGURAR-INICIO-DE-SESION.md` marcado como obsoleto; T-011
+  detallada en `TAREAS.md`.
+- **Pendiente:** Vincent confirma los conteos de Supabase y prepara la lista de usuarios.
+
+## 2026-10-01 — Claude
 - **Pedido:** Codex no estará disponible hasta el 2026-10-06; seguir con el Ejecutador.
 - **Cambios:** el Ejecutador asume temporalmente Ingeniería; T-008 reasignada al Ejecutador
   (`TAREAS.md`).

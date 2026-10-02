@@ -462,11 +462,24 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
 
 ### T-011 — Prueba controlada (Etapa 5)
 
-- **Estado:** Pendiente
+- **Estado:** Pendiente (espera la T-008)
 - **Asignada a:** Organizador y Vincent
-- **Qué hacer (resumen):** con dos usuarios (Vincent administrador y uno con una sola área)
-  comprobar en la página **y consultando Supabase directamente** que cada uno solo obtiene
-  lo suyo; recién entonces se avisa al equipo.
+- **Preparación (Vincent):** crear un segundo usuario de prueba en Supabase (Authentication →
+  Users → Add user), con un correo suyo distinto, y darle **una sola** área sin clientes,
+  por ejemplo `calidad`:
+  `insert into public.permisos (usuario_id, area_id) select id, 'calidad' from public.perfiles where correo = 'CORREO_DE_PRUEBA';`
+- **Prueba 1 — en la base de datos (SQL Editor, sin cambiar nada):** la directora le da a
+  Vincent una consulta que simula ser cada usuario (`set local role authenticated` y
+  `request.jwt.claims` con su `id`, dentro de una transacción que se deshace). Resultado
+  esperado: el usuario de prueba ve 1 espacio (`calidad`) y solo sus accesos, 0 clientes,
+  0 perfiles ajenos, y no puede insertar ni modificar nada; el administrador ve los 21
+  espacios y 42 accesos.
+- **Prueba 2 — en la página:** Vincent abre una copia de prueba con el interruptor encendido
+  (la directora indica cómo, sin tocar el sitio publicado) y entra con cada usuario:
+  áreas visibles, buscador, clientes, cierre de sesión, contraseña incorrecta y
+  "olvidé mi contraseña".
+- **Criterio para encender en el sitio publicado:** las dos pruebas como se espera. Después:
+  T-010 parte 2 (quitar los enlaces de `enlaces.js`) y avisar al equipo.
 
 ### D-001 — Directa: SharePoint de Agroplast, Planificación Estratégica
 

@@ -1,3 +1,7 @@
+> **OBSOLETO (2026-10-01):** Vincent eligió usuarios propios con Supabase en lugar de
+> Microsoft 365 (ver `TAREAS.md`, proyecto Supabase). Este documento se conserva por si en el
+> futuro se retoma el inicio de sesión con Microsoft. No lo envíe a TI.
+
 # Configurar el inicio de sesión con Microsoft 365
 
 Este documento es para quien administra el Microsoft 365 (Entra ID / Azure AD) de Ecco

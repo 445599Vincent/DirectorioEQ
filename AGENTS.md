@@ -40,7 +40,8 @@ Es un sitio estático sin compilación ni dependencias.
 | `EN-CURSO.md` | Tablero de reservas: qué archivos está editando cada agente **ahora mismo**. Se consulta antes de editar y se actualiza al empezar y al terminar. |
 | `_config.yml` | Configuración de GitHub Pages: evita que los archivos internos (`.md`) se publiquen en el sitio. |
 | `netlify.toml` | Hacía lo mismo en Netlify, el alojamiento anterior. |
-| `CONFIGURAR-INICIO-DE-SESION.md` | Instrucciones para el administrador de TI: cómo registrar la app en Microsoft Entra ID. No se publica en el sitio. |
+| `CONFIGURAR-INICIO-DE-SESION.md` | Obsoleto: plan descartado de inicio de sesión con Microsoft 365. |
+| `supabase/` | Esquema y reglas de seguridad de la base de datos de Supabase (`esquema.sql`, `LEEME.md`). No se publica en el sitio. |
 | `tests/directorio.test.mjs` | Pruebas automáticas de la navegación del hub y de los datos de `enlaces.js` (identificadores, campos, URLs, estados, logos, rutas). Las mantiene Codex. Correr con `node --test tests/directorio.test.mjs` antes de cada `git push`. |
 
 ## Cómo está organizado el hub
@@ -58,30 +59,24 @@ Es un sitio estático sin compilación ni dependencias.
 - **Buscador:** recorre todo el hub desde cualquier página.
 - Un acceso con `url: ""` se muestra como "Enlace pendiente" y no se puede abrir.
 
-## Inicio de sesión y accesos por rol
+## Inicio de sesión y accesos por usuario (Supabase)
 
-El hub puede pedir inicio de sesión con Microsoft 365 y mostrar solo las áreas del rol de
-cada persona. Todo vive en la constante `AUTH` al inicio del script de `index.html`:
+En construcción (proyecto en `TAREAS.md`, T-007 a T-011). Resumen:
 
-- **Mientras `AUTH.activo` sea `false`** (el valor por defecto), el sitio funciona igual
-  que siempre, sin inicio de sesión, visible para cualquiera. No tocar este valor sin que
-  el usuario lo pida explícitamente: encenderlo sin `clientId`/`tenantId` reales deja a
-  todo el equipo sin poder entrar al sitio.
-- El rol de cada área es su propio `id` (por ejemplo `pmo`, `comercial`). El rol `admin`
-  (`AUTH.rolAdmin`) ve todas las áreas. Los clientes (`CLIENTES`) siguen el rol `pmo`.
-  Si se agrega una área nueva a `enlaces.js`, avisar al usuario para que pida a su
-  administrador de TI crear el "App role" correspondiente (mismo `id`), siguiendo
-  `CONFIGURAR-INICIO-DE-SESION.md`.
-- Activarlo requiere que un administrador del Microsoft 365 de Ecco Qualitá registre una
-  aplicación en Entra ID y entregue dos datos (`clientId`, `tenantId`); los pasos exactos
-  están en `CONFIGURAR-INICIO-DE-SESION.md`. Solo el usuario decide cuándo pedir ese
-  registro y cuándo encender `AUTH.activo`.
-- **Límite importante, y hay que decírselo siempre al usuario si pregunta:** esto es un
-  sitio estático sin servidor, así que el inicio de sesión solo controla qué se *muestra*
-  en la página. No puede impedir que alguien descargue `enlaces.js` directamente y lea ahí
-  todas las direcciones. El riesgo real es bajo porque cada herramienta enlazada
-  (SharePoint, Planner, HubSpot, AdmCloud) exige su propio inicio de sesión real, que esto
-  no reemplaza.
+- Cada persona entra con correo y contraseña propios del directorio; Vincent crea los
+  usuarios en Supabase y les asigna áreas. Las áreas, clientes y accesos viven en la base de
+  datos de Supabase, que solo entrega a cada usuario lo de sus áreas (reglas RLS en
+  `supabase/esquema.sql`). Los clientes dependen del permiso del área `pmo`.
+- El interruptor `SUPABASE.activo` de `index.html` queda en `false` hasta que Vincent
+  apruebe la prueba final (T-011); con `false` el sitio funciona como siempre, desde
+  `enlaces.js`. **No encenderlo sin esa aprobación.**
+- En el código solo pueden aparecer la URL del proyecto y la clave pública
+  (`sb_publishable_…`). Nunca la clave secreta, la contraseña de la base de datos ni
+  contraseñas de usuarios. Los agentes no inician sesión con contraseñas reales.
+- Hasta la parte 2 de la T-010, `enlaces.js` sigue teniendo todos los enlaces y es público;
+  después solo tendrá `PROCESOS` y `GENERALES`.
+- El inicio de sesión con Microsoft 365 (`CONFIGURAR-INICIO-DE-SESION.md`) quedó
+  descartado.
 
 ## Reglas
 
@@ -111,8 +106,7 @@ cada persona. Todo vive en la constante `AUTH` al inicio del script de `index.ht
    commit y push de esa reserva antes de editar; si están ocupados, avisa al usuario y espera.
 2. Hacer el cambio y probarlo abriendo la página (p. ej. `python -m http.server 5500`;
    si el puerto está ocupado por el otro agente, usar otro puerto).
-3. Correr `node --test tests/directorio.test.mjs` y que pasen **todas** las pruebas (hoy son 14:
-   navegación y validación de los datos de `enlaces.js`).
+3. Correr `node --test tests/directorio.test.mjs` y que pasen **todas** las pruebas.
 4. **Registrar el cambio en `BITACORA.md`** (ver formato abajo) y **borrar tu reserva de
    `EN-CURSO.md`**, en el mismo commit.
 5. `git add` **solo de los archivos que reservaste** más `BITACORA.md` y `EN-CURSO.md`
