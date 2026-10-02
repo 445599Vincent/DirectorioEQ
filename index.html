@@ -160,6 +160,16 @@
   .sesion .quien { font-size: 13px; color: var(--texto); }
   .sesion .cerrar { font-size: 12px; font-weight: 500; color: var(--teal); text-decoration: none; }
   .sesion .cerrar:hover { text-decoration: underline; }
+  /* En pantallas angostas el encabezado usa dos líneas: el correo arriba y los enlaces debajo */
+  @media (max-width: 640px) {
+    header .contenedor { height: auto; min-height: 72px; padding-top: 10px; padding-bottom: 10px; gap: 12px; }
+    .cabecera-derecha { flex-wrap: wrap; justify-content: flex-end; row-gap: 4px; }
+    .sesion { flex-wrap: wrap; justify-content: flex-end; row-gap: 2px; min-width: 0; }
+    .sesion .quien {
+      flex-basis: 100%; text-align: right; min-width: 0;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+  }
 
   .login-pantalla {
     display: none; min-height: calc(100vh - 72px);
@@ -193,6 +203,40 @@
   .olvido { display: block; margin-top: 16px; text-align: center; font-size: 13px; color: var(--teal); }
   .login-error { color: #b42318; font-size: 13px; margin-top: 18px; }
   .login-info { color: var(--teal-oscuro); font-size: 13px; margin-top: 18px; }
+
+  /* Panel de administración (#/admin): solo lo ven los administradores */
+  .sesion .admin-enlace { font-size: 12px; font-weight: 700; color: var(--teal); text-decoration: none; }
+  .sesion .admin-enlace:hover { text-decoration: underline; }
+  .admin-caja {
+    background: var(--blanco); border: 1px solid var(--borde); border-radius: 16px;
+    padding: 20px 22px; margin-bottom: 18px; font-size: 14px;
+  }
+  .admin-caja ol { margin: 8px 0 0; padding-left: 20px; }
+  .admin-caja a { color: var(--teal); }
+  .admin-mensaje { border-radius: 12px; padding: 12px 16px; margin-bottom: 18px; font-size: 14px; }
+  .admin-mensaje.exito { background: rgba(16, 119, 130, .1); color: var(--teal-oscuro); }
+  .admin-mensaje.error { background: #fdecea; color: #b42318; }
+  .admin-lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
+  .admin-usuario {
+    background: var(--blanco); border: 1px solid var(--borde); border-radius: 16px; padding: 22px;
+    display: flex; flex-direction: column; gap: 12px; min-width: 0;
+  }
+  .admin-usuario .correo {
+    font-family: "DM Sans", sans-serif; font-weight: 700; font-size: 16px; color: var(--titulos);
+    overflow-wrap: anywhere;
+  }
+  .admin-usuario .campo { margin-bottom: 0; }
+  .admin-usuario fieldset { border: 1px solid var(--borde); border-radius: 12px; margin: 0; padding: 10px 14px 12px; }
+  .admin-usuario legend { padding: 0 6px; font-size: 13px; font-weight: 500; color: var(--titulos); }
+  .casilla { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: var(--titulos); padding: 3px 0; }
+  .casilla input { margin-top: 4px; accent-color: var(--teal); }
+  .casilla small { color: var(--texto); }
+  .estado-temporal { color: #6b4e0f; background: #fff4dc; border: 1px solid var(--dorado); }
+  .btn-secundario {
+    align-self: flex-start; padding: 8px 14px; border: 1px solid var(--teal); border-radius: 8px;
+    background: var(--blanco); color: var(--teal); font: inherit; font-size: 13px; font-weight: 500; cursor: pointer;
+  }
+  .btn-secundario:hover { background: rgba(16, 119, 130, .08); }
 </style>
 </head>
 <body>
@@ -225,7 +269,7 @@
       <a href="#" class="olvido" id="enlace-olvido">¿Olvidaste tu contraseña?</a>
     </form>
     <form id="panel-nueva" style="display:none">
-      <p>Crea tu contraseña para entrar al directorio. Usa al menos 8 caracteres.</p>
+      <p id="nueva-texto">Crea tu contraseña para entrar al directorio. Usa al menos 8 caracteres.</p>
       <label class="campo">Contraseña nueva
         <input id="nueva-1" type="password" autocomplete="new-password" minlength="8" required>
       </label>
@@ -233,6 +277,7 @@
         <input id="nueva-2" type="password" autocomplete="new-password" minlength="8" required>
       </label>
       <button class="btn-principal" id="btn-guardar" type="submit">Guardar contraseña</button>
+      <a href="#" class="olvido" id="cancelar-cambio" style="display:none">Cancelar y volver al directorio</a>
     </form>
     <p class="login-error" id="login-mensaje" role="alert" style="display:none"></p>
   </div>
@@ -346,6 +391,8 @@
   let ESPACIOS = [];
   // Aviso que encabeza el inicio (cuenta sin áreas o base de datos que no responde).
   let avisoInicio = "";
+  // Aviso de un momento (p. ej. "Tu contraseña se cambió"): se ve hasta cambiar de página.
+  let avisoPasajero = "";
   // true cuando ya hay datos para dibujar; antes no se dibuja nada.
   let listo = false;
 
@@ -507,6 +554,7 @@
     const id = decodeURIComponent(location.hash.replace(/^#\/?/, ""));
     const espacio = ESPACIOS.find(e => e.id === id);
     const esPaginaCerrados = id === "proyectos-cerrados";
+    const esPaginaAdmin = id === "admin";
     const volver = document.querySelector(".volver");
     let html;
 
@@ -519,6 +567,11 @@
       volver.href = regresoCerrados ? "#/proyectos-cerrados" : padre ? `#/${padre.id}` : "#/";
       volver.textContent = regresoCerrados ? "← Volver a Proyectos Cerrados"
         : padre ? `← Volver a ${padre.nombre}` : "← Volver al inicio";
+    } else if (esPaginaAdmin) {
+      portada("Administración", "Usuarios y permisos",
+        "Decide qué áreas ve cada persona del equipo y quién administra el directorio.", true);
+      volver.href = "#/";
+      volver.textContent = "← Volver al inicio";
     } else if (esPaginaCerrados) {
       portada("Gestión de Proyectos (PMO)", "Proyectos Cerrados",
         "Consulta los accesos de los proyectos finalizados.", true);
@@ -544,7 +597,9 @@
       document.getElementById("vacio").style.display = tarjetas.length ? "none" : "block";
     } else {
       document.getElementById("vacio").style.display = "none";
-      if (esPaginaCerrados) {
+      if (esPaginaAdmin) {
+        html = paginaAdmin();
+      } else if (esPaginaCerrados) {
         // Los clientes dependen del área del PMO: sin ella, la página no tiene nada que mostrar.
         html = areas.some(a => a.proyectosDeClientes)
           ? seccion("Gestión de Proyectos (PMO)", "Clientes con proyectos finalizados",
@@ -568,7 +623,7 @@
           seccion("Para todo el equipo", "Herramientas generales", GENERALES.map(l => tarjetaEnlace(l)));
       }
     }
-    contenedor.innerHTML = html;
+    contenedor.innerHTML = avisoPasajero + html;
     for (const img of contenedor.querySelectorAll(".logo img")) {
       img.onerror = () => {
         img.parentElement.classList.remove("logo");
@@ -581,6 +636,9 @@
   window.addEventListener("hashchange", () => {
     if (!listo) return;
     buscar.value = "";
+    avisoPasajero = "";
+    admin.estado = "sin-cargar";
+    admin.mensaje = null;
     mostrar();
     window.scrollTo(0, 0);
   });
@@ -652,6 +710,22 @@
     return contrasenaPorCrear;
   }
 
+  // Por qué se pide una contraseña nueva: "correo" (invitación o recuperación),
+  // "temporal" (la cuenta la creó el administrador) o "voluntario" (desde el encabezado).
+  const TEXTOS_CONTRASENA = {
+    correo: "Crea tu contraseña para entrar al directorio. Usa al menos 8 caracteres.",
+    temporal: "Tu contraseña actual es temporal. Crea una propia para entrar al directorio. " +
+      "Usa al menos 8 caracteres.",
+    voluntario: "Escribe tu contraseña nueva. Usa al menos 8 caracteres.",
+  };
+  let motivoContrasena = "correo";
+  function pedirContrasena(motivo) {
+    motivoContrasena = motivo;
+    document.getElementById("nueva-texto").textContent = TEXTOS_CONTRASENA[motivo];
+    document.getElementById("cancelar-cambio").style.display = motivo === "voluntario" ? "" : "none";
+    verPantalla("nueva");
+  }
+
   // "entrar": correo y contraseña · "nueva": crear contraseña · "directorio": la página.
   function verPantalla(cual) {
     document.getElementById("app").style.display = cual === "directorio" ? "" : "none";
@@ -693,8 +767,15 @@
     document.getElementById("sesion").innerHTML = `
       <span class="sesion">
         <span class="quien">${esc(usuario?.email)}</span>
+        ${miPerfil?.es_admin ? '<a href="#/admin" class="admin-enlace" id="enlace-admin">Administración</a>' : ""}
+        <a href="#" class="cerrar" id="cambiar-contrasena">Cambiar contraseña</a>
         <a href="#" class="cerrar" id="cerrar-sesion">Cerrar sesión</a>
       </span>`;
+    document.getElementById("cambiar-contrasena").addEventListener("click", e => {
+      e.preventDefault();
+      avisoLogin("");
+      pedirContrasena("voluntario");
+    });
     document.getElementById("cerrar-sesion").addEventListener("click", async e => {
       e.preventDefault();
       try {
@@ -708,6 +789,11 @@
   function salir() {
     listo = false;
     sesionActual = null;
+    miPerfil = null;
+    contrasenaYaCambiada = false;
+    avisoPasajero = "";
+    admin.estado = "sin-cargar";
+    admin.mensaje = null;
     usarDatos([], []);
     avisoInicio = "";
     contenedor.innerHTML = "";
@@ -720,7 +806,15 @@
     sesionActual = sesion;
     if (contrasenaPendiente()) {
       avisoLogin("");
-      verPantalla("nueva");
+      pedirContrasena("correo");
+      return;
+    }
+    miPerfil = await cargarMiPerfil(sesion.user);
+    // Cuenta creada por el administrador con una contraseña temporal (T-014): antes de ver
+    // el directorio hay que crear una propia. No se carga nada del directorio hasta entonces.
+    if (miPerfil?.debe_cambiar_contrasena && !contrasenaYaCambiada) {
+      avisoLogin("");
+      pedirContrasena("temporal");
       return;
     }
     mostrarUsuario(sesion.user);
@@ -739,7 +833,264 @@
     mostrar();
   }
 
+  // --- Panel de administración (#/admin, T-009) --------------------------------
+  // La página solo oculta o muestra botones: quien decide de verdad es la base de datos
+  // (reglas RLS de supabase/esquema.sql). Un usuario normal que llame a la API igual no
+  // puede leer perfiles ajenos ni cambiar permisos.
+  let miPerfil = null;
+  const admin = { estado: "sin-cargar", perfiles: [], permisos: [], mensaje: null };
+  const PROYECTO_SUPABASE = SUPABASE.url.replace(/^https:\/\/([^.]+)\..*$/, "$1");
+  const PANEL_USUARIOS = `https://supabase.com/dashboard/project/${PROYECTO_SUPABASE}/auth/users`;
+
+  // Perfil propio (nombre y si es administrador). Si falla, la persona entra como usuario normal.
+  async function cargarMiPerfil(usuario) {
+    if (!usuario?.id) return null;
+    try {
+      // "*" para que funcione antes y después de la migración 002 (debe_cambiar_contrasena).
+      const { data, error } = await conLimite(clienteSupabase.from("perfiles")
+        .select("*")
+        .eq("id", usuario.id)
+        .maybeSingle());
+      if (error) throw error;
+      return data || null;
+    } catch {
+      return null;
+    }
+  }
+
+  async function cargarAdmin() {
+    admin.estado = "cargando";
+    try {
+      const [perfiles, permisos] = await conLimite(Promise.all([
+        clienteSupabase.from("perfiles").select("*").order("correo"),
+        clienteSupabase.from("permisos").select("usuario_id, area_id"),
+      ]));
+      if (perfiles.error) throw perfiles.error;
+      if (permisos.error) throw permisos.error;
+      admin.perfiles = perfiles.data || [];
+      admin.permisos = permisos.data || [];
+      admin.estado = "listo";
+    } catch (error) {
+      admin.estado = "error";
+      admin.mensaje = { tipo: "error", texto: "No se pudo cargar la lista de usuarios. " + mensajeDeError(error) };
+    }
+    if (listo && location.hash === "#/admin") mostrar();
+  }
+
+  const areasDe = usuarioId => admin.permisos.filter(p => p.usuario_id === usuarioId).map(p => p.area_id);
+
+  // Guarda los cambios de una persona: nombre, nivel de administrador y áreas.
+  // Devuelve true si se guardó todo.
+  async function guardarUsuario(usuarioId, { nombre, esAdmin, areasElegidas }) {
+    const perfil = admin.perfiles.find(p => p.id === usuarioId);
+    if (!perfil) return false;
+    const esUnoMismo = usuarioId === miPerfil?.id;
+    const nombreLimpio = String(nombre ?? "").trim();
+    const cambios = {};
+    if (nombreLimpio !== perfil.nombre) cambios.nombre = nombreLimpio;
+    if (Boolean(esAdmin) !== perfil.es_admin) cambios.es_admin = Boolean(esAdmin);
+
+    if (cambios.es_admin === false && esUnoMismo &&
+        admin.perfiles.filter(p => p.es_admin).length === 1) {
+      admin.mensaje = { tipo: "error", texto: "No puedes quitarte el nivel de administrador: eres el " +
+        "único administrador del directorio. Primero nombra a otra persona." };
+      mostrar();
+      return false;
+    }
+    if ("es_admin" in cambios) {
+      const pregunta = cambios.es_admin
+        ? `¿Hacer administrador a ${perfil.correo}? Podrá ver todas las áreas y cambiar los permisos de todos.`
+        : esUnoMismo
+          ? "¿Quitarte el nivel de administrador? Dejarás de ver este panel."
+          : `¿Quitar el nivel de administrador a ${perfil.correo}?`;
+      if (!window.confirm(pregunta)) return false;
+    }
+
+    const actuales = areasDe(usuarioId);
+    const elegidas = [...new Set(areasElegidas || [])];
+    const agregar = elegidas.filter(a => !actuales.includes(a));
+    const quitar = actuales.filter(a => !elegidas.includes(a));
+    if (!Object.keys(cambios).length && !agregar.length && !quitar.length) {
+      admin.mensaje = { tipo: "exito", texto: `No había cambios que guardar para ${perfil.correo}.` };
+      mostrar();
+      return true;
+    }
+
+    let resultado = true;
+    try {
+      if (Object.keys(cambios).length) {
+        const { error } = await conLimite(clienteSupabase.from("perfiles").update(cambios).eq("id", usuarioId));
+        if (error) throw error;
+      }
+      if (agregar.length) {
+        const { error } = await conLimite(clienteSupabase.from("permisos")
+          .insert(agregar.map(area_id => ({ usuario_id: usuarioId, area_id }))));
+        if (error) throw error;
+      }
+      if (quitar.length) {
+        const { error } = await conLimite(clienteSupabase.from("permisos").delete()
+          .eq("usuario_id", usuarioId).in("area_id", quitar));
+        if (error) throw error;
+      }
+      admin.mensaje = { tipo: "exito", texto: `Cambios guardados para ${perfil.correo}.` };
+    } catch (error) {
+      resultado = false;
+      admin.mensaje = { tipo: "error", texto: `No se pudieron guardar los cambios de ${perfil.correo}. ` +
+        (error?.code === "42501" ? "La base de datos no lo permitió: solo un administrador puede hacerlo."
+          : mensajeDeError(error)) };
+    }
+
+    // Si alguien cambió su propio nivel, se vuelve a leer su perfil (y el encabezado).
+    // Quien se quitó a sí mismo el nivel vuelve a cargar el directorio con sus áreas reales.
+    if (esUnoMismo && "es_admin" in cambios && sesionActual) {
+      miPerfil = await cargarMiPerfil(sesionActual.user);
+      if (!miPerfil?.es_admin) {
+        await entrarAlDirectorio(sesionActual);
+        return resultado;
+      }
+    }
+    const mensaje = admin.mensaje;
+    await cargarAdmin();
+    if (admin.estado === "listo") admin.mensaje = mensaje;
+    mostrar();
+    return resultado;
+  }
+
+  function tarjetaUsuario(perfil) {
+    const suyas = areasDe(perfil.id);
+    const casillas = areas.map(area => `
+          <label class="casilla"><input type="checkbox" name="area" value="${esc(area.id)}"
+            ${suyas.includes(area.id) ? "checked" : ""}> ${esc(area.nombre)}</label>`).join("");
+    return `
+      <form class="admin-usuario" data-usuario="${esc(perfil.id)}">
+        <span class="correo">${esc(perfil.correo)}${perfil.id === miPerfil?.id ? " (tú)" : ""}</span>
+        ${perfil.es_admin ? '<span class="estado estado-activo">Administrador</span>' : ""}
+        ${perfil.debe_cambiar_contrasena
+          ? '<span class="estado estado-temporal">Contraseña temporal pendiente</span>'
+          : perfil.debe_cambiar_contrasena === false
+            ? `<button class="btn-secundario" type="button" data-accion="pedir-cambio">Pedir cambio de contraseña</button>`
+            : ""}
+        <label class="campo">Nombre
+          <input name="nombre" type="text" value="${esc(perfil.nombre)}" autocomplete="off">
+        </label>
+        <label class="casilla"><input type="checkbox" name="es_admin" ${perfil.es_admin ? "checked" : ""}>
+          <span>Administrador <small>(ve todas las áreas y clientes, y gestiona este panel)</small></span></label>
+        <fieldset>
+          <legend>Áreas que puede ver</legend>
+          ${casillas || "<p>No hay áreas cargadas.</p>"}
+        </fieldset>
+        <button class="btn-principal" type="submit">Guardar cambios</button>
+      </form>`;
+  }
+
+  function paginaAdmin() {
+    if (!miPerfil?.es_admin) {
+      return aviso("No tienes acceso a esta página. Solo la ven los administradores del directorio.");
+    }
+    if (admin.estado === "sin-cargar") cargarAdmin();
+    const mensaje = admin.mensaje
+      ? `<div class="admin-mensaje ${admin.mensaje.tipo}" role="status">${esc(admin.mensaje.texto)}</div>` : "";
+    const pmo = areas.find(a => a.proyectosDeClientes);
+    const ayuda = `
+      <div class="admin-caja">
+        <strong>Para agregar a una persona</strong>
+        <ol>
+          <li>Abre los <a href="${esc(PANEL_USUARIOS)}" target="_blank" rel="noopener">usuarios del
+            proyecto en Supabase</a>.</li>
+          <li>Pulsa <b>Add user → Create new user</b>, escribe su correo y una contraseña temporal, y
+            deja marcada <b>Auto Confirm User</b>.</li>
+          <li>Aparecerá sola en esta lista: márcale sus áreas y guarda.</li>
+          <li>Pásale la contraseña temporal. Al entrar por primera vez, el directorio le pedirá crear
+            una propia.</li>
+        </ol>
+      </div>
+      ${pmo ? `<div class="admin-caja">El área <b>${esc(pmo.nombre)}</b> da acceso también a todos
+        los clientes (proyectos activos y cerrados).</div>` : ""}`;
+    const lista = admin.estado === "listo"
+      ? (admin.perfiles.length
+          ? `<div class="admin-lista">${admin.perfiles.map(tarjetaUsuario).join("")}</div>`
+          : aviso("Todavía no hay usuarios."))
+      : admin.estado === "error" ? "" : aviso("Cargando usuarios…");
+    return `
+      <section>
+        <div class="cabecera">
+          <span class="etiqueta">Administración</span>
+          <h2>Usuarios</h2>
+        </div>
+        ${mensaje}${ayuda}${lista}
+      </section>`;
+  }
+
+  // Vuelve a marcar que la persona debe cambiar su contraseña al entrar (T-014).
+  async function pedirCambioDeContrasena(usuarioId) {
+    const perfil = admin.perfiles.find(p => p.id === usuarioId);
+    if (!perfil) return false;
+    if (!window.confirm(`¿Pedir a ${perfil.correo} que cambie su contraseña la próxima vez que entre?`)) return false;
+    let resultado = true;
+    try {
+      const { error } = await conLimite(clienteSupabase.from("perfiles")
+        .update({ debe_cambiar_contrasena: true }).eq("id", usuarioId));
+      if (error) throw error;
+      admin.mensaje = { tipo: "exito", texto: `${perfil.correo} deberá crear una contraseña nueva al entrar.` };
+    } catch (error) {
+      resultado = false;
+      admin.mensaje = { tipo: "error", texto: `No se pudo pedir el cambio de contraseña a ${perfil.correo}. ` +
+        mensajeDeError(error) };
+    }
+    const mensaje = admin.mensaje;
+    await cargarAdmin();
+    if (admin.estado === "listo") admin.mensaje = mensaje;
+    mostrar();
+    return resultado;
+  }
+
+  contenedor.addEventListener("click", async e => {
+    const boton = e.target?.closest?.('button[data-accion="pedir-cambio"]');
+    const formulario = boton?.closest("form[data-usuario]");
+    if (!formulario) return;
+    e.preventDefault();
+    boton.disabled = true;
+    await pedirCambioDeContrasena(formulario.dataset.usuario);
+    boton.disabled = false;
+  });
+
+  // Un solo oyente para todos los formularios del panel (la página se vuelve a dibujar).
+  contenedor.addEventListener("submit", async e => {
+    const formulario = e.target?.closest?.("form[data-usuario]");
+    if (!formulario) return;
+    e.preventDefault();
+    const boton = formulario.querySelector("button[type=submit]");
+    if (boton) boton.disabled = true;
+    await guardarUsuario(formulario.dataset.usuario, {
+      nombre: formulario.elements.nombre.value,
+      esAdmin: formulario.elements.es_admin.checked,
+      areasElegidas: [...formulario.querySelectorAll('input[name="area"]:checked')].map(c => c.value),
+    });
+    if (boton) boton.disabled = false;
+  });
+
+  // Marca en la base que la persona ya no tiene contraseña temporal. La función solo puede
+  // cambiar la fila de quien la llama (ver supabase/migracion-002-contrasena-temporal.sql).
+  // Si falla, la contraseña igual quedó cambiada: se entra y se volverá a pedir la próxima vez.
+  let contrasenaYaCambiada = false;
+  async function registrarContrasenaCambiada() {
+    contrasenaYaCambiada = true;
+    try {
+      const { error } = await conLimite(clienteSupabase.rpc("contrasena_cambiada"));
+      if (error) throw error;
+      if (miPerfil) miPerfil.debe_cambiar_contrasena = false;
+    } catch {}
+  }
+
   function prepararFormularios() {
+    document.getElementById("cancelar-cambio").addEventListener("click", e => {
+      e.preventDefault();
+      document.getElementById("nueva-1").value = "";
+      document.getElementById("nueva-2").value = "";
+      avisoLogin("");
+      verPantalla("directorio");
+    });
+
     document.getElementById("panel-entrar").addEventListener("submit", async e => {
       e.preventDefault();
       const correo = document.getElementById("correo").value.trim();
@@ -806,10 +1157,19 @@
         document.getElementById("nueva-1").value = "";
         document.getElementById("nueva-2").value = "";
         marcarContrasenaPendiente(false);
+        await registrarContrasenaCambiada();
+        if (motivoContrasena === "voluntario") {
+          avisoPasajero = aviso("Tu contraseña se cambió correctamente.");
+          verPantalla("directorio");
+          mostrar();
+          return;
+        }
         await entrarAlDirectorio(sesionActual);
       } catch (error) {
         avisoLogin(
-          error?.code === "weak_password" || error?.status === 422
+          error?.code === "same_password"
+            ? "La contraseña nueva debe ser distinta de la anterior."
+            : error?.code === "weak_password" || error?.status === 422
             ? "La contraseña no cumple los requisitos de seguridad. Prueba con una más larga que " +
               "mezcle letras y números."
             : esFallaDeServicio(error) ? MENSAJES.servicio
@@ -849,7 +1209,7 @@
     clienteSupabase.auth.onAuthStateChange(evento => {
       if (evento === "PASSWORD_RECOVERY") {
         marcarContrasenaPendiente(true);
-        verPantalla("nueva");
+        pedirContrasena("correo");
       }
       if (evento === "SIGNED_OUT" && listo) salir();
     });
