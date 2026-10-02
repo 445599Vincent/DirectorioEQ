@@ -29,6 +29,12 @@ El formato de cada entrada está en `AGENTS.md`.
 ---
 
 ## 2026-10-02 — Claude
+- **Pedido:** sumar al equipo un agente nuevo, "Ecco", desde otra cuenta de Vincent.
+- **Cambios:** Ecco cubre Ingeniería mientras no está Codex; el Ejecutador vuelve a Contenido;
+  T-012 reasignada a Ecco (`TAREAS.md`).
+- **Pendiente:** Nada.
+
+## 2026-10-02 — Claude
 - **Pedido:** revisar la T-008.
 - **Cambios:** T-008 aprobada; T-012 (modo de prueba con `?prueba=supabase`) asignada al
   Ejecutador para hacer la T-011 en el sitio real sin afectar al equipo.

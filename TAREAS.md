@@ -11,9 +11,12 @@ asignadas a ellos**. Vincent (el usuario) aprueba cada tarea antes de que se asi
 | Directora | Claude — sesión "Organizador" | `TAREAS.md`, `AGENTS.md`, `CONFIGURAR-INICIO-DE-SESION.md`, `_config.yml`; revisión final de todo |
 | Ingeniería | Codex | `index.html`, `tests/`, `supabase/` |
 | Contenido | Claude — sesión "Ejecutador" | `enlaces.js`, `logos/` |
+| Ingeniería (apoyo) | "Ecco" — agente de otra cuenta de Vincent | `index.html`, `tests/`, `supabase/` mientras Codex no esté; al volver Codex, la directora reparte las tareas de Ingeniería entre ambos |
 
-**Hasta el 2026-10-06 Codex no está disponible.** Mientras tanto el Ejecutador asume
-también el rol de Ingeniería (`index.html`, `tests/`, `supabase/`). Cuando Codex vuelva,
+**Hasta el 2026-10-06 Codex no está disponible.** Desde el 2026-10-02 el rol de Ingeniería
+(`index.html`, `tests/`, `supabase/`) lo cubre **Ecco**, y el Ejecutador vuelve a Contenido.
+Ecco no puede recibir mensajes de la directora (es otra cuenta): sus tareas se le avisan a
+través de Vincent, como a Codex. Cuando Codex vuelva,
 debe leer `BITACORA.md` y `TAREAS.md` antes de tocar nada, porque sus archivos habrán
 cambiado.
 
@@ -517,8 +520,7 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
 ### T-012 — Modo de prueba con Supabase en el sitio publicado
 
 - **Estado:** Asignada (2026-10-02)
-- **Asignada a:** Ejecutador (Ingeniería mientras no está Codex) — Claude Sonnet 5.5,
-  esfuerzo medio
+- **Asignada a:** Ecco (Ingeniería) — esfuerzo medio
 - **Archivos:** `index.html`, `tests/directorio.test.mjs`
 - **Qué hacer:** que el modo Supabase se encienda también si la dirección lleva
   `?prueba=supabase` (por ejemplo `https://directorio.eccoqualita.com/?prueba=supabase`),
