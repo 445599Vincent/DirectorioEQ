@@ -363,7 +363,7 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
 
 ### T-008 — Pantalla de inicio de sesión y carga desde Supabase (Etapa 2)
 
-- **Estado:** Asignada (reasignada el 2026-10-01)
+- **Estado:** En curso (2026-10-01)
 - **Asignada a:** Ejecutador (reemplaza a Codex hasta el 2026-10-06) — **Claude Opus 5.5,
   esfuerzo alto** (toca el inicio de sesión y la recuperación de contraseña)
 - **Archivos:** `index.html`, `tests/directorio.test.mjs`
