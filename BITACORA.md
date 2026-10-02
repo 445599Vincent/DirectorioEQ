@@ -29,6 +29,14 @@ El formato de cada entrada está en `AGENTS.md`.
 ---
 
 ## 2026-10-02 — Claude
+- **Pedido:** asignar administradores y áreas a varias personas, y mostrar en gris (con cómo
+  solicitar acceso) las áreas que un usuario no tiene.
+- **Cambios:** permisos entregados a Vincent como SQL para ejecutar en Supabase (no se
+  guardan correos en el repositorio, que es público); T-015 asignada a Ecco. Se quitaron de
+  `TAREAS.md` los correos personales que se habían anotado.
+- **Pendiente:** Vincent ejecuta el SQL de permisos; Ecco: T-009, T-014 y T-015.
+
+## 2026-10-02 — Claude
 - **Pedido:** Vincent creará él mismo las cuentas del equipo (unas 15 personas).
 - **Cambios:** T-014 (cambio obligatorio de la contraseña temporal) asignada a Ecco, para
   después de la T-009.

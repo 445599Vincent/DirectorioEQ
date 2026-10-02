@@ -505,7 +505,7 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
 - **Qué hacer:**
   1. Migración SQL reejecutable: columna `perfiles.debe_cambiar_contrasena boolean not null
      default true`; los perfiles que ya existen quedan en `false` salvo que no sean
-     administradores (k.moya → `true`, v.tapia → `false`). Una función
+     administradores (usuarios normales → `true`, administradores → `false`). Una función
      `public.contrasena_cambiada()` `security definer`, con `search_path` vacío, ejecutable
      solo por `authenticated`, que pone en `false` **únicamente** la fila del propio usuario
      (`auth.uid()`) y nada más. El administrador puede volver a ponerla en `true` (la
@@ -521,6 +521,36 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
   cambiarla; tras cambiarla, entra; la opción del encabezado funciona; un usuario no puede
   cambiar la marca de otro (explicar en las notas por qué la función lo impide).
 - **No hacer:** no encender `SUPABASE.activo`; no escribir contraseñas reales.
+- **Notas de entrega:** en el pull request.
+
+### T-015 — Áreas sin acceso en gris, con cómo solicitar acceso
+
+- **Estado:** Asignada (2026-10-02), **después de la T-014** (mismos archivos)
+- **Asignada a:** Ecco (rama `ecco/T-015` y pull request) — Claude Opus 5.5, esfuerzo alto
+- **Archivos:** `supabase/migracion-003-areas-visibles.sql` (nuevo), `supabase/LEEME.md`,
+  `index.html`, `tests/directorio.test.mjs`
+- **Pedido de Vincent:** que a quien no tiene acceso a un área no se le esconda, sino que la
+  vea en gris con un aviso de cómo solicitar acceso.
+- **Qué hacer:**
+  1. Migración: cambiar la política de lectura de `espacios` para que cualquier usuario con
+     sesión lea **las áreas** (`tipo = 'area'`: nombre, descripción, icono, proceso),
+     mientras los **clientes** siguen exigiendo `puede_ver('pmo')`. **`accesos` no cambia:**
+     los enlaces de un área solo los recibe quien tiene permiso. Sin sesión, nada.
+  2. La página lee los permisos propios (`permisos` del usuario y `es_admin` de su perfil)
+     para saber qué áreas tiene. Áreas con permiso: como hoy. Áreas sin permiso: tarjeta en
+     gris (no parece clicable, contraste de texto ≥ 4,5:1), con la etiqueta "Sin acceso" en
+     lugar del contador. Al pulsarla, su página muestra "No tienes acceso a esta área" y un
+     botón "Solicitar acceso" que abre un correo (`mailto:`) a `CONTACTO_ACCESO` con el
+     asunto "Solicitud de acceso al Directorio: <área>" y un texto ya escrito.
+  3. `CONTACTO_ACCESO` es una constante al inicio del script (por ahora el correo general
+     de Ecco Qualitá que ya aparece en el pie de página); Vincent puede pedir cambiarla.
+  4. Buscador: puede mostrar las áreas en gris por su nombre, nunca enlaces de áreas sin
+     permiso (no llegan desde la base).
+- **Pruebas:** con Supabase simulado, un usuario con 1 área ve las 13, 12 en gris, y la
+  página de un área sin permiso muestra el aviso y el botón; un administrador ve todas
+  normales; un cliente nunca aparece para quien no tiene `pmo`.
+- **Seguridad (la revisa la directora):** confirmar en la migración que `accesos` sigue
+  protegido por el permiso del área y que los clientes no se exponen.
 - **Notas de entrega:** en el pull request.
 
 ### T-013 — Panel de administración, parte B: contenido (Etapa 3)
@@ -619,11 +649,11 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
 - **Estado:** En curso (2026-10-02)
 - **Asignada a:** Organizador y Vincent
 - **Avance:** base de datos instalada y comprobada por Vincent (21 espacios, 42 accesos, 1
-  administrador: `v.tapia@eccoqualita.com`); el inicio de sesión en modo de prueba funciona.
+  administrador: Vincent); el inicio de sesión en modo de prueba funciona.
   Desde fuera, sin sesión, las cuatro tablas responden "permission denied". El primer
   intento de instalar `esquema.sql` no había quedado aplicado; se repitió con éxito.
-- **Resultado (2026-10-02):** prueba superada. Administrador (`v.tapia@`): ve las 13 áreas y
-  los clientes. Usuario normal (`k.moya@`): sin áreas veía solo las herramientas generales y
+- **Resultado (2026-10-02):** prueba superada. Administrador (Vincent): ve las 13 áreas y
+  los clientes. Usuario normal (cuenta de prueba): sin áreas veía solo las herramientas generales y
   el aviso "sin áreas asignadas"; con el permiso `calidad` ve **solo** Gestión de la Calidad.
   Como la página solo recibe de Supabase las filas permitidas, el buscador no puede mostrar
   otras áreas. **Antes de encender para todos:** panel de usuarios (T-009), cuentas del
