@@ -597,7 +597,9 @@ function clienteSupabaseFalso({ sesion = null, filas = FILAS_DE_EJEMPLO, errorDa
 }
 
 // Ejecuta la página con el interruptor encendido y el cliente simulado, sin red.
-async function abrirConSupabase({ hash = "#/", cliente = clienteSupabaseFalso() } = {}) {
+// encender: false deja el interruptor como está en el sitio (apagado), para el modo de prueba.
+// almacen: lo que la pestaña ya tiene guardado en sessionStorage.
+async function abrirConSupabase({ hash = "#/", search = "", encender = true, almacen = {}, cliente = clienteSupabaseFalso() } = {}) {
   const elementos = new Map();
   const volver = { href: "", textContent: "" };
   const historial = [];
@@ -625,7 +627,12 @@ async function abrirConSupabase({ hash = "#/", cliente = clienteSupabaseFalso() 
     return elementos.get(id);
   }
 
-  const location = { hash, origin: "https://directorio.eccoqualita.com", pathname: "/", search: "" };
+  const location = { hash, origin: "https://directorio.eccoqualita.com", pathname: "/", search };
+  const sessionStorage = {
+    getItem: (clave) => (Object.hasOwn(almacen, clave) ? almacen[clave] : null),
+    setItem: (clave, valor) => { almacen[clave] = String(valor); },
+    removeItem: (clave) => { delete almacen[clave]; },
+  };
   const contexto = vm.createContext({
     console,
     Date,
@@ -633,6 +640,7 @@ async function abrirConSupabase({ hash = "#/", cliente = clienteSupabaseFalso() 
     clearTimeout,
     URLSearchParams,
     location,
+    sessionStorage,
     history: { replaceState: (estado, titulo, url) => historial.push(url) },
     window: {
       supabase: { createClient: (url, clave) => { cliente.llamadas.push(["createClient", url, clave]); return cliente; } },
@@ -650,11 +658,13 @@ async function abrirConSupabase({ hash = "#/", cliente = clienteSupabaseFalso() 
   });
 
   vm.runInContext(enlaces, contexto, { filename: "enlaces.js" });
-  vm.runInContext(aplicacion.replace(/activo: false,/, "activo: true,"), contexto, { filename: "index.html" });
+  const codigo = encender ? aplicacion.replace(/activo: false,/, "activo: true,") : aplicacion;
+  vm.runInContext(codigo, contexto, { filename: "index.html" });
   await esperar();
 
   return {
     cliente,
+    almacen,
     elemento,
     historial,
     contenido: () => elemento("secciones").innerHTML,
@@ -802,4 +812,86 @@ test("los textos que vienen de la base se escapan antes de mostrarse", async () 
   });
   assert.doesNotMatch(inicio.contenido(), /<img src=x/);
   assert.match(tarjetaDe(inicio.contenido(), "pmo"), /&lt;img src=x/);
+});
+
+// --- Modo de prueba (T-012): ?prueba=supabase con el interruptor apagado ----------
+
+const usoSupabase = (vista) => vista.cliente.llamadas.some(([accion]) => accion === "createClient");
+const avisoDePrueba = (vista) => vista.elemento("modo-prueba").style.display === "";
+
+test("sin el parámetro de prueba el sitio sigue igual que siempre", async () => {
+  const vista = await abrirConSupabase({ encender: false });
+
+  assert.ok(!usoSupabase(vista), "no debe conectarse a Supabase");
+  assert.deepEqual(vista.pantalla(), { directorio: true, entrar: false, nueva: false });
+  assert.equal(vista.contenido(), abrirRuta("#/").contenido, "mismo inicio que con enlaces.js");
+  assert.ok(!avisoDePrueba(vista), "no se muestra el aviso de modo de prueba");
+  assert.deepEqual(vista.almacen, {}, "no se guarda nada en la pestaña");
+});
+
+test("otro valor del parámetro no enciende el modo de prueba", async () => {
+  const vista = await abrirConSupabase({ encender: false, search: "?prueba=otra" });
+
+  assert.ok(!usoSupabase(vista));
+  assert.deepEqual(vista.pantalla(), { directorio: true, entrar: false, nueva: false });
+});
+
+test("con ?prueba=supabase se pide iniciar sesión aunque el interruptor esté apagado", async () => {
+  const vista = await abrirConSupabase({ encender: false, search: "?prueba=supabase" });
+
+  assert.match(aplicacion, /const SUPABASE = \{\s*activo: false,/, "el interruptor sigue apagado");
+  assert.ok(usoSupabase(vista));
+  assert.deepEqual(vista.pantalla(), { directorio: false, entrar: true, nueva: false });
+  assert.equal(vista.contenido(), "", "no se dibuja nada antes de iniciar sesión");
+  assert.ok(avisoDePrueba(vista), "se muestra el aviso «Modo de prueba»");
+  assert.equal(vista.almacen["directorio-modo-prueba"], "1", "la pestaña recuerda el modo");
+});
+
+test("la pestaña recuerda el modo de prueba aunque la dirección ya no tenga el parámetro", async () => {
+  const vista = await abrirConSupabase({ encender: false, almacen: { "directorio-modo-prueba": "1" } });
+
+  assert.deepEqual(vista.pantalla(), { directorio: false, entrar: true, nueva: false });
+  assert.ok(avisoDePrueba(vista));
+});
+
+test("en modo de prueba el correo de recuperación regresa con el parámetro", async () => {
+  const vista = await abrirConSupabase({ encender: false, search: "?prueba=supabase" });
+
+  vista.elemento("correo").value = "persona@ejemplo.com";
+  await vista.elemento("enlace-olvido").disparar("click");
+
+  const llamada = vista.cliente.llamadas.find(([accion]) => accion === "resetPasswordForEmail");
+  assert.equal(llamada[2].redirectTo, `${SITIO}?prueba=supabase`);
+});
+
+test("al volver de un correo de invitación sin el parámetro se sigue en modo de prueba", async () => {
+  const vista = await abrirConSupabase({
+    encender: false,
+    hash: "#access_token=token-de-prueba&type=invite",
+    cliente: clienteSupabaseFalso({ sesion: { user: { email: "nueva@ejemplo.com" } } }),
+  });
+
+  assert.deepEqual(vista.pantalla(), { directorio: false, entrar: false, nueva: true });
+  assert.ok(avisoDePrueba(vista));
+  assert.equal(vista.almacen["directorio-modo-prueba"], "1");
+});
+
+test("un enlace de correo vencido sin el parámetro también abre el modo de prueba", async () => {
+  const vista = await abrirConSupabase({
+    encender: false,
+    hash: "#error=access_denied&error_code=otp_expired",
+  });
+
+  assert.deepEqual(vista.pantalla(), { directorio: false, entrar: true, nueva: false });
+  assert.match(vista.mensaje(), /ya no es válido/);
+});
+
+test("con el interruptor encendido no aparece el aviso de prueba y el correo regresa al sitio", async () => {
+  const vista = await abrirConSupabase({ search: "?prueba=supabase" });
+
+  assert.ok(!avisoDePrueba(vista));
+  vista.elemento("correo").value = "persona@ejemplo.com";
+  await vista.elemento("enlace-olvido").disparar("click");
+  const llamada = vista.cliente.llamadas.find(([accion]) => accion === "resetPasswordForEmail");
+  assert.equal(llamada[2].redirectTo, SITIO);
 });

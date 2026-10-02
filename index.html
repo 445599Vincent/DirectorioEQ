@@ -149,7 +149,13 @@
   footer { background: var(--titulos); color: rgba(255, 255, 255, .7); font-size: 14px; padding: 24px 0; text-align: center; }
   footer a { color: var(--dorado); text-decoration: none; }
 
-  /* Inicio de sesión con Supabase (solo se ve si SUPABASE.activo es true) */
+  /* Inicio de sesión con Supabase (solo se ve si SUPABASE.activo es true o en modo de prueba) */
+  .cabecera-derecha { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .modo-prueba {
+    flex-shrink: 0; padding: 5px 10px; border-radius: 48px;
+    font-size: 11px; font-weight: 700; line-height: 1; letter-spacing: .4px; text-transform: uppercase;
+    color: var(--titulos); background: var(--dorado);
+  }
   .sesion { display: flex; align-items: center; gap: 12px; }
   .sesion .quien { font-size: 13px; color: var(--texto); }
   .sesion .cerrar { font-size: 12px; font-weight: 500; color: var(--teal); text-decoration: none; }
@@ -197,7 +203,10 @@
       <img src="https://eccoqualita.com/wp-content/uploads/2025/09/Asset-1.svg" alt="Ecco Qualitá"
            onerror="this.outerHTML='<span>Ecco Qualitá</span>'">
     </a>
-    <span class="etiqueta" id="sesion">Directorio interno</span>
+    <div class="cabecera-derecha">
+      <span class="modo-prueba" id="modo-prueba" style="display:none">Modo de prueba</span>
+      <span class="etiqueta" id="sesion">Directorio interno</span>
+    </div>
   </div>
 </header>
 
@@ -271,6 +280,31 @@
     url: "https://yvhractjxuvfjaldhgdo.supabase.co",
     clavePublica: "sb_publishable_1QVuwl_e3IWZtdUCJwLvSQ_RnUIOI02",
   };
+
+  // --- Modo de prueba (para la prueba controlada, T-011) ----------------------
+  // Con ?prueba=supabase en la dirección, esa pestaña usa el inicio de sesión con
+  // Supabase aunque "activo" siga en false; el resto del equipo sigue viendo el sitio
+  // de siempre. No cambia la seguridad: los datos los sigue protegiendo Supabase.
+  // El modo se recuerda en la pestaña (sessionStorage) y también se enciende al volver
+  // de un correo de invitación o recuperación (#access_token=… o #error_code=…),
+  // porque el correo puede abrir una pestaña nueva sin el parámetro.
+  const CLAVE_MODO_PRUEBA = "directorio-modo-prueba";
+  function detectarModoPrueba() {
+    if (SUPABASE.activo) return false;
+    const pedido = /[?&]prueba=supabase(&|$)/.test(location.search || "");
+    const vieneDeCorreo = /^#(?!\/).*\b(access_token|error_code)=/.test(location.hash || "");
+    let recordado = false;
+    try {
+      recordado = sessionStorage.getItem(CLAVE_MODO_PRUEBA) === "1";
+      if (pedido || vieneDeCorreo) sessionStorage.setItem(CLAVE_MODO_PRUEBA, "1");
+    } catch {}
+    return pedido || vieneDeCorreo || recordado;
+  }
+  const modoPrueba = detectarModoPrueba();
+  const supabaseEncendido = SUPABASE.activo || modoPrueba;
+  // A dónde regresan los correos de recuperación: en modo de prueba, con el parámetro.
+  const direccionDeRegreso = () =>
+    location.origin + location.pathname + (modoPrueba ? "?prueba=supabase" : "");
 
   const ICONOS = {
     erp: '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4M7 13v-2M12 13V8M17 13v-4"/>',
@@ -551,7 +585,7 @@
     window.scrollTo(0, 0);
   });
 
-  // --- Inicio de sesión con Supabase (solo si SUPABASE.activo es true) ------
+  // --- Inicio de sesión con Supabase (solo si SUPABASE.activo es true o en modo de prueba)
   let clienteSupabase = null;
   let sesionActual = null;
 
@@ -588,7 +622,7 @@
     return MENSAJES.noSePudo;
   }
 
-  // La librería oficial de Supabase solo se descarga cuando el interruptor está encendido.
+  // La librería oficial de Supabase solo se descarga con el interruptor encendido o en modo de prueba.
   function cargarLibreriaSupabase() {
     if (window.supabase?.createClient) return Promise.resolve();
     return new Promise((resolver, rechazar) => {
@@ -740,7 +774,7 @@
       }
       try {
         const { error } = await conLimite(clienteSupabase.auth.resetPasswordForEmail(correo, {
-          redirectTo: location.origin + location.pathname,
+          redirectTo: direccionDeRegreso(),
         }));
         if (error) throw error;
         // Mismo mensaje exista o no la cuenta, para no revelar qué correos están registrados.
@@ -787,7 +821,7 @@
   }
 
   async function iniciar() {
-    if (!SUPABASE.activo) {
+    if (!supabaseEncendido) {
       // Igual que siempre: datos de enlaces.js y sin inicio de sesión.
       usarDatos(typeof AREAS === "undefined" ? [] : AREAS, typeof CLIENTES === "undefined" ? [] : CLIENTES);
       listo = true;
@@ -796,6 +830,7 @@
     }
 
     document.getElementById("app").style.display = "none";
+    if (modoPrueba) document.getElementById("modo-prueba").style.display = "";
     // Lo que trae la dirección cuando la persona llega desde un correo:
     // #access_token=…&type=invite|recovery, o #error=…&error_code=… si el enlace no sirve.
     const datosDelCorreo = new URLSearchParams(location.hash.startsWith("#/") ? "" : location.hash.slice(1));
