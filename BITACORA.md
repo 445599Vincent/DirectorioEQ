@@ -28,6 +28,14 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ---
 
+## 2026-10-02 — Claude (integrando el trabajo de Ecco)
+- **Pedido:** T-012, modo de prueba con Supabase.
+- **Cambios:** Ecco lo hizo en la rama `ecco/T-012` (pull request #1): con
+  `?prueba=supabase` esa pestaña usa el inicio de sesión de Supabase, con aviso "Modo de
+  prueba"; sin el parámetro el sitio no cambia (`index.html`, `tests/`). La directora lo
+  revisó y lo integró a `main`.
+- **Pendiente:** Vincent agrega la Redirect URL de prueba en Supabase.
+
 ## 2026-10-02 — Claude
 - **Pedido:** sumar al equipo un agente nuevo, "Ecco", desde otra cuenta de Vincent.
 - **Cambios:** Ecco cubre Ingeniería mientras no está Codex; el Ejecutador vuelve a Contenido;

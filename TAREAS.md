@@ -526,7 +526,7 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
 
 ### T-012 — Modo de prueba con Supabase en el sitio publicado
 
-- **Estado:** Asignada (2026-10-02)
+- **Estado:** Completada (revisada e integrada por la directora el 2026-10-02)
 - **Asignada a:** Ecco (Ingeniería) — esfuerzo medio
 - **Archivos:** `index.html`, `tests/directorio.test.mjs`
 - **Qué hacer:** que el modo Supabase se encienda también si la dirección lleva
@@ -539,7 +539,16 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
   sigue protegiendo Supabase.
 - **Criterios de aceptación:** sin el parámetro, el sitio idéntico al actual; con él, la
   pantalla de inicio de sesión; pruebas para ambos casos.
-- **Notas de entrega:**
+- **Notas de entrega:** en el pull request #1 de GitHub (rama `ecco/T-012`). 41 pruebas
+  (8 nuevas); modo con `?prueba=supabase`, recordado en la pestaña; `redirectTo` con el
+  parámetro; también se enciende al volver de un correo de Supabase (`#access_token=` o
+  `#error_code=`), porque la invitación abre una pestaña nueva sin el parámetro.
+- **Revisión de la directora:** aprobada e integrada a `main`. El agregado de encender el
+  modo al volver de un correo de Supabase se acepta: sin él, una invitación no permitiría
+  crear la contraseña, y no cambia la seguridad (los datos los protege la base). Las 41
+  pruebas pasan después de integrar. Pendiente de Vincent: agregar
+  `https://directorio.eccoqualita.com/?prueba=supabase` en Supabase → Authentication →
+  URL Configuration → Redirect URLs.
 
 ### T-011 — Prueba controlada (Etapa 5)
 
