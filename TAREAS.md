@@ -16,7 +16,14 @@ asignadas a ellos**. Vincent (el usuario) aprueba cada tarea antes de que se asi
 **Hasta el 2026-10-06 Codex no está disponible.** Desde el 2026-10-02 el rol de Ingeniería
 (`index.html`, `tests/`, `supabase/`) lo cubre **Ecco**, y el Ejecutador vuelve a Contenido.
 Ecco no puede recibir mensajes de la directora (es otra cuenta): sus tareas se le avisan a
-través de Vincent, como a Codex. Cuando Codex vuelva,
+través de Vincent, como a Codex.
+
+**Cómo trabaja Ecco (desde Claude Code en la web, con su propia copia del repositorio):**
+no comparte la carpeta de esta computadora, así que **no sube nada a `main`**. Para cada
+tarea crea una rama `ecco/T-XXX`, hace allí sus cambios (solo sus archivos) y abre un pull
+request en GitHub con las notas de entrega en la descripción. **No edita `TAREAS.md`,
+`BITACORA.md` ni `EN-CURSO.md`**: la directora reserva sus archivos al asignar, revisa el
+pull request, lo integra a `main`, registra la bitácora y libera la reserva. Cuando Codex vuelva,
 debe leer `BITACORA.md` y `TAREAS.md` antes de tocar nada, porque sus archivos habrán
 cambiado.
 
