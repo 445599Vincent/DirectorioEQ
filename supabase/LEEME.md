@@ -55,6 +55,18 @@ directorio, **Administración** → márcale sus áreas → **Guardar cambios**.
 vez, el directorio le pedirá crear su propia contraseña. Desde el panel también se puede
 **pedir el cambio de contraseña** otra vez.
 
+### `migracion-003-areas-visibles.sql` (T-015)
+
+Para que cada persona vea **en gris** las áreas que no tiene, con un botón para pedir acceso.
+
+- Cambia una sola regla: cualquier persona con sesión puede leer las **áreas** de `espacios`
+  (nombre, descripción, icono y proceso).
+- **No cambia** lo demás: los **clientes** siguen exigiendo el área PMO, y los **enlaces**
+  (`accesos`) de un área solo los recibe quien tiene permiso sobre ella. Sin sesión, nada.
+- Para comprobarla: entra con un usuario que tenga una sola área. En el inicio deben verse
+  todas las áreas, las demás en gris con "Sin acceso", y al abrir una gris no debe aparecer
+  ningún enlace, solo el botón **Solicitar acceso**.
+
 ## Quién puede hacer qué
 
 | Acción | Sin iniciar sesión | Usuario | Administrador |
@@ -65,8 +77,9 @@ vez, el directorio le pedirá crear su propia contraseña. Desde el panel tambi�
 | Leer sus propios permisos | No | Sí | Sí |
 | Leer permisos de otras personas | No | No | Sí |
 | Crear, cambiar o borrar permisos | No | No | Sí |
-| Leer áreas y clientes permitidos | No | Sí | Sí, todos |
-| Leer accesos permitidos | No | Sí | Sí, todos |
+| Leer nombre y descripción de todas las áreas (desde la migración 003) | No | Sí | Sí |
+| Leer clientes | No | Solo con el área PMO | Sí, todos |
+| Leer accesos (enlaces) | No | Solo los de sus áreas | Sí, todos |
 | Crear, cambiar o borrar áreas, clientes y accesos | No | No | Sí |
 | Darse a sí mismo el nivel de administrador | No | No | No |
 | Marcar su propia contraseña temporal como cambiada (`contrasena_cambiada()`) | No | Sí, solo la suya | Sí, solo la suya |

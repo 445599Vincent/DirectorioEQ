@@ -991,8 +991,10 @@ test("un usuario normal no ve el enlace de administración ni la página", async
   assert.doesNotMatch(vista.elemento("sesion").innerHTML, /Administración/);
   assert.match(vista.contenido(), /No tienes acceso a esta página/);
   assert.doesNotMatch(vista.contenido(), /admin@ejemplo\.com/);
-  assert.ok(!vista.cliente.llamadas.some(([tipo, tabla]) => tipo === "bd" && tabla === "permisos"),
-    "no pide la lista de permisos");
+  const permisosPedidos = vista.cliente.llamadas.filter(([tipo, tabla]) => tipo === "bd" && tabla === "permisos");
+  assert.ok(permisosPedidos.every(([, , , , filtros]) =>
+    filtros.some(([op, columna, valor]) => op === "eq" && columna === "usuario_id" && valor === PERFIL_ANA.id)),
+  "solo pide sus propios permisos, nunca la lista de todos");
 });
 
 test("un administrador ve el enlace y la lista de usuarios con sus áreas", async () => {
@@ -1234,4 +1236,150 @@ test("la migración 002 solo deja que cada persona apague su propia marca", () =
   assert.match(sql, /revoke all on function public\.contrasena_cambiada\(\) from public, anon;/);
   assert.match(sql, /grant execute on function public\.contrasena_cambiada\(\) to authenticated;/);
   assert.doesNotMatch(sql, /drop policy|create policy|disable row level security/, "no cambia las reglas RLS");
+});
+
+// --- Áreas sin acceso en gris (T-015) ------------------------------------------------
+
+const migracion003 = readFileSync(new URL("../supabase/migracion-003-areas-visibles.sql", import.meta.url), "utf8");
+
+// Lo que la base entrega después de la migración 003 a una persona con esas áreas: todas
+// las áreas, los clientes solo con el PMO y los enlaces solo de sus áreas (o todo si es admin).
+function filasQueEntregaLaBase(misAreas, esAdmin = false) {
+  const { espacios, accesos } = filasDesde(cargarDatos());
+  const puedeVer = (rol) => esAdmin || misAreas.includes(rol);
+  const visibles = espacios.filter((fila) => fila.tipo === "area" || puedeVer(fila.rol));
+  return {
+    espacios: visibles,
+    accesos: accesos.filter(({ espacio_id }) => puedeVer(espacios.find(({ id }) => id === espacio_id).rol)),
+  };
+}
+
+function clienteConAreas(misAreas, { esAdmin = false, errores = {}, filas } = {}) {
+  const yo = { id: "u-persona", correo: "persona@ejemplo.com", nombre: "Persona", es_admin: esAdmin, debe_cambiar_contrasena: false };
+  return clienteSupabaseFalso({
+    sesion: { user: { id: yo.id, email: yo.correo } },
+    filas: filas || filasQueEntregaLaBase(misAreas, esAdmin),
+    perfiles: [yo],
+    permisos: misAreas.map((area_id) => ({ usuario_id: yo.id, area_id })),
+    errores,
+  });
+}
+
+const tarjetasDeArea = (contenido) => [...contenido.matchAll(/<a class="tarjeta( sin-acceso)?" href="#\/([^"]+)">/g)]
+  .map(([, gris, id]) => ({ id, gris: Boolean(gris) }));
+const idsDeAreas = () => cargarDatos().AREAS.map(({ id }) => id);
+const idsDeClientes = () => cargarDatos().CLIENTES.map(({ id }) => id);
+
+test("un usuario con un área ve todas las áreas y las demás en gris", async () => {
+  const vista = await abrirConSupabase({ cliente: clienteConAreas(["calidad"]) });
+  const tarjetas = tarjetasDeArea(vista.contenido());
+
+  assert.deepEqual(tarjetas.map(({ id }) => id).sort(), idsDeAreas().sort(), "aparecen las 13 áreas");
+  assert.equal(tarjetas.length, 13);
+  assert.deepEqual(tarjetas.filter(({ gris }) => !gris).map(({ id }) => id), ["calidad"]);
+  assert.equal(tarjetas.filter(({ gris }) => gris).length, 12);
+
+  const gris = vista.contenido().match(/<a class="tarjeta sin-acceso" href="#\/tic">([\s\S]*?)<\/a>/)[1];
+  assert.match(gris, /Sin acceso/);
+  assert.doesNotMatch(gris, /disponible|pendiente|Sin accesos todavía/, "la etiqueta reemplaza al contador");
+  assert.match(tarjetaDe(vista.contenido(), "calidad"), /disponible/);
+  assert.doesNotMatch(vista.contenido(), /todavía no tiene áreas asignadas/);
+});
+
+test("la página de un área sin permiso muestra el aviso y el botón para pedir acceso", async () => {
+  const vista = await abrirConSupabase({ hash: "#/recursos-humanos", cliente: clienteConAreas(["calidad"]) });
+  const contenido = vista.contenido();
+
+  assert.match(contenido, /No tienes acceso a esta área/);
+  assert.doesNotMatch(contenido, /class="tarjeta/, "no hay ninguna tarjeta de enlace");
+  const enlace = contenido.match(/<a class="btn-solicitar" id="solicitar-acceso" href="([^"]+)">Solicitar acceso<\/a>/);
+  assert.ok(enlace, "hay un botón Solicitar acceso");
+  const direccion = new URL(enlace[1].replaceAll("&amp;", "&"));
+  assert.equal(direccion.protocol, "mailto:");
+  assert.equal(direccion.pathname, aplicacion.match(/const CONTACTO_ACCESO = "([^"]+)";/)[1]);
+  assert.equal(direccion.searchParams.get("subject"), "Solicitud de acceso al Directorio: Gestión de Recursos Humanos");
+  assert.match(direccion.searchParams.get("body"), /Solicito acceso al área «Gestión de Recursos Humanos»/);
+  assert.match(direccion.searchParams.get("body"), /persona@ejemplo\.com/);
+});
+
+test("el correo para pedir acceso es una constante al inicio y coincide con el pie de página", () => {
+  const constante = aplicacion.match(/const CONTACTO_ACCESO = "([^"]+)";/);
+  assert.ok(constante, "existe CONTACTO_ACCESO");
+  assert.ok(aplicacion.indexOf("const CONTACTO_ACCESO") < aplicacion.indexOf("const ICONOS"), "está al inicio del script");
+  assert.match(pagina, new RegExp(`<footer>[\\s\\S]*mailto:${constante[1].replace(".", "\\.")}`));
+});
+
+test("un administrador ve todas las áreas normales y los clientes", async () => {
+  const vista = await abrirConSupabase({ hash: "#/pmo", cliente: clienteConAreas([], { esAdmin: true }) });
+  assert.match(vista.contenido(), /Proyectos Activos/);
+  assert.doesNotMatch(vista.contenido(), /sin-acceso/);
+
+  const inicio = await abrirConSupabase({ cliente: clienteConAreas([], { esAdmin: true }) });
+  const tarjetas = tarjetasDeArea(inicio.contenido());
+  assert.equal(tarjetas.length, 13);
+  assert.ok(tarjetas.every(({ gris }) => !gris));
+});
+
+test("un cliente nunca aparece para quien no tiene el PMO", async () => {
+  const clientes = idsDeClientes();
+  for (const hash of ["#/", "#/pmo", "#/proyectos-cerrados", "#/banco-central"]) {
+    const vista = await abrirConSupabase({ hash, cliente: clienteConAreas(["calidad"]) });
+    for (const id of clientes) {
+      assert.doesNotMatch(vista.contenido(), new RegExp(`href="#/${id}"`), `${id} visible en ${hash}`);
+    }
+  }
+  const pmo = await abrirConSupabase({ hash: "#/pmo", cliente: clienteConAreas(["calidad"]) });
+  assert.match(pmo.contenido(), /No tienes acceso a esta área/);
+  assert.doesNotMatch(pmo.contenido(), /Proyectos Activos/);
+
+  const cerrados = await abrirConSupabase({ hash: "#/proyectos-cerrados", cliente: clienteConAreas(["calidad"]) });
+  assert.match(cerrados.contenido(), /No tienes acceso a esta página/);
+
+  const conPmo = await abrirConSupabase({ hash: "#/pmo", cliente: clienteConAreas(["pmo"]) });
+  assert.match(conPmo.contenido(), /Proyectos Activos/);
+  assert.match(conPmo.contenido(), /href="#\/fintax"/);
+});
+
+test("el buscador muestra las áreas en gris por su nombre, sin enlaces de ellas", async () => {
+  const vista = await abrirConSupabase({ cliente: clienteConAreas(["calidad"]) });
+  vista.elemento("buscar").value = "recursos humanos";
+  vista.contexto.mostrar();
+
+  assert.match(vista.contenido(), /<a class="tarjeta sin-acceso" href="#\/recursos-humanos">/);
+  assert.doesNotMatch(vista.contenido(), /target="_blank"/, "ningún enlace de un área sin permiso");
+  assert.ok(!vista.cliente.bd.accesos.some(({ espacio_id }) => espacio_id === "recursos-humanos"),
+    "la base no entregó sus enlaces");
+});
+
+test("quien no tiene ningún área ve todas en gris y el aviso", async () => {
+  const vista = await abrirConSupabase({ cliente: clienteConAreas([]) });
+  const tarjetas = tarjetasDeArea(vista.contenido());
+
+  assert.equal(tarjetas.length, 13);
+  assert.ok(tarjetas.every(({ gris }) => gris));
+  assert.match(vista.contenido(), /todavía no tiene áreas asignadas/);
+});
+
+test("si no se pueden leer los permisos propios no se marca ninguna área", async () => {
+  const vista = await abrirConSupabase({
+    cliente: clienteConAreas(["calidad"], { errores: { "select:permisos": { status: 0, message: "Failed to fetch" } } }),
+  });
+  assert.doesNotMatch(vista.contenido(), /sin-acceso/);
+});
+
+test("antes de la migración 003 (la base solo entrega las áreas propias) nada sale en gris", async () => {
+  const { espacios, accesos } = filasQueEntregaLaBase(["calidad"]);
+  const vista = await abrirConSupabase({
+    cliente: clienteConAreas(["calidad"], { filas: { espacios: espacios.filter(({ id }) => id === "calidad"), accesos } }),
+  });
+  assert.deepEqual(tarjetasDeArea(vista.contenido()), [{ id: "calidad", gris: false }]);
+});
+
+test("la migración 003 solo abre las áreas y deja protegidos clientes y enlaces", () => {
+  const sql = migracion003.replace(/--.*$/gm, "");
+  const politicas = [...sql.matchAll(/create policy (\w+)/g)].map(([, nombre]) => nombre);
+  assert.deepEqual(politicas, ["espacios_leer_por_rol"], "solo cambia la lectura de espacios");
+  assert.match(sql, /on public\.espacios for select\s+to authenticated/);
+  assert.match(sql, /\(\(select auth\.uid\(\)\) is not null and tipo = 'area'\)\s+or \(select privado\.puede_ver\(rol\)\)/);
+  assert.doesNotMatch(sql, /accesos|grant|anon|disable row level security/i, "no toca accesos ni privilegios");
 });
