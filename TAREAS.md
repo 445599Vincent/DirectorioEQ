@@ -465,7 +465,7 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
 
 ### T-009 — Panel de administración, parte A: usuarios y permisos (Etapa 3)
 
-- **Estado:** Asignada (2026-10-02)
+- **Estado:** Completada (revisada e integrada por la directora el 2026-10-05)
 - **Asignada a:** Ecco (Ingeniería, desde la web: rama `ecco/T-009` y pull request) —
   **Claude Opus 5.5, esfuerzo alto**
 - **Archivos:** `index.html`, `tests/directorio.test.mjs`
@@ -489,11 +489,12 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
   página; un administrador ve la lista, guarda áreas, cambia el nombre y el nivel; los
   errores de la base se muestran.
 - **No hacer:** no encender `SUPABASE.activo`; no tocar `enlaces.js` ni `supabase/`.
-- **Notas de entrega:** en el pull request.
+- **Notas de entrega:** pull request #2: página `#/admin` solo para administradores, lista de usuarios con nombre, nivel y áreas por casillas, aviso al quitarse a sí mismo siendo el único administrador, pasos para invitar.
+- **Revisión de la directora:** aprobada. Solo oculta botones; quien decide es la base (RLS). Textos escapados. 67 pruebas pasan tras integrar.
 
 ### T-014 — Contraseña temporal: cambio obligatorio en el primer ingreso
 
-- **Estado:** Asignada (2026-10-02), **empezar cuando la T-009 esté integrada** (mismos
+- **Estado:** Completada (revisada e integrada por la directora el 2026-10-05)
   archivos)
 - **Asignada a:** Ecco (rama `ecco/T-014` y pull request) — Claude Opus 5.5, esfuerzo alto
 - **Archivos:** `supabase/migracion-002-contrasena-temporal.sql` (nuevo), `supabase/LEEME.md`,
@@ -521,11 +522,12 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
   cambiarla; tras cambiarla, entra; la opción del encabezado funciona; un usuario no puede
   cambiar la marca de otro (explicar en las notas por qué la función lo impide).
 - **No hacer:** no encender `SUPABASE.activo`; no escribir contraseñas reales.
-- **Notas de entrega:** en el pull request.
+- **Notas de entrega:** pull request #3: migración `supabase/migracion-002-contrasena-temporal.sql`, pantalla obligatoria de contraseña nueva, "Cambiar contraseña" en el encabezado y marca en el panel.
+- **Revisión de la directora:** aprobada. La función solo actualiza la fila de quien la llama y solo esa columna; `anon` no puede ejecutarla. Límite aceptado: un usuario con conocimientos podría llamarla sin cambiar la contraseña (se saltaría el aviso, nada más); no hay forma de comprobarlo desde la base sin un servicio aparte. 67 pruebas pasan tras integrar.
 
 ### T-015 — Áreas sin acceso en gris, con cómo solicitar acceso
 
-- **Estado:** Asignada (2026-10-02), **después de la T-014** (mismos archivos)
+- **Estado:** Completada (revisada e integrada por la directora el 2026-10-05)
 - **Asignada a:** Ecco (rama `ecco/T-015` y pull request) — Claude Opus 5.5, esfuerzo alto
 - **Archivos:** `supabase/migracion-003-areas-visibles.sql` (nuevo), `supabase/LEEME.md`,
   `index.html`, `tests/directorio.test.mjs`
@@ -551,6 +553,19 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
   normales; un cliente nunca aparece para quien no tiene `pmo`.
 - **Seguridad (la revisa la directora):** confirmar en la migración que `accesos` sigue
   protegido por el permiso del área y que los clientes no se exponen.
+- **Notas de entrega:** pull request #4: migración `supabase/migracion-003-areas-visibles.sql`, áreas sin permiso en gris con "Sin acceso" y botón "Solicitar acceso" (correo a `CONTACTO_ACCESO`).
+- **Revisión de la directora:** aprobada. Las áreas (nombre, descripción, icono) pasan a ser visibles para todo usuario con sesión; los clientes siguen exigiendo `pmo` y la política de `accesos` no cambia, así que los enlaces siguen protegidos. 67 pruebas pasan tras integrar.
+
+### T-016 — Detalles de la página
+
+- **Estado:** Asignada (2026-10-05)
+- **Asignada a:** Ecco (rama `ecco/T-016` y pull request) — Claude Sonnet 5.5, esfuerzo medio
+- **Archivos:** `index.html`, `tests/directorio.test.mjs`
+- **Qué hacer:** (1) `<link rel="icon" href="favicon.ico">` en el `<head>` (el Ejecutador
+  ya subió `favicon.ico` a la raíz, D-018); (2) que el encabezado no se desborde en
+  pantallas de 320–375 px con la etiqueta "Modo de prueba", el correo y los enlaces de
+  sesión (que se acomoden en dos líneas o se acorte el correo); (3) fijar la versión exacta
+  de `@supabase/supabase-js` en la dirección de jsDelivr en lugar de `@2`.
 - **Notas de entrega:** en el pull request.
 
 ### T-013 — Panel de administración, parte B: contenido (Etapa 3)
@@ -855,7 +870,7 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
 
 ### D-018 — Directa: icono EQ en la pestaña del navegador
 
-- **Estado:** Para revisión (2026-10-05)
+- **Estado:** Completada (revisada por la directora el 2026-10-05)
 - **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent
 - **Archivos:** `favicon.ico` (nuevo, en la raíz) y `logos/icono-eq.png` (nuevo)
 - **Notas de entrega:** solo se agregaron dos archivos; no se tocó `index.html`, `tests/` ni
@@ -865,3 +880,4 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
   Ingeniería:** agregar `<link rel="icon" href="favicon.ico">` en `index.html` (no lo hice
   porque está reservado por Ecco en T-009). Los navegadores guardan el icono mucho tiempo: puede
   tardar en verse o requerir cerrar y abrir la pestaña.
+- **Revisión de la directora:** aprobada; `favicon.ico` en la raíz es lo correcto (los navegadores lo buscan ahí). El `<link rel="icon">` queda en la T-016.

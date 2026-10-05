@@ -28,6 +28,15 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ---
 
+## 2026-10-05 — Claude (integrando el trabajo de Ecco)
+- **Pedido:** T-009, T-014 y T-015.
+- **Cambios:** integrados a `main` los pull requests #2, #3 y #4 de Ecco: panel de
+  administración (`#/admin`), contraseña temporal con cambio obligatorio y áreas sin acceso
+  en gris (`index.html`, `tests/`, `supabase/migracion-002-…` y `migracion-003-…`). Todo
+  sigue apagado salvo en `?prueba=supabase`. D-018 (icono de la pestaña) aprobada; T-016
+  asignada a Ecco.
+- **Pendiente:** Vincent ejecuta las migraciones 002 y 003 en Supabase.
+
 ## 2026-10-05 — Claude (Contenido)
 - **Pedido:** que salga el logo de EQ en la pestaña del navegador (pedido directo).
 - **Cambios:** nuevo `favicon.ico` en la raíz del sitio (16, 32, 48 y 64 px, hecho con el icono
