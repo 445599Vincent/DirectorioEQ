@@ -544,8 +544,18 @@ const FILAS_DE_EJEMPLO = {
   ],
 };
 
-function clienteSupabaseFalso({ sesion = null, filas = FILAS_DE_EJEMPLO, errorDatos = null, errorEntrar = null } = {}) {
+// perfiles y permisos: filas de esas tablas; errores: { "update:perfiles": error, … }.
+function clienteSupabaseFalso({
+  sesion = null, filas = FILAS_DE_EJEMPLO, perfiles = [], permisos = [],
+  errorDatos = null, errorEntrar = null, errores = {},
+} = {}) {
   const llamadas = [];
+  const bd = {
+    espacios: clonar(filas.espacios),
+    accesos: clonar(filas.accesos),
+    perfiles: clonar(perfiles),
+    permisos: clonar(permisos),
+  };
   const sesionDe = (correo) => ({ access_token: "token-de-prueba", user: { email: correo } });
   let sesionActual = sesion;
   const responder = (valor) => Promise.resolve(valor);
@@ -573,6 +583,7 @@ function clienteSupabaseFalso({ sesion = null, filas = FILAS_DE_EJEMPLO, errorDa
       },
       updateUser(cambios) {
         llamadas.push(["updateUser", Object.keys(cambios)]);
+        if (errores.updateUser) return responder({ data: { user: null }, error: errores.updateUser });
         return responder({ data: { user: sesionActual?.user }, error: null });
       },
       signOut() {
@@ -581,28 +592,79 @@ function clienteSupabaseFalso({ sesion = null, filas = FILAS_DE_EJEMPLO, errorDa
         return responder({ error: null });
       },
     },
+    bd,
+    // Igual que la función de supabase/migracion-002: solo cambia la fila de quien llama.
+    rpc(nombre) {
+      llamadas.push(["rpc", nombre]);
+      const error = errores[`rpc:${nombre}`];
+      if (error) return responder({ data: null, error });
+      if (nombre === "contrasena_cambiada") {
+        bd.perfiles.filter(({ id }) => id === sesionActual?.user?.id)
+          .forEach((perfil) => { perfil.debe_cambiar_contrasena = false; });
+      }
+      return responder({ data: null, error: null });
+    },
     from(tabla) {
       llamadas.push(["from", tabla]);
-      const resultado = errorDatos
-        ? { data: null, error: errorDatos }
-        : { data: tabla === "espacios" ? filas.espacios : filas.accesos, error: null };
-      const consulta = {
-        select: () => consulta,
-        order: () => consulta,
-        then: (cumplir, fallar) => Promise.resolve(resultado).then(cumplir, fallar),
-      };
-      return consulta;
+      return consultaFalsa(tabla, bd, llamadas, { errorDatos, errores });
     },
   };
+}
+
+// Una consulta de Supabase simulada sobre tablas en memoria: select, update, insert y
+// delete, con filtros eq/in. Cada operación que llega a la base se anota en "llamadas"
+// como ["bd", tabla, acción, datos, filtros].
+function consultaFalsa(tabla, bd, llamadas, { errorDatos, errores }) {
+  let accion = null;
+  let datos = null;
+  let unico = false;
+  const filtros = [];
+  const cumple = (fila) => filtros.every(([tipo, columna, valor]) =>
+    tipo === "eq" ? fila[columna] === valor : valor.includes(fila[columna]));
+
+  function ejecutar() {
+    accion ||= "select";
+    llamadas.push(["bd", tabla, accion, datos, filtros]);
+    const error = errores[`${accion}:${tabla}`]
+      || (errorDatos && accion === "select" && ["espacios", "accesos"].includes(tabla) ? errorDatos : null);
+    if (error) return { data: null, error };
+    const filasTabla = (bd[tabla] ||= []);
+    if (accion === "select") {
+      const encontradas = filasTabla.filter(cumple).map((fila) => ({ ...fila }));
+      return { data: unico ? (encontradas[0] ?? null) : encontradas, error: null };
+    }
+    if (accion === "update") filasTabla.filter(cumple).forEach((fila) => Object.assign(fila, datos));
+    if (accion === "insert") filasTabla.push(...[].concat(datos).map((fila) => ({ ...fila })));
+    if (accion === "delete") bd[tabla] = filasTabla.filter((fila) => !cumple(fila));
+    return { data: null, error: null };
+  }
+
+  const consulta = {
+    select: () => consulta,
+    order: () => consulta,
+    eq: (columna, valor) => { filtros.push(["eq", columna, valor]); return consulta; },
+    in: (columna, valores) => { filtros.push(["in", columna, valores]); return consulta; },
+    maybeSingle: () => { unico = true; return consulta; },
+    update: (cambios) => { accion = "update"; datos = cambios; return consulta; },
+    insert: (filas) => { accion = "insert"; datos = filas; return consulta; },
+    delete: () => { accion = "delete"; return consulta; },
+    then: (cumplir, fallar) => Promise.resolve().then(ejecutar).then(cumplir, fallar),
+  };
+  return consulta;
 }
 
 // Ejecuta la página con el interruptor encendido y el cliente simulado, sin red.
 // encender: false deja el interruptor como está en el sitio (apagado), para el modo de prueba.
 // almacen: lo que la pestaña ya tiene guardado en sessionStorage.
-async function abrirConSupabase({ hash = "#/", search = "", encender = true, almacen = {}, cliente = clienteSupabaseFalso() } = {}) {
+// confirmar: respuesta a las preguntas de confirmación (window.confirm).
+async function abrirConSupabase({
+  hash = "#/", search = "", encender = true, almacen = {}, cliente = clienteSupabaseFalso(),
+  confirmar = () => true,
+} = {}) {
   const elementos = new Map();
   const volver = { href: "", textContent: "" };
   const historial = [];
+  const preguntas = [];
 
   function elemento(id) {
     if (!elementos.has(id)) {
@@ -618,8 +680,8 @@ async function abrirConSupabase({ hash = "#/", search = "", encender = true, alm
         classList: { toggle() {} },
         querySelectorAll() { return []; },
         addEventListener(tipo, oyente) { (oyentes[tipo] ||= []).push(oyente); },
-        async disparar(tipo) {
-          for (const oyente of oyentes[tipo] || []) await oyente({ preventDefault() {} });
+        async disparar(tipo, evento = {}) {
+          for (const oyente of oyentes[tipo] || []) await oyente({ preventDefault() {}, ...evento });
           await esperar();
         },
       });
@@ -646,6 +708,7 @@ async function abrirConSupabase({ hash = "#/", search = "", encender = true, alm
       supabase: { createClient: (url, clave) => { cliente.llamadas.push(["createClient", url, clave]); return cliente; } },
       addEventListener() {},
       scrollTo() {},
+      confirm: (pregunta) => { preguntas.push(pregunta); return confirmar(pregunta); },
     },
     document: {
       getElementById: elemento,
@@ -665,6 +728,8 @@ async function abrirConSupabase({ hash = "#/", search = "", encender = true, alm
   return {
     cliente,
     almacen,
+    contexto,
+    preguntas,
     elemento,
     historial,
     contenido: () => elemento("secciones").innerHTML,
@@ -894,4 +959,427 @@ test("con el interruptor encendido no aparece el aviso de prueba y el correo reg
   await vista.elemento("enlace-olvido").disparar("click");
   const llamada = vista.cliente.llamadas.find(([accion]) => accion === "resetPasswordForEmail");
   assert.equal(llamada[2].redirectTo, SITIO);
+});
+
+// --- Panel de administración (T-009) ------------------------------------------------
+
+const FILAS_DOS_AREAS = {
+  espacios: [
+    ...FILAS_DE_EJEMPLO.espacios,
+    { id: "calidad", tipo: "area", nombre: "Área de prueba Calidad", descripcion: "SGC.", icono: "calidad", proceso: "estrategico", estado: null, logo: null, proyectos_de_clientes: false, orden: 2 },
+  ],
+  accesos: FILAS_DE_EJEMPLO.accesos,
+};
+const PERFIL_ADMIN = { id: "u-admin", correo: "admin@ejemplo.com", nombre: "Admin", es_admin: true };
+const PERFIL_ANA = { id: "u-ana", correo: "ana@ejemplo.com", nombre: "Ana", es_admin: false };
+
+function clienteConUsuarios({ yo = PERFIL_ADMIN, perfiles = [PERFIL_ADMIN, PERFIL_ANA], errores = {} } = {}) {
+  return clienteSupabaseFalso({
+    sesion: { user: { id: yo.id, email: yo.correo } },
+    filas: FILAS_DOS_AREAS,
+    perfiles,
+    permisos: [{ usuario_id: "u-ana", area_id: "pmo" }],
+    errores,
+  });
+}
+
+const escrituras = (cliente) => cliente.llamadas.filter(([tipo, , accion]) => tipo === "bd" && accion !== "select");
+
+test("un usuario normal no ve el enlace de administración ni la página", async () => {
+  const vista = await abrirConSupabase({ hash: "#/admin", cliente: clienteConUsuarios({ yo: PERFIL_ANA }) });
+
+  assert.doesNotMatch(vista.elemento("sesion").innerHTML, /Administración/);
+  assert.match(vista.contenido(), /No tienes acceso a esta página/);
+  assert.doesNotMatch(vista.contenido(), /admin@ejemplo\.com/);
+  const permisosPedidos = vista.cliente.llamadas.filter(([tipo, tabla]) => tipo === "bd" && tabla === "permisos");
+  assert.ok(permisosPedidos.every(([, , , , filtros]) =>
+    filtros.some(([op, columna, valor]) => op === "eq" && columna === "usuario_id" && valor === PERFIL_ANA.id)),
+  "solo pide sus propios permisos, nunca la lista de todos");
+});
+
+test("un administrador ve el enlace y la lista de usuarios con sus áreas", async () => {
+  const vista = await abrirConSupabase({ hash: "#/admin", cliente: clienteConUsuarios() });
+  await esperar();
+  const contenido = vista.contenido();
+
+  assert.match(vista.elemento("sesion").innerHTML, /href="#\/admin"[^>]*>Administración/);
+  assert.match(contenido, /admin@ejemplo\.com \(tú\)/);
+  assert.match(contenido, /ana@ejemplo\.com/);
+  const ana = contenido.match(/data-usuario="u-ana">([\s\S]*?)<\/form>/)[1];
+  assert.match(ana, /value="pmo"\s+checked/, "Ana tiene el PMO marcado");
+  assert.match(ana, /value="calidad"\s+>/, "Calidad sin marcar");
+  assert.match(contenido, /da acceso también a todos[\s\S]*los clientes/);
+  assert.match(contenido, /supabase\.com\/dashboard\/project\/yvhractjxuvfjaldhgdo\/auth\/users/);
+  assert.match(contenido, /Create new user/);
+});
+
+test("el administrador guarda las áreas desde el formulario", async () => {
+  const vista = await abrirConSupabase({ hash: "#/admin", cliente: clienteConUsuarios() });
+  await esperar();
+
+  const formulario = {
+    dataset: { usuario: "u-ana" },
+    elements: { nombre: { value: "Ana" }, es_admin: { checked: false } },
+    closest() { return this; },
+    querySelector: () => ({ disabled: false }),
+    querySelectorAll: () => [{ value: "calidad" }],
+  };
+  await vista.elemento("secciones").disparar("submit", { target: formulario });
+  await esperar();
+
+  assert.deepEqual(vista.cliente.bd.permisos, [{ usuario_id: "u-ana", area_id: "calidad" }]);
+  assert.match(vista.contenido(), /Cambios guardados para ana@ejemplo\.com/);
+  assert.match(vista.contenido().match(/data-usuario="u-ana">([\s\S]*?)<\/form>/)[1], /value="calidad"\s+checked/,
+    "la lista se actualiza después del cambio");
+  assert.deepEqual(vista.preguntas, [], "cambiar áreas no pide confirmación");
+});
+
+test("el administrador cambia el nombre y el nivel, con confirmación", async () => {
+  const vista = await abrirConSupabase({ hash: "#/admin", cliente: clienteConUsuarios() });
+  await esperar();
+
+  await vista.contexto.guardarUsuario("u-ana", { nombre: "  Ana Pérez ", esAdmin: true, areasElegidas: ["pmo"] });
+
+  assert.equal(vista.preguntas.length, 1);
+  assert.match(vista.preguntas[0], /¿Hacer administrador a ana@ejemplo\.com\?/);
+  assert.deepEqual(
+    vista.cliente.bd.perfiles.find(({ id }) => id === "u-ana"),
+    { ...PERFIL_ANA, nombre: "Ana Pérez", es_admin: true },
+  );
+  assert.deepEqual(escrituras(vista.cliente).map(([, tabla, accion]) => [tabla, accion]), [["perfiles", "update"]],
+    "las áreas no cambiaron, así que no se tocan los permisos");
+});
+
+test("si no se confirma el cambio de nivel no se guarda nada", async () => {
+  const vista = await abrirConSupabase({ hash: "#/admin", cliente: clienteConUsuarios(), confirmar: () => false });
+  await esperar();
+
+  const guardado = await vista.contexto.guardarUsuario("u-ana", { nombre: "Ana", esAdmin: true, areasElegidas: [] });
+
+  assert.equal(guardado, false);
+  assert.deepEqual(escrituras(vista.cliente), []);
+});
+
+test("el único administrador no puede quitarse a sí mismo el nivel", async () => {
+  const vista = await abrirConSupabase({ hash: "#/admin", cliente: clienteConUsuarios() });
+  await esperar();
+
+  await vista.contexto.guardarUsuario("u-admin", { nombre: "Admin", esAdmin: false, areasElegidas: [] });
+
+  assert.deepEqual(escrituras(vista.cliente), []);
+  assert.deepEqual(vista.preguntas, []);
+  assert.match(vista.contenido(), /eres el único administrador/);
+});
+
+test("los errores de la base se muestran en el panel", async () => {
+  const vista = await abrirConSupabase({
+    hash: "#/admin",
+    cliente: clienteConUsuarios({ errores: { "insert:permisos": { status: 403, code: "42501", message: "row-level security" } } }),
+  });
+  await esperar();
+
+  const guardado = await vista.contexto.guardarUsuario("u-ana", { nombre: "Ana", esAdmin: false, areasElegidas: ["pmo", "calidad"] });
+
+  assert.equal(guardado, false);
+  assert.match(vista.contenido(), /No se pudieron guardar los cambios de ana@ejemplo\.com/);
+  assert.match(vista.contenido(), /solo un administrador puede hacerlo/);
+});
+
+test("si la lista de usuarios no carga se avisa", async () => {
+  const vista = await abrirConSupabase({
+    hash: "#/admin",
+    cliente: clienteConUsuarios({ errores: { "select:permisos": { status: 0, message: "Failed to fetch" } } }),
+  });
+  await esperar();
+
+  assert.match(vista.contenido(), /No se pudo cargar la lista de usuarios/);
+});
+
+test("los correos y nombres del panel se escapan", async () => {
+  const intruso = { id: "u-x", correo: '<img src=x onerror="alert(1)">', nombre: '"><script>alert(1)</script>', es_admin: false };
+  const vista = await abrirConSupabase({
+    hash: "#/admin",
+    cliente: clienteConUsuarios({ perfiles: [PERFIL_ADMIN, intruso] }),
+  });
+  await esperar();
+
+  assert.doesNotMatch(vista.contenido(), /<img src=x|<script>/);
+  assert.match(vista.contenido(), /&lt;img src=x/);
+});
+
+// --- Contraseña temporal (T-014) ----------------------------------------------------
+
+const migracion002 = readFileSync(new URL("../supabase/migracion-002-contrasena-temporal.sql", import.meta.url), "utf8");
+const PERFIL_TEMPORAL = { id: "u-temp", correo: "temporal@ejemplo.com", nombre: "", es_admin: false, debe_cambiar_contrasena: true };
+
+function clienteTemporal(opciones = {}) {
+  return clienteSupabaseFalso({
+    sesion: { user: { id: PERFIL_TEMPORAL.id, email: PERFIL_TEMPORAL.correo } },
+    perfiles: [PERFIL_ADMIN, PERFIL_TEMPORAL],
+    permisos: [{ usuario_id: PERFIL_TEMPORAL.id, area_id: "pmo" }],
+    ...opciones,
+  });
+}
+
+async function escribirContrasena(vista, clave = "ClaveNuevaDePrueba1") {
+  vista.elemento("nueva-1").value = clave;
+  vista.elemento("nueva-2").value = clave;
+  await vista.elemento("panel-nueva").disparar("submit");
+}
+
+test("con la contraseña temporal pendiente no se ve el directorio hasta cambiarla", async () => {
+  const vista = await abrirConSupabase({ cliente: clienteTemporal() });
+
+  assert.deepEqual(vista.pantalla(), { directorio: false, entrar: false, nueva: true });
+  assert.match(vista.elemento("nueva-texto").textContent, /contraseña actual es temporal/);
+  assert.notEqual(vista.elemento("cancelar-cambio").style.display, "", "no se puede saltar el cambio");
+  assert.equal(vista.contenido(), "");
+  assert.ok(!vista.cliente.llamadas.some(([tipo, tabla]) => tipo === "bd" && tabla === "accesos"),
+    "no se piden los enlaces antes del cambio");
+
+  await escribirContrasena(vista);
+
+  assert.ok(vista.cliente.llamadas.some(([accion, campos]) => accion === "updateUser" && campos.includes("password")));
+  assert.ok(vista.cliente.llamadas.some(([accion, nombre]) => accion === "rpc" && nombre === "contrasena_cambiada"));
+  assert.equal(vista.cliente.bd.perfiles.find(({ id }) => id === "u-temp").debe_cambiar_contrasena, false);
+  assert.deepEqual(vista.pantalla(), { directorio: true, entrar: false, nueva: false });
+  assert.match(tarjetaDe(vista.contenido(), "pmo"), /Área de prueba PMO/);
+});
+
+test("la función de la base se llama solo después de guardar la contraseña", async () => {
+  const vista = await abrirConSupabase({
+    cliente: clienteTemporal({ errores: { updateUser: { status: 422, code: "same_password" } } }),
+  });
+
+  await escribirContrasena(vista);
+
+  assert.equal(vista.mensaje(), "La contraseña nueva debe ser distinta de la anterior.");
+  assert.ok(!vista.cliente.llamadas.some(([accion]) => accion === "rpc"));
+  assert.deepEqual(vista.pantalla(), { directorio: false, entrar: false, nueva: true });
+});
+
+test("si la base no registra el cambio, la persona igual entra y no queda atrapada", async () => {
+  const vista = await abrirConSupabase({
+    cliente: clienteTemporal({ errores: { "rpc:contrasena_cambiada": { status: 0, message: "Failed to fetch" } } }),
+  });
+
+  await escribirContrasena(vista);
+
+  assert.deepEqual(vista.pantalla(), { directorio: true, entrar: false, nueva: false });
+});
+
+test("cualquier usuario puede cambiar su contraseña desde el encabezado", async () => {
+  const vista = await abrirConSupabase({ hash: "#/pmo", cliente: clienteConUsuarios({ yo: PERFIL_ANA }) });
+
+  assert.match(vista.elemento("sesion").innerHTML, /Cambiar contraseña/);
+  await vista.elemento("cambiar-contrasena").disparar("click");
+  assert.deepEqual(vista.pantalla(), { directorio: false, entrar: false, nueva: true });
+  assert.equal(vista.elemento("cancelar-cambio").style.display, "", "se puede cancelar");
+
+  await vista.elemento("cancelar-cambio").disparar("click");
+  assert.deepEqual(vista.pantalla(), { directorio: true, entrar: false, nueva: false });
+  assert.ok(!vista.cliente.llamadas.some(([accion]) => accion === "updateUser"));
+
+  await vista.elemento("cambiar-contrasena").disparar("click");
+  await escribirContrasena(vista);
+
+  assert.ok(vista.cliente.llamadas.some(([accion]) => accion === "updateUser"));
+  assert.ok(vista.cliente.llamadas.some(([accion, nombre]) => accion === "rpc" && nombre === "contrasena_cambiada"));
+  assert.deepEqual(vista.pantalla(), { directorio: true, entrar: false, nueva: false });
+  assert.match(vista.contenido(), /Tu contraseña se cambió correctamente/);
+  assert.match(vista.contenido(), /SharePoint de prueba/, "sigue en la misma página");
+});
+
+test("el panel muestra la contraseña temporal pendiente y permite pedir el cambio", async () => {
+  const conMarca = { ...PERFIL_ANA, debe_cambiar_contrasena: false };
+  const vista = await abrirConSupabase({
+    hash: "#/admin",
+    cliente: clienteConUsuarios({ perfiles: [{ ...PERFIL_ADMIN, debe_cambiar_contrasena: false }, conMarca, PERFIL_TEMPORAL] }),
+  });
+  await esperar();
+  const tarjeta = (id) => vista.contenido().match(new RegExp(`data-usuario="${id}">([\\s\\S]*?)</form>`))[1];
+
+  assert.match(tarjeta("u-temp"), /Contraseña temporal pendiente/);
+  assert.doesNotMatch(tarjeta("u-temp"), /Pedir cambio de contraseña/);
+  assert.match(tarjeta("u-ana"), /Pedir cambio de contraseña/);
+
+  const formulario = { dataset: { usuario: "u-ana" } };
+  const boton = { disabled: false, closest: (selector) => (selector.startsWith("form") ? formulario : boton) };
+  await vista.elemento("secciones").disparar("click", { target: boton });
+  await esperar();
+
+  assert.match(vista.preguntas.at(-1), /¿Pedir a ana@ejemplo\.com que cambie su contraseña/);
+  assert.equal(vista.cliente.bd.perfiles.find(({ id }) => id === "u-ana").debe_cambiar_contrasena, true);
+  assert.match(tarjeta("u-ana"), /Contraseña temporal pendiente/);
+  assert.match(vista.contenido(), /ana@ejemplo\.com deberá crear una contraseña nueva/);
+});
+
+test("sin la migración 002 el panel no muestra la marca y nadie queda bloqueado", async () => {
+  const vista = await abrirConSupabase({ hash: "#/admin", cliente: clienteConUsuarios() });
+  await esperar();
+
+  assert.deepEqual(vista.pantalla(), { directorio: true, entrar: false, nueva: false });
+  assert.doesNotMatch(vista.contenido(), /Contraseña temporal pendiente|Pedir cambio de contraseña/);
+});
+
+test("la migración 002 solo deja que cada persona apague su propia marca", () => {
+  const sql = migracion002.replace(/--.*$/gm, "");
+  assert.match(sql, /add column debe_cambiar_contrasena boolean not null default true/);
+  assert.match(sql, /set debe_cambiar_contrasena = false\s+where es_admin;/, "administradores en false");
+
+  const funcion = sql.match(/create or replace function public\.contrasena_cambiada\(\)([\s\S]*?)\$\$;/);
+  assert.ok(funcion, "la función no recibe parámetros");
+  assert.match(funcion[1], /security definer/);
+  assert.match(funcion[1], /set search_path = ''/);
+  assert.match(funcion[1], /update public\.perfiles\s+set debe_cambiar_contrasena = false\s+where id = \(select auth\.uid\(\)\);/,
+    "solo la fila de quien la llama, y solo esa columna");
+  assert.match(sql, /revoke all on function public\.contrasena_cambiada\(\) from public, anon;/);
+  assert.match(sql, /grant execute on function public\.contrasena_cambiada\(\) to authenticated;/);
+  assert.doesNotMatch(sql, /drop policy|create policy|disable row level security/, "no cambia las reglas RLS");
+});
+
+// --- Áreas sin acceso en gris (T-015) ------------------------------------------------
+
+const migracion003 = readFileSync(new URL("../supabase/migracion-003-areas-visibles.sql", import.meta.url), "utf8");
+
+// Lo que la base entrega después de la migración 003 a una persona con esas áreas: todas
+// las áreas, los clientes solo con el PMO y los enlaces solo de sus áreas (o todo si es admin).
+function filasQueEntregaLaBase(misAreas, esAdmin = false) {
+  const { espacios, accesos } = filasDesde(cargarDatos());
+  const puedeVer = (rol) => esAdmin || misAreas.includes(rol);
+  const visibles = espacios.filter((fila) => fila.tipo === "area" || puedeVer(fila.rol));
+  return {
+    espacios: visibles,
+    accesos: accesos.filter(({ espacio_id }) => puedeVer(espacios.find(({ id }) => id === espacio_id).rol)),
+  };
+}
+
+function clienteConAreas(misAreas, { esAdmin = false, errores = {}, filas } = {}) {
+  const yo = { id: "u-persona", correo: "persona@ejemplo.com", nombre: "Persona", es_admin: esAdmin, debe_cambiar_contrasena: false };
+  return clienteSupabaseFalso({
+    sesion: { user: { id: yo.id, email: yo.correo } },
+    filas: filas || filasQueEntregaLaBase(misAreas, esAdmin),
+    perfiles: [yo],
+    permisos: misAreas.map((area_id) => ({ usuario_id: yo.id, area_id })),
+    errores,
+  });
+}
+
+const tarjetasDeArea = (contenido) => [...contenido.matchAll(/<a class="tarjeta( sin-acceso)?" href="#\/([^"]+)">/g)]
+  .map(([, gris, id]) => ({ id, gris: Boolean(gris) }));
+const idsDeAreas = () => cargarDatos().AREAS.map(({ id }) => id);
+const idsDeClientes = () => cargarDatos().CLIENTES.map(({ id }) => id);
+
+test("un usuario con un área ve todas las áreas y las demás en gris", async () => {
+  const vista = await abrirConSupabase({ cliente: clienteConAreas(["calidad"]) });
+  const tarjetas = tarjetasDeArea(vista.contenido());
+
+  assert.deepEqual(tarjetas.map(({ id }) => id).sort(), idsDeAreas().sort(), "aparecen las 13 áreas");
+  assert.equal(tarjetas.length, 13);
+  assert.deepEqual(tarjetas.filter(({ gris }) => !gris).map(({ id }) => id), ["calidad"]);
+  assert.equal(tarjetas.filter(({ gris }) => gris).length, 12);
+
+  const gris = vista.contenido().match(/<a class="tarjeta sin-acceso" href="#\/tic">([\s\S]*?)<\/a>/)[1];
+  assert.match(gris, /Sin acceso/);
+  assert.doesNotMatch(gris, /disponible|pendiente|Sin accesos todavía/, "la etiqueta reemplaza al contador");
+  assert.match(tarjetaDe(vista.contenido(), "calidad"), /disponible/);
+  assert.doesNotMatch(vista.contenido(), /todavía no tiene áreas asignadas/);
+});
+
+test("la página de un área sin permiso muestra el aviso y el botón para pedir acceso", async () => {
+  const vista = await abrirConSupabase({ hash: "#/recursos-humanos", cliente: clienteConAreas(["calidad"]) });
+  const contenido = vista.contenido();
+
+  assert.match(contenido, /No tienes acceso a esta área/);
+  assert.doesNotMatch(contenido, /class="tarjeta/, "no hay ninguna tarjeta de enlace");
+  const enlace = contenido.match(/<a class="btn-solicitar" id="solicitar-acceso" href="([^"]+)">Solicitar acceso<\/a>/);
+  assert.ok(enlace, "hay un botón Solicitar acceso");
+  const direccion = new URL(enlace[1].replaceAll("&amp;", "&"));
+  assert.equal(direccion.protocol, "mailto:");
+  assert.equal(direccion.pathname, aplicacion.match(/const CONTACTO_ACCESO = "([^"]+)";/)[1]);
+  assert.equal(direccion.searchParams.get("subject"), "Solicitud de acceso al Directorio: Gestión de Recursos Humanos");
+  assert.match(direccion.searchParams.get("body"), /Solicito acceso al área «Gestión de Recursos Humanos»/);
+  assert.match(direccion.searchParams.get("body"), /persona@ejemplo\.com/);
+});
+
+test("el correo para pedir acceso es una constante al inicio y coincide con el pie de página", () => {
+  const constante = aplicacion.match(/const CONTACTO_ACCESO = "([^"]+)";/);
+  assert.ok(constante, "existe CONTACTO_ACCESO");
+  assert.ok(aplicacion.indexOf("const CONTACTO_ACCESO") < aplicacion.indexOf("const ICONOS"), "está al inicio del script");
+  assert.match(pagina, new RegExp(`<footer>[\\s\\S]*mailto:${constante[1].replace(".", "\\.")}`));
+});
+
+test("un administrador ve todas las áreas normales y los clientes", async () => {
+  const vista = await abrirConSupabase({ hash: "#/pmo", cliente: clienteConAreas([], { esAdmin: true }) });
+  assert.match(vista.contenido(), /Proyectos Activos/);
+  assert.doesNotMatch(vista.contenido(), /sin-acceso/);
+
+  const inicio = await abrirConSupabase({ cliente: clienteConAreas([], { esAdmin: true }) });
+  const tarjetas = tarjetasDeArea(inicio.contenido());
+  assert.equal(tarjetas.length, 13);
+  assert.ok(tarjetas.every(({ gris }) => !gris));
+});
+
+test("un cliente nunca aparece para quien no tiene el PMO", async () => {
+  const clientes = idsDeClientes();
+  for (const hash of ["#/", "#/pmo", "#/proyectos-cerrados", "#/banco-central"]) {
+    const vista = await abrirConSupabase({ hash, cliente: clienteConAreas(["calidad"]) });
+    for (const id of clientes) {
+      assert.doesNotMatch(vista.contenido(), new RegExp(`href="#/${id}"`), `${id} visible en ${hash}`);
+    }
+  }
+  const pmo = await abrirConSupabase({ hash: "#/pmo", cliente: clienteConAreas(["calidad"]) });
+  assert.match(pmo.contenido(), /No tienes acceso a esta área/);
+  assert.doesNotMatch(pmo.contenido(), /Proyectos Activos/);
+
+  const cerrados = await abrirConSupabase({ hash: "#/proyectos-cerrados", cliente: clienteConAreas(["calidad"]) });
+  assert.match(cerrados.contenido(), /No tienes acceso a esta página/);
+
+  const conPmo = await abrirConSupabase({ hash: "#/pmo", cliente: clienteConAreas(["pmo"]) });
+  assert.match(conPmo.contenido(), /Proyectos Activos/);
+  assert.match(conPmo.contenido(), /href="#\/fintax"/);
+});
+
+test("el buscador muestra las áreas en gris por su nombre, sin enlaces de ellas", async () => {
+  const vista = await abrirConSupabase({ cliente: clienteConAreas(["calidad"]) });
+  vista.elemento("buscar").value = "recursos humanos";
+  vista.contexto.mostrar();
+
+  assert.match(vista.contenido(), /<a class="tarjeta sin-acceso" href="#\/recursos-humanos">/);
+  assert.doesNotMatch(vista.contenido(), /target="_blank"/, "ningún enlace de un área sin permiso");
+  assert.ok(!vista.cliente.bd.accesos.some(({ espacio_id }) => espacio_id === "recursos-humanos"),
+    "la base no entregó sus enlaces");
+});
+
+test("quien no tiene ningún área ve todas en gris y el aviso", async () => {
+  const vista = await abrirConSupabase({ cliente: clienteConAreas([]) });
+  const tarjetas = tarjetasDeArea(vista.contenido());
+
+  assert.equal(tarjetas.length, 13);
+  assert.ok(tarjetas.every(({ gris }) => gris));
+  assert.match(vista.contenido(), /todavía no tiene áreas asignadas/);
+});
+
+test("si no se pueden leer los permisos propios no se marca ninguna área", async () => {
+  const vista = await abrirConSupabase({
+    cliente: clienteConAreas(["calidad"], { errores: { "select:permisos": { status: 0, message: "Failed to fetch" } } }),
+  });
+  assert.doesNotMatch(vista.contenido(), /sin-acceso/);
+});
+
+test("antes de la migración 003 (la base solo entrega las áreas propias) nada sale en gris", async () => {
+  const { espacios, accesos } = filasQueEntregaLaBase(["calidad"]);
+  const vista = await abrirConSupabase({
+    cliente: clienteConAreas(["calidad"], { filas: { espacios: espacios.filter(({ id }) => id === "calidad"), accesos } }),
+  });
+  assert.deepEqual(tarjetasDeArea(vista.contenido()), [{ id: "calidad", gris: false }]);
+});
+
+test("la migración 003 solo abre las áreas y deja protegidos clientes y enlaces", () => {
+  const sql = migracion003.replace(/--.*$/gm, "");
+  const politicas = [...sql.matchAll(/create policy (\w+)/g)].map(([, nombre]) => nombre);
+  assert.deepEqual(politicas, ["espacios_leer_por_rol"], "solo cambia la lectura de espacios");
+  assert.match(sql, /on public\.espacios for select\s+to authenticated/);
+  assert.match(sql, /\(\(select auth\.uid\(\)\) is not null and tipo = 'area'\)\s+or \(select privado\.puede_ver\(rol\)\)/);
+  assert.doesNotMatch(sql, /accesos|grant|anon|disable row level security/i, "no toca accesos ni privilegios");
 });
