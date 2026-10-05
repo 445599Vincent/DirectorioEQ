@@ -852,3 +852,16 @@ Etapas: **0** Vincent crea el proyecto (pasos en el chat del Organizador) · **1
   dirección). Como Vincent ya instaló la base con el SQL anterior, la tarjeta solo tendrá el
   enlace en Supabase si se vuelve a ejecutar `no-subir/datos-supabase.sql` (se puede repetir sin
   duplicar). Pruebas 41 de 41.
+
+### D-018 — Directa: icono EQ en la pestaña del navegador
+
+- **Estado:** Para revisión (2026-10-05)
+- **Asignada a:** Ejecutador (Contenido), pedido directo de Vincent
+- **Archivos:** `favicon.ico` (nuevo, en la raíz) y `logos/icono-eq.png` (nuevo)
+- **Notas de entrega:** solo se agregaron dos archivos; no se tocó `index.html`, `tests/` ni
+  `enlaces.js`. El `favicon.ico` va en la raíz porque los navegadores lo piden por su cuenta;
+  está fuera de `logos/` (carpeta de mi rol) por esa razón: se ruega a la directora confirmar que
+  es aceptable. Imagen: icono "EQ" de eccoqualita.com, recortado y cuadrado. **Propuesta para
+  Ingeniería:** agregar `<link rel="icon" href="favicon.ico">` en `index.html` (no lo hice
+  porque está reservado por Ecco en T-009). Los navegadores guardan el icono mucho tiempo: puede
+  tardar en verse o requerir cerrar y abrir la pestaña.

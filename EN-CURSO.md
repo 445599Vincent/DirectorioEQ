@@ -33,4 +33,3 @@ Formato de la hora: `AAAA-MM-DD HH:MM` (hora local de República Dominicana).
 | Agente | Sesión | Desde | Archivos | Tarea |
 |---|---|---|---|---|
 | Ecco (web) | Ingeniería — reserva hecha por la directora | 2026-10-02 | `index.html`, `tests/directorio.test.mjs` | T-009 — Panel de administración: usuarios y permisos |
-| Claude | Ejecutador (Contenido) | 2026-10-05 08:55 | `favicon.ico`, `logos/icono-eq.png` | D-018 — Icono EQ en la pestaña del navegador |

@@ -28,6 +28,15 @@ El formato de cada entrada está en `AGENTS.md`.
 
 ---
 
+## 2026-10-05 — Claude (Contenido)
+- **Pedido:** que salga el logo de EQ en la pestaña del navegador (pedido directo).
+- **Cambios:** nuevo `favicon.ico` en la raíz del sitio (16, 32, 48 y 64 px, hecho con el icono
+  "EQ" de eccoqualita.com) y copia `logos/icono-eq.png`. Los navegadores piden `favicon.ico`
+  solos, así que no hace falta tocar `index.html` (reservado por Ecco).
+- **Pendiente:** opcional, para Ingeniería: declarar el icono en `<head>` de `index.html`
+  (`<link rel="icon" href="favicon.ico">`) para que también lo tomen los navegadores que no
+  piden el archivo solos y para la tarea de app instalable.
+
 ## 2026-10-02 — Claude
 - **Pedido:** asignar administradores y áreas a varias personas, y mostrar en gris (con cómo
   solicitar acceso) las áreas que un usuario no tiene.
